@@ -40,7 +40,7 @@ public class MenuScreen extends ScreenAdapter {
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
-
+        
 
         Texture up = new Texture("start.png");
         Texture down = new Texture("start2.png");
