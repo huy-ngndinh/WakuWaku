@@ -28,11 +28,6 @@ public class Map {
         shape = new PolygonShape();
         fdef = new FixtureDef();
 
-        // System.out.println("Map class: " + map.getClass());
-        // System.out.println("Layers class" + map.getLayers().getClass());
-        // System.out.println("Layer class" + map.getLayers().get(2).getClass());
-        //
-
         // create map objects
         for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
