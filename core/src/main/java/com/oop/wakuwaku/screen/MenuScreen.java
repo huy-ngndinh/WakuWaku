@@ -58,7 +58,7 @@ public class MenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickSound.play();
-                game.setScreen(new FirstScreen(game));
+                game.setScreen(new GameScreen(game));
             }
         });
 

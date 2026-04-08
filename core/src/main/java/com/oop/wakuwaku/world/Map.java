@@ -1,8 +1,9 @@
-package com.oop.wakuwaku.sprites;
+package com.oop.wakuwaku.world;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -17,13 +18,13 @@ public class Map {
     private BodyDef bdef;
     private PolygonShape shape;
     private FixtureDef fdef;
-    private World world;
     private TiledMap map;
+    private Map mapObject;
 
     private Body body;
-    public Map(World world, TiledMap map) {
-        this.world = world;
-        this.map = map;
+    public Map(World world) {
+
+        map = new TmxMapLoader().load("./raw_asset/ver01.tmx");
         bdef = new BodyDef();
         shape = new PolygonShape();
         fdef = new FixtureDef();
@@ -43,6 +44,9 @@ public class Map {
             
             body.createFixture(fdef);
         }
+    }
+    public TiledMap getTiledMap(){
+        return map;
     }
 
 }
