@@ -3,7 +3,6 @@ package com.oop.wakuwaku.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.Vector2;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.System.Physics;
 import com.oop.wakuwaku.System.Render;
@@ -60,14 +59,19 @@ public class GameScreen extends ScreenAdapter {
     private void input(float delta) {
         // Handle user input here. This method is called every frame from render().
         if (input.isPressed(Input.Keys.A)) {
-            gameworld.getPlayer().updatePhysics(new Vector2(-10f,0));
-
+            gameworld.getPlayer().moveLeft();
         }
-        else if (input.isPressed(Input.Keys.D)) {
-            gameworld.getPlayer().updatePhysics(new Vector2(10f,0));
+        if (input.isPressed(Input.Keys.D)) {
+            gameworld.getPlayer().moveRight();
         }
-        else if (input.isPressed(Input.Keys.SPACE)) {
-            gameworld.getPlayer().updatePhysics(new Vector2(0, 100f));
+        if (input.isPressed(Input.Keys.SPACE)) {
+            gameworld.getPlayer().jump();
+        }
+        if(input.isPressed(Input.Keys.SHIFT_LEFT)){
+            if(!gameworld.getPlayer().isDash()){
+                gameworld.getPlayer().setDash();
+            }
+            if(gameworld.getPlayer().isDash())gameworld.getPlayer().dash(delta);
         }
     }
 

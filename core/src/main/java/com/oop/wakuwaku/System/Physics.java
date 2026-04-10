@@ -9,7 +9,7 @@ public class Physics {
     private Box2DDebugRenderer debugRenderer;
 
     public Physics() {
-      this.world = new World(new Vector2(0f, -15f), false);
+      this.world = new World(new Vector2(0f, -10f), false);
       this.debugRenderer = new Box2DDebugRenderer();
       
     }

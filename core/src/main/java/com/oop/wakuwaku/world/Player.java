@@ -15,7 +15,6 @@ public class Player extends Sprite{
     private Body b2body;
     private CircleShape shape;
     private int jumpCount = 0;
-
     public Player(World world) {
         //this.world = world;
 
@@ -34,12 +33,65 @@ public class Player extends Sprite{
         fdef.shape = shape; 
         b2body.createFixture(fdef);
     }
-
-    public void updatePhysics(Vector2 force){
-        this.b2body.applyForce(force, this.b2body.getWorldCenter(), true);
+    
+    //Basic movement
+    public void moveLeft(){
+        this.b2body.applyForce(new Vector2(-30f, 0), this.b2body.getWorldCenter(), true);
         Vector2 velocity = this.b2body.getLinearVelocity();
         if (velocity.x < -10f) this.b2body.setLinearVelocity(new Vector2(-10f, velocity.y));
-        if(velocity.x > 10f) this.b2body.setLinearVelocity(new Vector2(10f, velocity.y));   
+    }
+    public void moveRight(){
+        this.b2body.applyForce(new Vector2(30f, 0), this.b2body.getWorldCenter(), true);
+        Vector2 velocity = this.b2body.getLinearVelocity();
+        if (velocity.x > 10f) this.b2body.setLinearVelocity(new Vector2(10f, velocity.y));
+    }
+    public void jump(){
+        if(jumpCount <= 2){
+            this.b2body.applyForce(new Vector2(0, 60f), this.b2body.getWorldCenter(), true);
+            jumpCount++;
+        }
+        else{
+            jumpCount = 0;
+        }
+    }
+
+    // Dashing
+    private int cnt_dash_screen = 0;
+    private boolean isDashing = false;
+    private float cooldown = 0f;
+
+    public boolean isDash(){
+        return isDashing;
+    }
+    public void setDash(){
+        isDashing = true;
     }
     
+    public void dash(float delta){
+        Vector2 velocity = this.b2body.getLinearVelocity();
+        if(velocity.x > 0){
+            this.b2body.applyLinearImpulse(new Vector2(5f,0), this.b2body.getWorldCenter(), true);
+            //add block timer
+            // stop after 20 frames (assuming 60 FPS, this is about 0.166 seconds)
+            if(cnt_dash_screen >= 20){
+                this.b2body.setLinearVelocity(new Vector2(0,0));
+                cnt_dash_screen = 0;
+                isDashing = false;
+            } else {
+                cnt_dash_screen++;  
+            }
+        } 
+        else if (velocity.x < 0){
+            this.b2body.applyLinearImpulse(new Vector2(-5f, 0), this.b2body.getWorldCenter(), true);
+            //add block timer
+            // blockTimer = 0.1f; // Block input for 0.1 seconds
+            if(cnt_dash_screen >= 20){
+                this.b2body.setLinearVelocity(new Vector2(0,0));
+                cnt_dash_screen = 0;
+                isDashing = false;
+            } else {
+                cnt_dash_screen++;  
+            }
+        }
+    }
 }   
