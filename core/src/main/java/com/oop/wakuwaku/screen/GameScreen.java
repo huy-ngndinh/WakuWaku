@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.oop.wakuwaku.Main;
+import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.Physics;
 import com.oop.wakuwaku.System.Render;
 import com.oop.wakuwaku.input.GameInput;
@@ -13,11 +14,12 @@ public class GameScreen extends ScreenAdapter {
     private Main game;
 
     public static final float TILE_PIXEL = 32f;
-    public static final float UNIT = 1f / TILE_PIXEL; 
+    public static final float UNIT = 1f / TILE_PIXEL;
 
-    
+
     // Box2d
     private Physics physics;
+    private CollisionDetector collisionDetector;
 
     //gameinput
     private GameInput input;
@@ -31,14 +33,16 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void show() { 
+    public void show() {
 
         physics = new Physics();
+        collisionDetector = new CollisionDetector();
+        physics.getWorld().setContactListener(collisionDetector);
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
 
-    }       
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -52,13 +56,14 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         input(delta);
+        if (collisionDetector.isTouchingWall()) System.out.println("Collision detected");
         // logic();
         draw();
     }
 
     private void input(float delta) {
         // Handle user input here. This method is called every frame from render().
-        if(gameworld.getPlayer().isGrounded()){
+//        if(gameworld.getPlayer().isGrounded()){
             if (input.isPressed(Input.Keys.A)) {
                 gameworld.getPlayer().moveLeft();
             }
@@ -66,11 +71,11 @@ public class GameScreen extends ScreenAdapter {
                 gameworld.getPlayer().moveRight();
             }
             if (input.isPressed(Input.Keys.SPACE)) {
-            gameworld.getPlayer().jump();
+                gameworld.getPlayer().jump();
             }
-        }
-        
-        
+//        }
+
+
         if(input.isPressed(Input.Keys.SHIFT_LEFT)){
             if(!gameworld.getPlayer().isDash()){
                 gameworld.getPlayer().setDash();
@@ -80,8 +85,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void logic(){
-        
-    }   
+
+    }
 
     private void draw(){
 
@@ -115,6 +120,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        
+
     }
 }
