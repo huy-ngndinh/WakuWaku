@@ -8,10 +8,6 @@ public class GameInput {
      * @return <code>True</code> if the key is pressed, <code>False</code> otherwise
      */
     public boolean isPressed(int key){
-        return Gdx.input.isKeyJustPressed(key);
-    }
-
-    public boolean isHeld(int key) {
         return Gdx.input.isKeyPressed(key);
     }
 }
