@@ -17,7 +17,7 @@ public class Player extends Sprite{
 
     private Body b2body;
     private CircleShape shape;
-    
+    private int jumpCount = 0;
     public Player(World world) {
         //this.world = world;
 
@@ -36,11 +36,6 @@ public class Player extends Sprite{
         fdef.shape = shape;
         b2body.createFixture(fdef);
     }
-    // Utility functions
-    public boolean isGrounded() {
-        // Kiểm tra nếu player đang chạm đất (đơn giản bằng cách kiểm tra nếu vận tốc y gần bằng 0)
-        return Math.abs(this.b2body.getLinearVelocity().y) < 0.01f;
-    }
     
     //Basic movement
     public void moveLeft(){
@@ -48,14 +43,11 @@ public class Player extends Sprite{
         Vector2 velocity = this.b2body.getLinearVelocity();
         if (velocity.x < -10f) this.b2body.setLinearVelocity(new Vector2(-10f, velocity.y));
     }
-
     public void moveRight(){
         this.b2body.applyForce(new Vector2(30f, 0), this.b2body.getWorldCenter(), true);
         Vector2 velocity = this.b2body.getLinearVelocity();
         if (velocity.x > 10f) this.b2body.setLinearVelocity(new Vector2(10f, velocity.y));
     }
-
-    private int jumpCount = 0;
     public void jump(){
         if(jumpCount <= 2){
             this.b2body.applyForce(new Vector2(0, 60f), this.b2body.getWorldCenter(), true);
@@ -105,8 +97,4 @@ public class Player extends Sprite{
             }
         }
     }
-
-    
-    
-    
 }   
