@@ -7,6 +7,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.oop.wakuwaku.screen.GameScreen;
 
+
+/**
+ * The class responsible for drawing the sprite and tiled map of the game.
+ */
 public class Render {
     private FitViewport viewport;
     private SpriteBatch batch;
@@ -26,15 +30,30 @@ public class Render {
         mapRenderer.setView(camera);
 
     }
+
+    /**
+     * Draw the tiled map using <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/maps/tiled/renderers/OrthogonalTiledMapRenderer.java" ><code>OrthogonalTiledMapRenderer</code></a>.
+     */
     public void draw(){
         viewport.apply();
         camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();
     }
+
+    /**
+     * Update camera viewport
+     * @param width The new width
+     * @param height The new height
+     */
     public void updateViewport(int width, int height){
         viewport.update(width, height, true);
     }
+
+    /**
+     * Return an instance of <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/OrthographicCamera.java"><code>OrthographicCamera</code></a> used to render the game. Only one instance of the camera should exist and is managed by this class.
+     * @return <code>OrthographicCamera</code>
+     */
     public OrthographicCamera getCamera() {
         return camera;
     }
