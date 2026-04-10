@@ -38,9 +38,8 @@ public class Player extends Sprite{
         b2body.createFixture(fdef);
     }
     // Utility functions
-    public boolean isGrounded() {
-        // Kiểm tra nếu player đang chạm đất (đơn giản bằng cách kiểm tra nếu vận tốc y gần bằng 0)
-        return Math.abs(this.b2body.getLinearVelocity().y) < 0.01f;
+    public boolean isTouchingGround() {
+        return true;// Kiểm tra nếu player đang chạm đất (đơn giản bằng cách kiểm tra nếu vận tốc y gần bằng 0);
     }
 
     //Basic movement
@@ -56,7 +55,6 @@ public class Player extends Sprite{
         if (velocity.x > 10f) this.b2body.setLinearVelocity(new Vector2(10f, velocity.y));
     }
 
-    private int jumpCount = 0;
     public void jump(){
         this.b2body.applyForce(new Vector2(0, 30f), this.b2body.getWorldCenter(), true);
     }

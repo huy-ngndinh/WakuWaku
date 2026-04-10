@@ -63,18 +63,15 @@ public class GameScreen extends ScreenAdapter {
 
     private void input(float delta) {
         // Handle user input here. This method is called every frame from render().
-//        if(gameworld.getPlayer().isGrounded()){
-            if (input.isPressed(Input.Keys.A)) {
-                gameworld.getPlayer().moveLeft();
-            }
-            if (input.isPressed(Input.Keys.D)) {
-                gameworld.getPlayer().moveRight();
-            }
-            if (input.isPressed(Input.Keys.SPACE)) {
-                gameworld.getPlayer().jump();
-            }
-//        }
-
+        if (input.isPressed(Input.Keys.A)) {
+            gameworld.getPlayer().moveLeft();
+        }
+        if (input.isPressed(Input.Keys.D)) {
+            gameworld.getPlayer().moveRight();
+        }
+        if (input.isPressed(Input.Keys.SPACE) && collisionDetector.isTouchingWall()) {
+            gameworld.getPlayer().jump();
+        }
 
         if(input.isPressed(Input.Keys.SHIFT_LEFT)){
             if(!gameworld.getPlayer().isDash()){
