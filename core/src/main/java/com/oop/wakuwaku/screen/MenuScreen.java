@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,72 +23,65 @@ import com.oop.wakuwaku.Main;
 
 public class MenuScreen extends ScreenAdapter {
     private Main game;
-    private Skin skin;
     private Stage stage;
+    private Texture bgTex, playTex, setTex;
+    private ImageButton play, sett;
 
     public MenuScreen(Main game){
         this.game = game;
     }
 
     @Override
-    public void show(){
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
-
+    public void show() {
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(stage); 
 
-        //Begin layout
-        Table table = new Table();
-        table.setFillParent(true);
-        stage.addActor(table);
-        
+        bgTex = new Texture("background.jpg");
+        playTex = new Texture("play.png");
+        setTex  = new Texture("settings.png");
 
-        Texture up = new Texture("start.png");
-        Texture down = new Texture("start2.png");
+        play = new ImageButton(new TextureRegionDrawable(new TextureRegion(playTex)));
+        sett = new ImageButton(new TextureRegionDrawable(new TextureRegion(setTex)));
 
-        ImageButton button = new ImageButton(
-            new TextureRegionDrawable(new TextureRegion(up)),
-            new TextureRegionDrawable(new TextureRegion(down))
-        );
+        Table root = new Table();
+        root.setFillParent(true);
+        stage.addActor(root);
 
-        table.add(button).pad(20);
+        Table menuButtons = new Table();
+        menuButtons.right().bottom(); // Đẩy sang phải-dưới
+        menuButtons.add(play).size(280, 115).padBottom(-5);
+        menuButtons.row();
+        menuButtons.add(sett).size(280, 110);
 
-        Sound clickSound = Gdx.audio.newSound(Gdx.files.internal("click.mp3"));
+        root.add(menuButtons).expand().right().bottom().padRight(-10).padBottom(-5);
 
-        button.addListener(new ClickListener() {
+        play.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play();
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen(game)); 
             }
         });
-
-
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("u jut clicked me >.<");
-            }
-        });
-
     }
 
     @Override
-    public void render(float delta){
-        ScreenUtils.clear(Color.WHITE);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
+    public void render(float delta) {
+        ScreenUtils.clear(Color.BLACK);
+
+        if (game.batch != null) {
+            game.batch.begin();
+            game.batch.draw(bgTex, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            game.batch.end();
+        }
+
+        stage.act(delta);
         stage.draw();
     }
 
     @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
     public void dispose () {
-        skin.dispose();
         stage.dispose();
+        bgTex.dispose();
+        playTex.dispose();
+        setTex.dispose();
     }
 }
