@@ -3,12 +3,17 @@ package com.oop.wakuwaku.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.math.Vector2;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.Physics;
+import com.oop.wakuwaku.System.PlayerStateHandler;
 import com.oop.wakuwaku.System.Render;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
+
+import java.util.Vector;
+
 /** First screen of the application. Displayed after the application is created. */
 public class GameScreen extends ScreenAdapter {
     private Main game;
@@ -20,6 +25,7 @@ public class GameScreen extends ScreenAdapter {
     // Box2d
     private Physics physics;
     private CollisionDetector collisionDetector;
+    private PlayerStateHandler playerStateHandler;
 
     //gameinput
     private GameInput input;
@@ -38,6 +44,7 @@ public class GameScreen extends ScreenAdapter {
         physics = new Physics();
         collisionDetector = new CollisionDetector();
         physics.getWorld().setContactListener(collisionDetector);
+        playerStateHandler = new PlayerStateHandler();
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
@@ -56,29 +63,43 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         input(delta);
-        if (collisionDetector.isTouchingWall()) System.out.println("Collision detected");
         // logic();
         draw();
     }
 
     private void input(float delta) {
-        // Handle user input here. This method is called every frame from render().
-        if (input.isPressed(Input.Keys.A)) {
-            gameworld.getPlayer().moveLeft();
-        }
-        if (input.isPressed(Input.Keys.D)) {
-            gameworld.getPlayer().moveRight();
-        }
-        if (input.isPressed(Input.Keys.SPACE) && collisionDetector.isTouchingWall()) {
-            gameworld.getPlayer().jump();
+        playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
+        System.out.println(playerStateHandler.getCurrentState());
+        PlayerStateHandler.State playerState = playerStateHandler.getCurrentState();
+        switch (playerState) {
+            case PlayerStateHandler.State.IDLE:
+                gameworld.getPlayer().resetJumpFlag();
+                gameworld.getPlayer().setGravity(1f);
+                break;
+            case PlayerStateHandler.State.WALK:
+                if (gameworld.getPlayer().getDirection() == 0) gameworld.getPlayer().moveLeft();
+                else gameworld.getPlayer().moveRight();
+                break;
+            case PlayerStateHandler.State.JUMP:
+                gameworld.getPlayer().setGravity(1f);
+                gameworld.getPlayer().jump(new Vector2(0, 3f));
+                break;
+            case PlayerStateHandler.State.WALL:
+                gameworld.getPlayer().setGravity(0.2f);
+                if (collisionDetector.isTouchingLeftWall()) gameworld.getPlayer().stickLeft();
+                else gameworld.getPlayer().stickRight();
+                break;
+            case PlayerStateHandler.State.WALL_CLIMB:
+                gameworld.getPlayer().setGravity(0.2f);
+                gameworld.getPlayer().moveUp();
+                break;
+            case PlayerStateHandler.State.WALL_KICK:
+                gameworld.getPlayer().setGravity(1f);
+                gameworld.getPlayer().wall_kick();
+                break;
+
         }
 
-        if(input.isPressed(Input.Keys.SHIFT_LEFT)){
-            if(!gameworld.getPlayer().isDash()){
-                gameworld.getPlayer().setDash();
-            }
-            if(gameworld.getPlayer().isDash())gameworld.getPlayer().dash(delta);
-        }
     }
 
     private void logic(){
@@ -88,6 +109,7 @@ public class GameScreen extends ScreenAdapter {
     private void draw(){
 
         render.draw();
+        collisionDetector.resetCollision();
         physics.simulate(Gdx.graphics.getDeltaTime());
         // Scale matrix for Box2D debug renderer (pixels to world units)
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);

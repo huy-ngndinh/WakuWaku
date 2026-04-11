@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.oop.wakuwaku.System.PlayerStateHandler;
 
 /**
  * This class manages the main character.
@@ -37,9 +38,36 @@ public class Player extends Sprite{
         fdef.shape = shape;
         b2body.createFixture(fdef);
     }
+
+    private int direction = 0;
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
     // Utility functions
     public boolean isTouchingGround() {
-        return true;// Kiểm tra nếu player đang chạm đất (đơn giản bằng cách kiểm tra nếu vận tốc y gần bằng 0);
+        return true;
+    }
+
+    public void setGravity(float gravity) {
+        b2body.setGravityScale(gravity);
+    }
+
+    public void stickRight() {
+        Vector2 vel = b2body.getLinearVelocity();
+        if (vel.y > 0) b2body.setLinearVelocity(new Vector2(0, 0));
+        else b2body.setLinearVelocity(new Vector2(0, vel.y));
+    }
+
+    public void stickLeft() {
+        Vector2 vel = b2body.getLinearVelocity();
+        if (vel.y > 0) b2body.setLinearVelocity(new Vector2(0, 0));
+        else b2body.setLinearVelocity(new Vector2(0, vel.y));
     }
 
     //Basic movement
@@ -55,8 +83,36 @@ public class Player extends Sprite{
         if (velocity.x > 10f) this.b2body.setLinearVelocity(new Vector2(10f, velocity.y));
     }
 
-    public void jump(){
-        this.b2body.applyForce(new Vector2(0, 30f), this.b2body.getWorldCenter(), true);
+    public void moveUp() {
+        this.b2body.applyForce(new Vector2(0f, 10f), this.b2body.getWorldCenter(), true);
+        Vector2 velocity = this.b2body.getLinearVelocity();
+        if (velocity.y > 2f) this.b2body.setLinearVelocity(new Vector2(velocity.x, 2f));
+    }
+
+    private boolean jumpFlag = false;
+
+    public void resetJumpFlag() {
+        jumpFlag = false;
+    }
+
+    public void jump(Vector2 impulse){
+        if (!jumpFlag) {
+            this.b2body.applyLinearImpulse(impulse, this.b2body.getWorldCenter(), true);
+            jumpFlag = true;
+        }
+    }
+
+    private boolean wallKickFlag = false;
+
+    public void resetWallKickFlag() {
+        wallKickFlag = false;
+    }
+
+    public void wall_kick() {
+        if (!wallKickFlag) {
+            this.b2body.applyLinearImpulse(new Vector2(-direction * 2f, 3f), this.b2body.getWorldCenter(), true);
+            wallKickFlag = true;
+        }
     }
 
     // Dashing
