@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.oop.wakuwaku.Main;
 
@@ -26,6 +27,9 @@ public class MenuScreen extends ScreenAdapter {
     private Stage stage;
     private Texture bgTex, playTex, setTex;
     private ImageButton play, sett;
+    private FitViewport viewport;
+    private final float VIRTUAL_WIDTH = 1280;
+    private final float VIRTUAL_HEIGHT = 720;
 
     public MenuScreen(Main game){
         this.game = game;
@@ -33,7 +37,8 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage); 
 
         bgTex = new Texture("background.jpg");
@@ -49,11 +54,11 @@ public class MenuScreen extends ScreenAdapter {
 
         Table menuButtons = new Table();
         menuButtons.right().bottom(); // Đẩy sang phải-dưới
-        menuButtons.add(play).size(280, 115).padBottom(-5);
+        menuButtons.add(play).size(410, 220).padBottom(-57);
         menuButtons.row();
-        menuButtons.add(sett).size(280, 110);
+        menuButtons.add(sett).size(410, 210);
 
-        root.add(menuButtons).expand().right().bottom().padRight(-10).padBottom(-5);
+        root.add(menuButtons).expand().right().bottom().padRight(-3).padBottom(-30);
 
         play.addListener(new ClickListener() {
             @Override
@@ -68,8 +73,9 @@ public class MenuScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.BLACK);
 
         if (game.batch != null) {
+            game.batch.setProjectionMatrix(viewport.getCamera().combined);
             game.batch.begin();
-            game.batch.draw(bgTex, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            game.batch.draw(bgTex, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
             game.batch.end();
         }
 
@@ -83,5 +89,10 @@ public class MenuScreen extends ScreenAdapter {
         bgTex.dispose();
         playTex.dispose();
         setTex.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true); 
     }
 }
