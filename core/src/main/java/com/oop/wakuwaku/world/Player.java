@@ -18,6 +18,12 @@ public class Player extends Sprite{
     private Body b2body;
     private CircleShape shape;
 
+    public enum State{FALLING,JUMPING,STANDING,RUNNING,CLIMBING};
+    public State curState;
+    public State preState;
+    private int faceDirection;
+    private float stateTimer;
+
     public Player(World world) {
         //this.world = world;
 
@@ -29,34 +35,63 @@ public class Player extends Sprite{
         // sau khi def body trong world thì ta sẽ truyền bdef đó vào hàm createBody của world để tạo ra body trong world
         b2body = world.createBody(bdef);
         b2body.setUserData("player");
-
+        
         // fixture def: chứa hình dạng và physics của body
         FixtureDef fdef = new FixtureDef();
         shape = new CircleShape();
         shape.setRadius(0.5f);
         fdef.shape = shape;
         b2body.createFixture(fdef);
+
+        //def state 
+        curState = State.STANDING;
+        preState = State.STANDING;
+        stateTimer = 0;
+        faceDirection = 1;//default facing right 
     }
+
+    
+    
     // Utility functions
     public boolean isTouchingGround() {
         return true;// Kiểm tra nếu player đang chạm đất (đơn giản bằng cách kiểm tra nếu vận tốc y gần bằng 0);
     }
+    public void getPos(){
+        System.err.println(
+        "x : " + this.b2body.getLinearVelocity().x + 
+        "\ny : "+ this.b2body.getLinearVelocity().y);
+    }
+    // thiết lập máy trạng thái (FSM)
 
-    //Basic movement
-    public void moveLeft(){
-        this.b2body.applyForce(new Vector2(-30f, 0), this.b2body.getWorldCenter(), true);
-        Vector2 velocity = this.b2body.getLinearVelocity();
-        if (velocity.x < -10f) this.b2body.setLinearVelocity(new Vector2(-10f, velocity.y));
+    public State getState(){
+        if(b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && preState == State.JUMPING))
+            return State.JUMPING;
+        else if(b2body.getLinearVelocity().y < 0)
+            return State.FALLING;
+        else if(b2body.getLinearVelocity().x != 0)
+            return State.RUNNING;
+        else return State.STANDING;
     }
 
+    //Basic movement
+    //private final float MAX_SPEED;
+    public void moveLeft(){
+        //this.b2body.setLinearVelocity(-MAX_SPEED,this.b2body.getLinearVelocity().y);
+        if(this.b2body.getLinearVelocity().x >= -2)
+            this.b2body.applyLinearImpulse(new Vector2(-2f, 0), this.b2body.getWorldCenter(), true);
+    }
+    
     public void moveRight(){
-        this.b2body.applyForce(new Vector2(30f, 0), this.b2body.getWorldCenter(), true);
-        Vector2 velocity = this.b2body.getLinearVelocity();
-        if (velocity.x > 10f) this.b2body.setLinearVelocity(new Vector2(10f, velocity.y));
+        //Vector2 velocity = this.b2body.getLinearVelocity();
+        //this.b2body.setLinearVelocity(MAX_SPEED,this.b2body.getLinearVelocity().y);
+        if(this.b2body.getLinearVelocity().x <= 2)
+            this.b2body.applyLinearImpulse(new Vector2(2f, 0), this.b2body.getWorldCenter(), true);
+
     }
 
     public void jump(){
-        this.b2body.applyForce(new Vector2(0, 30f), this.b2body.getWorldCenter(), true);
+        //this.b2body.applyForce(new Vector2(0, 100f), this.b2body.getWorldCenter(), true);
+        this.b2body.applyLinearImpulse(new Vector2(0, 10f), this.b2body.getWorldCenter(), true);
     }
 
     // Dashing

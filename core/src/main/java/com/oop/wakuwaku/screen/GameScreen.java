@@ -56,8 +56,8 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         input(delta);
-        if (collisionDetector.isTouchingWall()) System.out.println("Collision detected");
         // logic();
+        gameworld.getPlayer().getPos();
         draw();
     }
 
@@ -69,16 +69,16 @@ public class GameScreen extends ScreenAdapter {
         if (input.isPressed(Input.Keys.D)) {
             gameworld.getPlayer().moveRight();
         }
-        if (input.isPressed(Input.Keys.SPACE) && collisionDetector.isTouchingWall()) {
+        if (input.isJustPressed(Input.Keys.SPACE) && collisionDetector.isTouchingWall()) {
             gameworld.getPlayer().jump();
         }
-
         if(input.isPressed(Input.Keys.SHIFT_LEFT)){
             if(!gameworld.getPlayer().isDash()){
                 gameworld.getPlayer().setDash();
             }
-            if(gameworld.getPlayer().isDash())gameworld.getPlayer().dash(delta);
+            else gameworld.getPlayer().dash(delta);
         }
+    
     }
 
     private void logic(){
