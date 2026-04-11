@@ -1,11 +1,11 @@
 package com.oop.wakuwaku.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.Physics;
+import com.oop.wakuwaku.System.PlayerStateHandler;
 import com.oop.wakuwaku.System.Render;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
@@ -20,6 +20,7 @@ public class GameScreen extends ScreenAdapter {
     // Box2d
     private Physics physics;
     private CollisionDetector collisionDetector;
+    private PlayerStateHandler playerStateHandler;
 
     //gameinput
     private GameInput input;
@@ -38,6 +39,7 @@ public class GameScreen extends ScreenAdapter {
         physics = new Physics();
         collisionDetector = new CollisionDetector();
         physics.getWorld().setContactListener(collisionDetector);
+        playerStateHandler = new PlayerStateHandler();
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
@@ -57,28 +59,43 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         input(delta);
         // logic();
-        gameworld.getPlayer().getPos();
+       // gameworld.getPlayer().getPos();
+        System.out.println(playerStateHandler.getCurrentState());
         draw();
     }
 
     private void input(float delta) {
-        // Handle user input here. This method is called every frame from render().
-        if (input.isPressed(Input.Keys.A)) {
-            gameworld.getPlayer().moveLeft();
+        //WF : update -> getcurState -> actor thực hiện action
+        playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
+        PlayerStateHandler.State playerState = playerStateHandler.getCurrentState();
+        switch (playerState) {
+            // thực hiện hành động thực tế của actor 
+            case PlayerStateHandler.State.STAND:
+                break;
+            case PlayerStateHandler.State.WALK:
+                if(gameworld.getPlayer().getDirection() == 1)gameworld.getPlayer().moveRight();
+                else gameworld.getPlayer().moveLeft();
+                break;
+            case PlayerStateHandler.State.JUMP:
+                gameworld.getPlayer().moveUp();
+                break;
+            case PlayerStateHandler.State.FALL: 
+                gameworld.getPlayer().fallDown();
+            case PlayerStateHandler.State.ON_WALL:
+                
+                break;
+            case PlayerStateHandler.State.CLIMB:
+                
+                break;
+            case PlayerStateHandler.State.WALL_KICK:
+                
+                break;
+            case PlayerStateHandler.State.DASH:
+                gameworld.getPlayer().dash(delta);
+                break;
         }
-        if (input.isPressed(Input.Keys.D)) {
-            gameworld.getPlayer().moveRight();
-        }
-        if (input.isJustPressed(Input.Keys.SPACE) && collisionDetector.isTouchingWall()) {
-            gameworld.getPlayer().jump();
-        }
-        if(input.isPressed(Input.Keys.SHIFT_LEFT)){
-            if(!gameworld.getPlayer().isDash()){
-                gameworld.getPlayer().setDash();
-            }
-            else gameworld.getPlayer().dash(delta);
-        }
-    
+       
+
     }
 
     private void logic(){
@@ -88,6 +105,7 @@ public class GameScreen extends ScreenAdapter {
     private void draw(){
 
         render.draw();
+        //collisionDetector.resetCollision();
         physics.simulate(Gdx.graphics.getDeltaTime());
         // Scale matrix for Box2D debug renderer (pixels to world units)
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);

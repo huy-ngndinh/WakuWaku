@@ -41,7 +41,6 @@ public class Map {
             bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
 
             body = world.createBody(bdef);
-            body.setUserData("map");
 
             shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
             fdef.shape = shape;
@@ -59,7 +58,6 @@ public class Map {
             bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
 
             body = world.createBody(bdef);
-            body.setUserData("map");
 
             shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
             fdef.shape = shape;
