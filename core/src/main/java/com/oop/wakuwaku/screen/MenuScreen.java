@@ -53,7 +53,7 @@ public class MenuScreen extends ScreenAdapter {
         stage.addActor(root);
 
         Table menuButtons = new Table();
-        menuButtons.right().bottom(); // Đẩy sang phải-dưới
+        menuButtons.right().bottom(); 
         menuButtons.add(play).size(410, 220).padBottom(-57);
         menuButtons.row();
         menuButtons.add(sett).size(410, 210);
