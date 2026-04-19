@@ -50,21 +50,25 @@ public class PlayerStateHandler {
         updateCooldownDash(delta);
         switch (currentState) {
             case STAND:
-                if(input.isPressed(Keys.D)){
+                if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
+                    // touching wall should be prioritized before other inputs
+                    changeState(State.ON_WALL);
+                } else if(input.isPressed(Keys.D)){
                     gameWorld.getPlayer().setDirection(1);
                     changeState(State.WALK);
-                }
-                if(input.isPressed(Keys.A)){
+                } else if(input.isPressed(Keys.A)){
                     gameWorld.getPlayer().setDirection(0);
                     changeState(State.WALK);
-                }
-                if(input.isPressed(Keys.SPACE)){
+                } else if(input.isPressed(Keys.SPACE)){
                     changeState(State.JUMP);
                 }
                 break;
 
             case WALK:
-                if (input.isPressed(Keys.A)) {
+                if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
+                    // touching wall should be prioritized before other inputs
+                    changeState(State.ON_WALL);
+                } else if (input.isPressed(Keys.A)) {
                     // A
                     gameWorld.getPlayer().setDirection(0);
                     if (input.isPressed(Keys.SPACE)) {
@@ -100,7 +104,11 @@ public class PlayerStateHandler {
                 break;
             case JUMP:
                 // xử lý JUMP...
-                changeState(State.FALL);
+                if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
+                    changeState(State.ON_WALL);
+                } else {
+                    changeState(State.FALL);
+                }
                 break;
             case FALL:
                 if(collisionDetector.isTouchingGround()){
@@ -111,6 +119,8 @@ public class PlayerStateHandler {
                         // else: stand
                         changeState(State.STAND);
                     }
+                } else if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
+                    changeState(State.ON_WALL);
                 }
                 break;
             case DASH:
@@ -130,6 +140,31 @@ public class PlayerStateHandler {
                         changeState(State.STAND);
                     }
                 }
+                break;
+            case ON_WALL:
+                if (!collisionDetector.isTouchingWall()) {
+                    changeState(State.FALL);
+                } else if (!input.isPressed(Keys.K)) {
+                    changeState(State.FALL);
+                } else if (input.isPressed(Keys.W)) {
+                    changeState(State.CLIMB);
+                } else if (input.isJustPressed(Keys.SPACE)) {
+                    changeState(State.WALL_KICK);
+                }
+                break;
+            case CLIMB:
+                if (!collisionDetector.isTouchingWall()) {
+                    changeState(State.FALL);
+                } else if (input.isJustPressed(Keys.SPACE)) {
+                    changeState(State.WALL_KICK);
+                } else if (!input.isPressed(Keys.K) || !input.isPressed(Keys.W)) {
+                    changeState(State.FALL);
+                } else if (input.isPressed(Keys.K) && !input.isPressed(Keys.W)) {
+                    changeState(State.ON_WALL);
+                }
+                break;
+            case WALL_KICK:
+                changeState(State.FALL);
                 break;
         }
     }

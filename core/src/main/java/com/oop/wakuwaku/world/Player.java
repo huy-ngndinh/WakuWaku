@@ -76,7 +76,7 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(new Vector2(3.5f, 0));
     }
 
-    public void moveUp(){
+    public void jump(){
         Vector2 currentVelocity = this.b2body.getLinearVelocity();
         if (currentVelocity.x < 0) this.b2body.applyLinearImpulse(new Vector2(-2f,5f), this.b2body.getWorldCenter(), true);
         else if (currentVelocity.x > 0) this.b2body.applyLinearImpulse(new Vector2(2f, 5f), this.b2body.getWorldCenter(), true);
@@ -112,5 +112,19 @@ public class Player extends Sprite{
     public void resetDashTimer(){
         this.dashTime = Gdx.graphics.getDeltaTime() * 10;
         this.dashTimer = 0;
+    }
+
+    public void climb() {
+        this.b2body.setLinearVelocity(new Vector2(0, 2f));
+    }
+
+    public void wall_kick(int direction) {
+        if (direction == 0) {
+            // wall kick to right
+            this.b2body.applyLinearImpulse(new Vector2(3.5f, 2.5f), this.b2body.getWorldCenter(), true);
+        } else {
+            // wall kick to left
+            this.b2body.applyLinearImpulse(new Vector2(-3.5f, 2.5f), this.b2body.getWorldCenter(), true);
+        }
     }
 }

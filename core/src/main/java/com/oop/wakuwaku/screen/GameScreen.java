@@ -56,9 +56,12 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         input(delta);
+
         // logic();
         System.out.println(playerStateHandler.getCurrentState());
+
         draw();
+//        System.out.println(collisionDetector.isTouchingLeftWall() + " " + collisionDetector.isTouchingRightWall());
     }
 
     private void input(float delta) {
@@ -75,21 +78,23 @@ public class GameScreen extends ScreenAdapter {
                 else gameworld.getPlayer().moveLeft();
                 break;
             case PlayerStateHandler.State.JUMP:
-                gameworld.getPlayer().moveUp();
+                gameworld.getPlayer().jump();
                 break;
             case PlayerStateHandler.State.FALL:
                 gameworld.getPlayer().fallDown();
+                break;
             case PlayerStateHandler.State.ON_WALL:
-
-                break;
-            case PlayerStateHandler.State.CLIMB:
-
-                break;
-            case PlayerStateHandler.State.WALL_KICK:
-
+                gameworld.getPlayer().stop();
                 break;
             case PlayerStateHandler.State.DASH:
                 gameworld.getPlayer().dash(delta);
+                break;
+            case PlayerStateHandler.State.CLIMB:
+                gameworld.getPlayer().climb();
+                break;
+            case PlayerStateHandler.State.WALL_KICK:
+                int direction = collisionDetector.isTouchingLeftWall() ? 0 : 1;
+                gameworld.getPlayer().wall_kick(direction);
                 break;
         }
     }
@@ -102,6 +107,7 @@ public class GameScreen extends ScreenAdapter {
         // draw sprites
         render.draw();
         // update physics
+        collisionDetector.resetWallContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
