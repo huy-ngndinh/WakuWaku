@@ -9,13 +9,12 @@ import com.oop.wakuwaku.System.PlayerStateHandler;
 import com.oop.wakuwaku.System.Render;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
-/** First screen of the application. Displayed after the application is created. */
+/** First screen of the application.*/
 public class GameScreen extends ScreenAdapter {
     private Main game;
 
     public static final float TILE_PIXEL = 32f;
     public static final float UNIT = 1f / TILE_PIXEL;
-
 
     // Box2d
     private Physics physics;
@@ -50,7 +49,6 @@ public class GameScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         // If the window is minimized on a desktop (LWJGL3) platform, width and height are 0, which causes problems.
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
-        //if(width <= 0 || height <= 0) return;
         render.updateViewport(width, height);
         // Resize your screen here. The parameters represent the new window size.
     }
@@ -59,7 +57,6 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         input(delta);
         // logic();
-       // gameworld.getPlayer().getPos();
         System.out.println(playerStateHandler.getCurrentState());
         draw();
     }
@@ -69,33 +66,32 @@ public class GameScreen extends ScreenAdapter {
         playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
         PlayerStateHandler.State playerState = playerStateHandler.getCurrentState();
         switch (playerState) {
-            // thực hiện hành động thực tế của actor 
+            // thực hiện hành động thực tế của actor
             case PlayerStateHandler.State.STAND:
+                gameworld.getPlayer().stop();
                 break;
             case PlayerStateHandler.State.WALK:
-                if(gameworld.getPlayer().getDirection() == 1)gameworld.getPlayer().moveRight();
+                if(gameworld.getPlayer().getDirection() == 1) gameworld.getPlayer().moveRight();
                 else gameworld.getPlayer().moveLeft();
                 break;
             case PlayerStateHandler.State.JUMP:
                 gameworld.getPlayer().moveUp();
                 break;
-            case PlayerStateHandler.State.FALL: 
+            case PlayerStateHandler.State.FALL:
                 gameworld.getPlayer().fallDown();
             case PlayerStateHandler.State.ON_WALL:
-                
+
                 break;
             case PlayerStateHandler.State.CLIMB:
-                
+
                 break;
             case PlayerStateHandler.State.WALL_KICK:
-                
+
                 break;
             case PlayerStateHandler.State.DASH:
                 gameworld.getPlayer().dash(delta);
                 break;
         }
-       
-
     }
 
     private void logic(){
@@ -103,19 +99,11 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void draw(){
-
+        // draw sprites
         render.draw();
-        //collisionDetector.resetCollision();
+        // update physics
         physics.simulate(Gdx.graphics.getDeltaTime());
-        // Scale matrix for Box2D debug renderer (pixels to world units)
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
-        // float worldWidth = viewport.getWorldWidth();
-        // float worldHeight = viewport.getWorldHeight();
-
-        // game.batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-
-
-        // game.batch.end();
     }
 
     @Override
