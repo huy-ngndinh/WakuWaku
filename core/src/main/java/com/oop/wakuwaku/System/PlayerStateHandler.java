@@ -31,6 +31,7 @@ public class PlayerStateHandler {
         currentState = state;
     }
 
+    //COOLDOWN do playerhandlerState quản lí để cho thuận tiện
     private float cooldownDash = 0f;
     public void updateState(float delta, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
     cooldownDash = Math.max(0f,cooldownDash - delta);
@@ -75,7 +76,6 @@ public class PlayerStateHandler {
             }
             break;
         case JUMP:
-            // xử lý JUMP...
             changeState(State.FALL);
             break;
         case FALL:

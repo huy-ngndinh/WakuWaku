@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -99,8 +98,6 @@ public class Player extends Sprite{
     private float dashTimer = 0;
     private float dashTime = Gdx.graphics.getDeltaTime() * 20;//.. là số frame muốn bị block
 
-    
-
     public void dash(float delta){
         Vector2 velocity = this.b2body.getLinearVelocity();
         if(velocity.x > 0){
@@ -119,4 +116,5 @@ public class Player extends Sprite{
         this.dashTimer = 0;
     }
 
+    //
 }
