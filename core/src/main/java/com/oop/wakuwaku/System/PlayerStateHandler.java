@@ -20,10 +20,16 @@ public class PlayerStateHandler {
 
     private State currentState;
     private float cooldownDash;
+    private boolean isDifferentState;
 
     public PlayerStateHandler() {
         currentState = State.STAND;
         cooldownDash = 0f;
+        isDifferentState = false;
+    }
+
+    public boolean isDifferentState() {
+        return isDifferentState;
     }
 
     public State getCurrentState() {
@@ -47,6 +53,7 @@ public class PlayerStateHandler {
     }
 
     public void updateState(float delta, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
+        State oldState = currentState;
         updateCooldownDash(delta);
         switch (currentState) {
             case STAND:
@@ -167,5 +174,7 @@ public class PlayerStateHandler {
                 changeState(State.FALL);
                 break;
         }
+        State newState = currentState;
+        isDifferentState = oldState != newState;
     }
 }

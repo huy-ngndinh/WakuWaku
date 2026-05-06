@@ -2,11 +2,9 @@ package com.oop.wakuwaku.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.System.CollisionDetector;
-import com.oop.wakuwaku.System.Physics;
-import com.oop.wakuwaku.System.PlayerStateHandler;
-import com.oop.wakuwaku.System.Render;
+import com.oop.wakuwaku.System.*;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 /** First screen of the application.*/
@@ -20,6 +18,9 @@ public class GameScreen extends ScreenAdapter {
     private Physics physics;
     private CollisionDetector collisionDetector;
     private PlayerStateHandler playerStateHandler;
+
+    // Animation
+    private AnimationHandler animationHandler;
 
     //gameinput
     private GameInput input;
@@ -39,6 +40,7 @@ public class GameScreen extends ScreenAdapter {
         collisionDetector = new CollisionDetector();
         physics.getWorld().setContactListener(collisionDetector);
         playerStateHandler = new PlayerStateHandler();
+        animationHandler = new AnimationHandler();
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
@@ -58,9 +60,9 @@ public class GameScreen extends ScreenAdapter {
         input(delta);
 
         // logic();
-        System.out.println(playerStateHandler.getCurrentState());
+//        System.out.println(playerStateHandler.getCurrentState());
 
-        draw();
+        draw(delta);
 //        System.out.println(collisionDetector.isTouchingLeftWall() + " " + collisionDetector.isTouchingRightWall());
     }
 
@@ -103,13 +105,16 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    private void draw(){
-        // draw sprites
+    private void draw(float delta){
+        // draw map
         render.draw();
+        // draw player/animation
+        TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
+        render.drawPlayer(gameworld.getPlayer(), animationRegion);
         // update physics
         collisionDetector.resetWallContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
-        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+//        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
 
     @Override

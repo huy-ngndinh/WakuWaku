@@ -1,13 +1,10 @@
 package com.oop.wakuwaku.world;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,8 +13,8 @@ import com.badlogic.gdx.physics.box2d.World;
  * This class manages the main character.
  */
 public class Player extends Sprite{
-    private float TILE_PIXEL = 32f;
-    private float UNIT = 1f / TILE_PIXEL;
+    public static float TILE_PIXEL = 32f;
+    public static float UNIT = 1f / TILE_PIXEL;
 
     private Body b2body;
     private CircleShape shape;
@@ -57,10 +54,8 @@ public class Player extends Sprite{
         return direction;
     }
 
-    public void getPos(){
-        System.err.println(
-        "x : " + this.b2body.getLinearVelocity().x +
-        "\ny : "+ this.b2body.getLinearVelocity().y);
+    public Vector2 getPosition() {
+        return b2body.getPosition();
     }
 
     //Basic movement
@@ -122,9 +117,11 @@ public class Player extends Sprite{
         if (direction == 0) {
             // wall kick to right
             this.b2body.applyLinearImpulse(new Vector2(3.5f, 2.5f), this.b2body.getWorldCenter(), true);
+            setDirection(1);
         } else {
             // wall kick to left
             this.b2body.applyLinearImpulse(new Vector2(-3.5f, 2.5f), this.b2body.getWorldCenter(), true);
+            setDirection(0);
         }
     }
 }
