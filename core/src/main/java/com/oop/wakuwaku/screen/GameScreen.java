@@ -60,7 +60,8 @@ public class GameScreen extends ScreenAdapter {
         input(delta);
 
         // logic();
-//        System.out.println(playerStateHandler.getCurrentState());
+        System.out.println(playerStateHandler.getCurrentState());
+        System.out.println(collisionDetector.isTouchingGround());
 
         draw(delta);
 //        System.out.println(collisionDetector.isTouchingLeftWall() + " " + collisionDetector.isTouchingRightWall());
@@ -114,7 +115,7 @@ public class GameScreen extends ScreenAdapter {
         // update physics
         collisionDetector.resetWallContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
-//        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
 
     @Override
