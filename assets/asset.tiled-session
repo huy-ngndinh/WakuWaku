@@ -2,6 +2,7 @@
     "activeFile": "asset_oop/living-ketchen.tmx",
     "expandedProjectPaths": [
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "asset_oop/interior-house.tsx": {
             "scaleInDock": 1,
@@ -9,10 +10,10 @@
         },
         "asset_oop/living-ketchen.tmx": {
             "scale": 1,
-            "selectedLayer": 1,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 352.5,
-                "y": 3035.5
+                "x": 425.5,
+                "y": 73.5
             }
         }
     },

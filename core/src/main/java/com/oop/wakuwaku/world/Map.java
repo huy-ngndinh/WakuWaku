@@ -27,7 +27,7 @@ public class Map {
     private Body body;
     public Map(World world) {
 
-        map = new TmxMapLoader().load("./raw_asset/ver01.tmx");
+        map = new TmxMapLoader().load("./asset_work/living-ketchen.tmx");
         bdef = new BodyDef();
         shape = new PolygonShape();
         fdef = new FixtureDef();
@@ -50,7 +50,7 @@ public class Map {
             body.setUserData("ground");
         }
         // Create Wall objects
-        for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             // define body for the all map object
