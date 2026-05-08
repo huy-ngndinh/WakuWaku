@@ -1,5 +1,5 @@
 {
-    "activeFile": "asset_work/living-ketchen.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -20,11 +20,11 @@
             "scaleInDock": 1
         },
         "asset_work/living-ketchen.tmx": {
-            "scale": 5.5,
+            "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 500.6363636363636,
-                "y": 560.6363636363636
+                "x": 504.5,
+                "y": 383.5
             }
         }
     },
@@ -32,7 +32,6 @@
     "map.height": 100,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
-        "asset_work/living-ketchen.tmx"
     ],
     "project": "asset.tiled-project",
     "recentFiles": [
