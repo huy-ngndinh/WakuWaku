@@ -1,5 +1,5 @@
 {
-    "activeFile": "asset_oop/living-ketchen.tmx",
+    "activeFile": "asset_work/living-ketchen.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -15,17 +15,28 @@
                 "x": 425.5,
                 "y": 73.5
             }
+        },
+        "asset_work/interior-house.tsx": {
+            "scaleInDock": 1
+        },
+        "asset_work/living-ketchen.tmx": {
+            "scale": 5.5,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 500.6363636363636,
+                "y": 560.6363636363636
+            }
         }
     },
     "last.imagePath": "D:/2025.2/OOP/MINI PROJECTs/GAME_WakuWaku/WakuWaku/assets/asset_oop",
     "map.height": 100,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
-        "asset_oop/interior-house.tsx",
-        "asset_oop/living-ketchen.tmx"
+        "asset_work/living-ketchen.tmx"
     ],
     "project": "asset.tiled-project",
     "recentFiles": [
+        "asset_work/living-ketchen.tmx",
         "asset_oop/interior-house.tsx",
         "asset_oop/living-ketchen.tmx"
     ],
