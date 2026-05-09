@@ -20,7 +20,7 @@ public class AnimationHandler {
         Texture runTexture = new Texture(Gdx.files.internal("animation/cat-run.png"));
         Texture idleTexture = new Texture(Gdx.files.internal("animation/cat-idle.png"));
         // Use the split utility method to create a 2D array of TextureRegions. This is
-        // possible because this sprite sheet contains frames of equal size and they are
+        // possible because this sprite sheet contains frames of equal size, and they are
         // all aligned.
         TextureRegion[][] tempRunRegion = TextureRegion.split(runTexture, runTexture.getWidth() / RUN_ANIMATION_FRAMES, runTexture.getHeight());
         TextureRegion[][] tempIdleRegion = TextureRegion.split(idleTexture, idleTexture.getWidth() / IDLE_ANIMATION_FRAMES, idleTexture.getHeight());

@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.World;
  * The class responsible for controlling the general physic logic of the game. Use <code>Box2D</code> internally
  */
 public class Physics {
-    private World world;
-    private Box2DDebugRenderer debugRenderer;
+    private final World world;
+    private final Box2DDebugRenderer debugRenderer;
 
     public Physics() {
       this.world = new World(new Vector2(0f, -10f), false);

@@ -44,6 +44,7 @@ public class Map {
 
             shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
             fdef.shape = shape;
+            fdef.friction = 0.0f;
 
             body.createFixture(fdef);
 
@@ -61,6 +62,7 @@ public class Map {
 
             shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
             fdef.shape = shape;
+            fdef.friction = 0.0f;
 
             body.createFixture(fdef);
 

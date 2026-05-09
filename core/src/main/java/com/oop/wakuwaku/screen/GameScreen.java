@@ -24,6 +24,8 @@ public class GameScreen extends ScreenAdapter {
 
     //gameinput
     private GameInput input;
+
+    // Game world (Map, Player)
     private GameWorld gameworld;
 
     //render
@@ -107,13 +109,15 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void draw(float delta){
+        // reset
+        render.reset();
         // draw map
-        render.draw();
+        render.draw(gameworld.getPlayer());
         // draw player/animation
         TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
         render.drawPlayer(gameworld.getPlayer(), animationRegion);
         // update physics
-        collisionDetector.resetWallContact();
+        collisionDetector.resetContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }

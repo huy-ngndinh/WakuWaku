@@ -57,7 +57,9 @@ public class PlayerStateHandler {
         updateCooldownDash(delta);
         switch (currentState) {
             case STAND:
-                if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
+                if (!collisionDetector.isTouchingGround()) {
+                    changeState(State.FALL);
+                } else if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
                     // touching wall should be prioritized before other inputs
                     changeState(State.ON_WALL);
                 } else if(input.isPressed(Keys.D)){
@@ -72,7 +74,9 @@ public class PlayerStateHandler {
                 break;
 
             case WALK:
-                if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
+                if (!collisionDetector.isTouchingGround()) {
+                    changeState(State.FALL);
+                } else if (input.isPressed(Keys.K) && collisionDetector.isTouchingWall()) {
                     // touching wall should be prioritized before other inputs
                     changeState(State.ON_WALL);
                 } else if (input.isPressed(Keys.A)) {

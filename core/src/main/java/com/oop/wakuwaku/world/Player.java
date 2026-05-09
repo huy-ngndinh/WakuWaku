@@ -37,6 +37,7 @@ public class Player extends Sprite{
         shape = new CircleShape();
         shape.setRadius(0.5f);
         fdef.shape = shape;
+        fdef.friction = 0.0f;
         b2body.createFixture(fdef);
         //def state
         direction = 0;

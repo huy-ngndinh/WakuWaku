@@ -19,7 +19,7 @@ import com.oop.wakuwaku.Main;
 
 public class ResultScreen extends ScreenAdapter {
 
-    private Main game;
+    private final Main game;
     private Stage stage;
     private Skin skin;
 
