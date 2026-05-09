@@ -50,7 +50,7 @@ public class Map {
             body.setUserData("ground");
         }
         // Create Wall objects
-        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             // define body for the all map object
