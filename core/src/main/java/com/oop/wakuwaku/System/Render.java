@@ -2,10 +2,12 @@ package com.oop.wakuwaku.System;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.oop.wakuwaku.screen.GameScreen;
+import com.oop.wakuwaku.world.Player;
 
 
 /**
@@ -25,10 +27,19 @@ public class Render {
         camera.setToOrtho(false, 30, 20);
 
         batch = new SpriteBatch();
+        batch.setProjectionMatrix(camera.combined);
 
         mapRenderer = new OrthogonalTiledMapRenderer(map, GameScreen.UNIT);
         mapRenderer.setView(camera);
 
+    }
+
+    public void drawPlayer(Player player, TextureRegion animationRegion) {
+        float width = animationRegion.getRegionWidth() * Player.UNIT * 2.0f;
+        float height = animationRegion.getRegionHeight() * Player.UNIT * 2.0f;
+        batch.begin();
+        batch.draw(animationRegion, player.getPosition().x - width / 2, player.getPosition().y - height / 3, width, height);
+        batch.end();
     }
 
     /**
