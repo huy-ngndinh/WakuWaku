@@ -27,13 +27,13 @@ public class Map {
     private Body body;
     public Map(World world) {
 
-        map = new TmxMapLoader().load("./raw_asset/ver01.tmx");
+        map = new TmxMapLoader().load("./asset_work/living-ketchen.tmx");
         bdef = new BodyDef();
         shape = new PolygonShape();
         fdef = new FixtureDef();
 
-        // create map objects
-        for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+        // create Ground objects
+        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             // define body for the all map object
@@ -46,8 +46,29 @@ public class Map {
             fdef.shape = shape;
 
             body.createFixture(fdef);
+
+            body.setUserData("ground");
+        }
+        // Create Wall objects
+        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            // define body for the all map object
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
+            fdef.shape = shape;
+
+            body.createFixture(fdef);
+
+            body.setUserData("wall");
         }
     }
+
+
 
     /**
      * Return the <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/maps/tiled/TiledMap.java"><code>TiledMap</code></a> instance. Only one should exist per level and is managed by this class.

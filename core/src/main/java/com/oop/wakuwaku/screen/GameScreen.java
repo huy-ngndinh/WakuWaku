@@ -1,24 +1,26 @@
 package com.oop.wakuwaku.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.System.Physics;
-import com.oop.wakuwaku.System.Render;
+import com.oop.wakuwaku.System.*;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
-/** First screen of the application. Displayed after the application is created. */
+/** First screen of the application.*/
 public class GameScreen extends ScreenAdapter {
     private Main game;
 
     public static final float TILE_PIXEL = 32f;
-    public static final float UNIT = 1f / TILE_PIXEL; 
+    public static final float UNIT = 1f / TILE_PIXEL;
 
-    
     // Box2d
     private Physics physics;
+    private CollisionDetector collisionDetector;
+    private PlayerStateHandler playerStateHandler;
+
+    // Animation
+    private AnimationHandler animationHandler;
 
     //gameinput
     private GameInput input;
@@ -32,20 +34,23 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void show() { 
+    public void show() {
 
         physics = new Physics();
+        collisionDetector = new CollisionDetector();
+        physics.getWorld().setContactListener(collisionDetector);
+        playerStateHandler = new PlayerStateHandler();
+        animationHandler = new AnimationHandler();
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
 
-    }       
+    }
 
     @Override
     public void resize(int width, int height) {
         // If the window is minimized on a desktop (LWJGL3) platform, width and height are 0, which causes problems.
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
-        //if(width <= 0 || height <= 0) return;
         render.updateViewport(width, height);
         // Resize your screen here. The parameters represent the new window size.
     }
@@ -53,41 +58,64 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         input(delta);
+
         // logic();
-        draw();
+        System.out.println(playerStateHandler.getCurrentState());
+        System.out.println(collisionDetector.isTouchingGround());
+
+        draw(delta);
+//        System.out.println(collisionDetector.isTouchingLeftWall() + " " + collisionDetector.isTouchingRightWall());
     }
 
     private void input(float delta) {
-        // Handle user input here. This method is called every frame from render().
-        if (input.isPressed(Input.Keys.A)) {
-            gameworld.getPlayer().updatePhysics(new Vector2(-10f,0));
-
-        }
-        else if (input.isPressed(Input.Keys.D)) {
-            gameworld.getPlayer().updatePhysics(new Vector2(10f,0));
-        }
-        else if (input.isPressed(Input.Keys.SPACE)) {
-            gameworld.getPlayer().updatePhysics(new Vector2(0, 100f));
+        //WF : update -> getcurState -> actor thực hiện action
+        playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
+        PlayerStateHandler.State playerState = playerStateHandler.getCurrentState();
+        switch (playerState) {
+            // thực hiện hành động thực tế của actor
+            case PlayerStateHandler.State.STAND:
+                gameworld.getPlayer().stop();
+                break;
+            case PlayerStateHandler.State.WALK:
+                if(gameworld.getPlayer().getDirection() == 1) gameworld.getPlayer().moveRight();
+                else gameworld.getPlayer().moveLeft();
+                break;
+            case PlayerStateHandler.State.JUMP:
+                gameworld.getPlayer().jump();
+                break;
+            case PlayerStateHandler.State.FALL:
+                gameworld.getPlayer().fallDown();
+                break;
+            case PlayerStateHandler.State.ON_WALL:
+                gameworld.getPlayer().stop();
+                break;
+            case PlayerStateHandler.State.DASH:
+                gameworld.getPlayer().dash(delta);
+                break;
+            case PlayerStateHandler.State.CLIMB:
+                gameworld.getPlayer().climb();
+                break;
+            case PlayerStateHandler.State.WALL_KICK:
+                int direction = collisionDetector.isTouchingLeftWall() ? 0 : 1;
+                gameworld.getPlayer().wall_kick(direction);
+                break;
         }
     }
 
     private void logic(){
-        
-    }   
 
-    private void draw(){
+    }
 
+    private void draw(float delta){
+        // draw map
         render.draw();
+        // draw player/animation
+        TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
+        render.drawPlayer(gameworld.getPlayer(), animationRegion);
+        // update physics
+        collisionDetector.resetWallContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
-        // Scale matrix for Box2D debug renderer (pixels to world units)
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
-        // float worldWidth = viewport.getWorldWidth();
-        // float worldHeight = viewport.getWorldHeight();
-
-        // game.batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-
-
-        // game.batch.end();
     }
 
     @Override
@@ -107,6 +135,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        
+
     }
 }

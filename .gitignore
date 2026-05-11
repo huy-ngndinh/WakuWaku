@@ -1,3 +1,4 @@
+*.tiled-session
 ## Gradle:
 .gradle/
 gradle-app.setting

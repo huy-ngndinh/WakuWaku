@@ -1,0 +1,44 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "asset_oop/interior-house.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "asset_oop/living-ketchen.tmx": {
+            "scale": 1,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 425.5,
+                "y": 73.5
+            }
+        },
+        "asset_work/interior-house.tsx": {
+            "scaleInDock": 1
+        },
+        "asset_work/living-ketchen.tmx": {
+            "scale": 1,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 504.5,
+                "y": 383.5
+            }
+        }
+    },
+    "last.imagePath": "D:/2025.2/OOP/MINI PROJECTs/GAME_WakuWaku/WakuWaku/assets/asset_oop",
+    "map.height": 100,
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+    ],
+    "project": "asset.tiled-project",
+    "recentFiles": [
+        "asset_work/living-ketchen.tmx",
+        "asset_oop/interior-house.tsx",
+        "asset_oop/living-ketchen.tmx"
+    ],
+    "resizeMap.removeObjects": false,
+    "tileset.lastUsedFormat": "tsx"
+}
