@@ -8,13 +8,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.oop.wakuwaku.System.Physics;
 
 /**
  * This class manages the main character.
  */
 public class Player extends Sprite{
-    public static float TILE_PIXEL = 32f;
-    public static float UNIT = 1f / TILE_PIXEL;
 
     private Body b2body;
     private CircleShape shape;
@@ -27,7 +26,7 @@ public class Player extends Sprite{
     public Player(World world) {
         // define player
         BodyDef bdef = new BodyDef();
-        bdef.position.set(64f * UNIT, 150f * UNIT);
+        bdef.position.set(64f * Physics.UNIT, 150f * Physics.UNIT);
         bdef.type = BodyDef.BodyType.DynamicBody;
         // sau khi def body trong world thì ta sẽ truyền bdef đó vào hàm createBody của world để tạo ra body trong world
         b2body = world.createBody(bdef);
@@ -43,10 +42,9 @@ public class Player extends Sprite{
         direction = 0;
     }
 
-    public Body getBody(){
-        return this.b2body;
-    }
-
+    /*
+    Utility function
+     */
     public void setDirection(int direction) {
         this.direction = direction;
     }
@@ -59,7 +57,11 @@ public class Player extends Sprite{
         return b2body.getPosition();
     }
 
-    //Basic movement
+    public Vector2 getVelocity() { return b2body.getLinearVelocity(); }
+
+    /*
+    Basic movements
+     */
     public void stop() {
         this.b2body.setLinearVelocity(new Vector2(0, 0));
     }
@@ -80,7 +82,34 @@ public class Player extends Sprite{
     }
 
     public void fallDown(){
-        //this.b2body.applyLinearImpulse(new Vector2(0,-1f), this.b2body.getWorldCenter(), true);
+        Vector2 currentVelocity = this.b2body.getLinearVelocity();
+        currentVelocity.y = -3f;
+        this.b2body.setLinearVelocity(currentVelocity);
+        System.out.println("fall down");
+    }
+
+    public void fallLeft() {
+        // persist momentum
+        Vector2 currentVelocity = this.b2body.getLinearVelocity();
+        currentVelocity.x = Math.min(-0.5f, currentVelocity.x);
+        currentVelocity.y = -3f;
+        this.b2body.setLinearVelocity(currentVelocity);
+    }
+
+    public void fallRight() {
+        // persist momentum
+        Vector2 currentVelocity = this.b2body.getLinearVelocity();
+        currentVelocity.x = Math.max(0.5f, currentVelocity.x);
+        currentVelocity.y = -3f;
+        this.b2body.setLinearVelocity(currentVelocity);
+    }
+
+    public void slide() {
+        this.b2body.setLinearVelocity(new Vector2(0, -0.5f));
+    }
+
+    public void climb() {
+        this.b2body.setLinearVelocity(new Vector2(0, 1f));
     }
 
     // Dashing
@@ -110,19 +139,15 @@ public class Player extends Sprite{
         this.dashTimer = 0;
     }
 
-    public void climb() {
-        this.b2body.setLinearVelocity(new Vector2(0, 2f));
-    }
-
     public void wall_kick(int direction) {
-        if (direction == 0) {
+        if (direction == 1) {
             // wall kick to right
-            this.b2body.applyLinearImpulse(new Vector2(3.5f, 2.5f), this.b2body.getWorldCenter(), true);
-            setDirection(1);
+            this.b2body.applyLinearImpulse(new Vector2(4f, 3f), this.b2body.getWorldCenter(), true);
+            setDirection(0);
         } else {
             // wall kick to left
-            this.b2body.applyLinearImpulse(new Vector2(-3.5f, 2.5f), this.b2body.getWorldCenter(), true);
-            setDirection(0);
+            this.b2body.applyLinearImpulse(new Vector2(-4f, 3f), this.b2body.getWorldCenter(), true);
+            setDirection(1);
         }
     }
 }

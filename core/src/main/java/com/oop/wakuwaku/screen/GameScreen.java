@@ -4,15 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Main;
+import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.System.*;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
+import com.oop.wakuwaku.world.Player;
+
 /** First screen of the application.*/
 public class GameScreen extends ScreenAdapter {
     private Main game;
-
-    public static final float TILE_PIXEL = 32f;
-    public static final float UNIT = 1f / TILE_PIXEL;
 
     // Box2d
     private Physics physics;
@@ -41,8 +41,8 @@ public class GameScreen extends ScreenAdapter {
         physics = new Physics();
         collisionDetector = new CollisionDetector();
         physics.getWorld().setContactListener(collisionDetector);
-        playerStateHandler = new PlayerStateHandler();
         animationHandler = new AnimationHandler();
+        playerStateHandler = new PlayerStateHandler(this.animationHandler);
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
@@ -59,53 +59,45 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        input(delta);
-
-        // logic();
-        System.out.println(playerStateHandler.getCurrentState());
-        System.out.println(collisionDetector.isTouchingGround());
-
+        logic(delta);
         draw(delta);
-//        System.out.println(collisionDetector.isTouchingLeftWall() + " " + collisionDetector.isTouchingRightWall());
     }
 
-    private void input(float delta) {
-        //WF : update -> getcurState -> actor thực hiện action
-        playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
-        PlayerStateHandler.State playerState = playerStateHandler.getCurrentState();
-        switch (playerState) {
-            // thực hiện hành động thực tế của actor
-            case PlayerStateHandler.State.STAND:
-                gameworld.getPlayer().stop();
-                break;
-            case PlayerStateHandler.State.WALK:
-                if(gameworld.getPlayer().getDirection() == 1) gameworld.getPlayer().moveRight();
-                else gameworld.getPlayer().moveLeft();
-                break;
-            case PlayerStateHandler.State.JUMP:
-                gameworld.getPlayer().jump();
-                break;
-            case PlayerStateHandler.State.FALL:
-                gameworld.getPlayer().fallDown();
-                break;
-            case PlayerStateHandler.State.ON_WALL:
-                gameworld.getPlayer().stop();
-                break;
-            case PlayerStateHandler.State.DASH:
-                gameworld.getPlayer().dash(delta);
-                break;
-            case PlayerStateHandler.State.CLIMB:
-                gameworld.getPlayer().climb();
-                break;
-            case PlayerStateHandler.State.WALL_KICK:
-                int direction = collisionDetector.isTouchingLeftWall() ? 0 : 1;
-                gameworld.getPlayer().wall_kick(direction);
-                break;
+    private void logic(float delta) {
+        // WF : getcurState -> actor thực hiện action -> update
+
+        PlayerState playerState = playerStateHandler.getCurrentState();
+        Player player = gameworld.getPlayer();
+
+        if (playerState instanceof Idle) {
+            player.stop();
+        } else if (playerState instanceof Walking) {
+            int direction = player.getDirection();
+            if (direction == 0) player.moveRight();
+            else player.moveLeft();
+        } else if (playerState instanceof Falling) {
+            int direction = ((Falling) playerState).getFallingDirection();
+            if (direction == 1) player.fallLeft();
+            else if (direction == -1) player.fallRight();
+            else player.fallDown();
+        } else if (playerState instanceof Jump) {
+            boolean jumpRequest = ((Jump) playerState).isJumpRequest();
+            if (jumpRequest) {
+                player.jump();
+                ((Jump) playerState).turnOffJumpRequest();
+            }
+        } else if (playerState instanceof WallAttach) {
+            player.slide();
+        } else if (playerState instanceof WallClimb) {
+            player.climb();
+        } else if (playerState instanceof WallKick) {
+            if (((WallKick) playerState).isJumpRequest()) {
+                player.wall_kick(((WallKick) playerState).getWallDirection());
+                ((WallKick) playerState).turnOffJumpRequest();
+            }
         }
-    }
 
-    private void logic(){
-
+        playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
     }
 
     private void draw(float delta){

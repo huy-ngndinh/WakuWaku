@@ -30,7 +30,7 @@ public class Render {
 
         batch = new SpriteBatch();
 
-        mapRenderer = new OrthogonalTiledMapRenderer(map, GameScreen.UNIT);
+        mapRenderer = new OrthogonalTiledMapRenderer(map, Physics.UNIT);
         mapRenderer.setView(camera);
 
     }
@@ -41,11 +41,11 @@ public class Render {
     }
 
     public void drawPlayer(Player player, TextureRegion animationRegion) {
-        float width = animationRegion.getRegionWidth() * Player.UNIT * 2.0f;
-        float height = animationRegion.getRegionHeight() * Player.UNIT * 2.0f;
+        float width = animationRegion.getRegionWidth() * Physics.UNIT * 1.0f;
+        float height = animationRegion.getRegionHeight() * Physics.UNIT * 1.0f;
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(animationRegion, player.getPosition().x - width / 2, player.getPosition().y - height / 3, width, height);
+        batch.draw(animationRegion, player.getPosition().x - width / 2, player.getPosition().y - height / 2, width, height);
         batch.end();
     }
 

@@ -11,10 +11,10 @@ public class GameInput extends InputAdapter{
         public boolean isPressed(int key){
             return Gdx.input.isKeyPressed(key);
         }
-    public boolean isJustPressed(int key){
+        public boolean isJustPressed(int key){
         return Gdx.input.isKeyJustPressed(key);
     }
-    public boolean keyUp(int key){
+        public boolean keyUp(int key){
         return false;
     }
 
