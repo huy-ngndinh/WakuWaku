@@ -50,6 +50,8 @@ public class PlayerStateHandler {
             animationHandler.updateAnimationState(WallClimbAnimation.INSTANCE);
         } else if (newState instanceof WallKick) {
             animationHandler.updateAnimationState(WallKickAnimation.INSTANCE);
+        } else if (newState instanceof WallSprint) {
+            animationHandler.updateAnimationState(WallSprintAnimation.INSTANCE);
         }
     }
 

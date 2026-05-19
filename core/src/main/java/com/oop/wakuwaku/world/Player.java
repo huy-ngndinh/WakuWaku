@@ -76,9 +76,9 @@ public class Player extends Sprite{
 
     public void jump(){
         Vector2 currentVelocity = this.b2body.getLinearVelocity();
-        if (currentVelocity.x < 0) this.b2body.applyLinearImpulse(new Vector2(-2f,5f), this.b2body.getWorldCenter(), true);
-        else if (currentVelocity.x > 0) this.b2body.applyLinearImpulse(new Vector2(2f, 5f), this.b2body.getWorldCenter(), true);
-        else this.b2body.applyLinearImpulse(new Vector2(0f, 5f), this.b2body.getWorldCenter(), true);
+        if (currentVelocity.x < 0) this.b2body.applyLinearImpulse(new Vector2(-2f,6f), this.b2body.getWorldCenter(), true);
+        else if (currentVelocity.x > 0) this.b2body.applyLinearImpulse(new Vector2(2f, 6f), this.b2body.getWorldCenter(), true);
+        else this.b2body.applyLinearImpulse(new Vector2(0f, 6f), this.b2body.getWorldCenter(), true);
     }
 
     public void fallDown(){
@@ -110,6 +110,11 @@ public class Player extends Sprite{
 
     public void climb() {
         this.b2body.setLinearVelocity(new Vector2(0, 1f));
+    }
+
+    public void wallSprint(int direction) {
+        if (direction == 0) this.b2body.applyLinearImpulse(new Vector2(1f, 5f), this.b2body.getWorldCenter(), true);
+        else this.b2body.applyLinearImpulse(new Vector2(-1f, 5f), this.b2body.getWorldCenter(), true);
     }
 
     // Dashing

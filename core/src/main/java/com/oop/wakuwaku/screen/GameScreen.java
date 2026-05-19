@@ -95,6 +95,11 @@ public class GameScreen extends ScreenAdapter {
                 player.wall_kick(((WallKick) playerState).getWallDirection());
                 ((WallKick) playerState).turnOffJumpRequest();
             }
+        } else if (playerState instanceof WallSprint) {
+            if (((WallSprint) playerState).isJumpRequest()) {
+                player.wallSprint(((WallSprint) playerState).getWallDirection());
+                ((WallSprint) playerState).turnOffJumpRequest();
+            }
         }
 
         playerStateHandler.updateState(delta, input, collisionDetector, gameworld);

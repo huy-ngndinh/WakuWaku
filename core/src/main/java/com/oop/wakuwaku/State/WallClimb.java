@@ -31,6 +31,9 @@ public class WallClimb extends PlayerState {
         } else if (!collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
             playerStateHandler.changeState(WallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+        } else if (collisionDetector.isTouchingWall() && !input.isPressed(Input.Keys.D) && !input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
+            playerStateHandler.changeState(WallSprint.INSTANCE);
+            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!input.isPressed(Input.Keys.K) || !collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);

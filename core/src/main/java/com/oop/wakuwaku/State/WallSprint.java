@@ -5,9 +5,8 @@ import com.oop.wakuwaku.System.PlayerStateHandler;
 import com.oop.wakuwaku.input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 
-public class WallKick extends PlayerState {
-
-    public static final WallKick INSTANCE = new WallKick();
+public class WallSprint extends PlayerState {
+    public static final WallSprint INSTANCE = new WallSprint();
 
     private int direction;
     private boolean jumpRequest = false;
