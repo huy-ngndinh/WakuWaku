@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * This class manages the physics objects that is created and controlled by <code>Physics</code>.
  */
 public class GameWorld {
-    private Player player;
+    private final Player player;
     private Map map;
     public GameWorld(World world) {
         player = new Player(world);
@@ -26,9 +26,5 @@ public class GameWorld {
      */
     public Map getMap() {
         return map;
-    }
-
-    public boolean update(){
-        return true;
     }
 }

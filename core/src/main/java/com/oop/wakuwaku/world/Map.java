@@ -27,13 +27,14 @@ public class Map {
     private Body body;
     public Map(World world) {
 
-        map = new TmxMapLoader().load("./asset_work/living-ketchen.tmx");
+//        map = new TmxMapLoader().load("./asset_work/living-ketchen.tmx");
+        map = new TmxMapLoader().load("./test_map/map.tmx");
         bdef = new BodyDef();
         shape = new PolygonShape();
         fdef = new FixtureDef();
 
         // create Ground objects
-        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             // define body for the all map object
@@ -44,13 +45,14 @@ public class Map {
 
             shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
             fdef.shape = shape;
+            fdef.friction = 0.0f;
 
             body.createFixture(fdef);
 
             body.setUserData("ground");
         }
         // Create Wall objects
-        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             // define body for the all map object
@@ -61,6 +63,7 @@ public class Map {
 
             shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
             fdef.shape = shape;
+            fdef.friction = 0.0f;
 
             body.createFixture(fdef);
 

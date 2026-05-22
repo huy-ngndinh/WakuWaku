@@ -1,4 +1,4 @@
-package com.oop.wakuwaku.screen;
+package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.oop.wakuwaku.Main;
 
 public class MenuScreen extends ScreenAdapter {
-    private Main game;
+    private final Main game;
     private Skin skin;
     private Stage stage;
 
@@ -40,7 +40,7 @@ public class MenuScreen extends ScreenAdapter {
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
-        
+
 
         Texture up = new Texture("start.png");
         Texture down = new Texture("start2.png");

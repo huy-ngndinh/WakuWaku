@@ -1,12 +1,13 @@
 package com.oop.wakuwaku.System;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.oop.wakuwaku.screen.GameScreen;
 import com.oop.wakuwaku.world.Player;
 
 
@@ -21,32 +22,39 @@ public class Render {
 //    private GameWorld gameWorld;
 
     public Render(TiledMap map) {
-        viewport = new FitViewport(30, 20);
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 30, 20);
 
-        batch = new SpriteBatch();
-        batch.setProjectionMatrix(camera.combined);
+        viewport = new FitViewport(30, 20, camera);
 
-        mapRenderer = new OrthogonalTiledMapRenderer(map, GameScreen.UNIT);
+        batch = new SpriteBatch();
+
+        mapRenderer = new OrthogonalTiledMapRenderer(map, Physics.UNIT);
         mapRenderer.setView(camera);
 
     }
 
+    public void reset() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
     public void drawPlayer(Player player, TextureRegion animationRegion) {
-        float width = animationRegion.getRegionWidth() * Player.UNIT * 2.0f;
-        float height = animationRegion.getRegionHeight() * Player.UNIT * 2.0f;
+        float width = animationRegion.getRegionWidth() * Physics.UNIT * 1.0f;
+        float height = animationRegion.getRegionHeight() * Physics.UNIT * 1.0f;
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(animationRegion, player.getPosition().x - width / 2, player.getPosition().y - height / 3, width, height);
+        batch.draw(animationRegion, player.getPosition().x - width / 2, player.getPosition().y - height / 2, width, height);
         batch.end();
     }
 
     /**
      * Draw the tiled map using <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/maps/tiled/renderers/OrthogonalTiledMapRenderer.java" ><code>OrthogonalTiledMapRenderer</code></a>.
      */
-    public void draw(){
+    public void draw(Player player){
         viewport.apply();
+        camera.position.set(player.getPosition().x, player.getPosition().y, 0);
+        camera.zoom = 0.6f;
         camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();

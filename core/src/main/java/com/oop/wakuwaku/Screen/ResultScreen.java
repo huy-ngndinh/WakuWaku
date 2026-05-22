@@ -1,4 +1,4 @@
-package com.oop.wakuwaku.screen;
+package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -19,7 +19,7 @@ import com.oop.wakuwaku.Main;
 
 public class ResultScreen extends ScreenAdapter {
 
-    private Main game;
+    private final Main game;
     private Stage stage;
     private Skin skin;
 
