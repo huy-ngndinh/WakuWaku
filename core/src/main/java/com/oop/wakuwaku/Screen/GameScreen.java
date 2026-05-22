@@ -1,13 +1,25 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.State.*;
-import com.oop.wakuwaku.System.*;
 import com.oop.wakuwaku.Input.GameInput;
+import com.oop.wakuwaku.Main;
+import com.oop.wakuwaku.State.BeforeJump;
+import com.oop.wakuwaku.State.Falling;
+import com.oop.wakuwaku.State.Idle;
+import com.oop.wakuwaku.State.Jump;
+import com.oop.wakuwaku.State.PlayerState;
+import com.oop.wakuwaku.State.Walking;
+import com.oop.wakuwaku.State.WallAttach;
+import com.oop.wakuwaku.State.WallClimb;
+import com.oop.wakuwaku.State.WallKick;
+import com.oop.wakuwaku.State.WallSprint;
+import com.oop.wakuwaku.System.AnimationHandler;
+import com.oop.wakuwaku.System.CollisionDetector;
+import com.oop.wakuwaku.System.Physics;
+import com.oop.wakuwaku.System.PlayerStateHandler;
+import com.oop.wakuwaku.System.Render;
 import com.oop.wakuwaku.world.GameWorld;
 import com.oop.wakuwaku.world.Player;
 
@@ -66,7 +78,12 @@ public class GameScreen extends ScreenAdapter {
 //            GameInput.counter++;
 //            System.out.println(GameInput.counter);
 //        }
-        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+        //System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+        // if(playerStateHandler.getCurrentState() instanceof Jump) {
+        //     System.out.println(((Jump) playerStateHandler.getCurrentState()).isJumpRequest());
+        // }
+        
+        // System.out.println(gameworld.getPlayer().getVelocity().y);  
         input.update(delta);
         draw(delta);
     }
@@ -84,14 +101,12 @@ public class GameScreen extends ScreenAdapter {
             if (direction == 0) player.moveRight();
             else player.moveLeft();
         } else if (playerState instanceof Falling) {
-            int direction = ((Falling) playerState).getFallingDirection();
-            if (direction == 1) player.fallLeft();
-            else if (direction == -1) player.fallRight();
-            else player.fallDown();
+            player.fallDown();
         } else if (playerState instanceof Jump) {
+            int direction = ((Jump) playerState).getDirection();
             boolean jumpRequest = ((Jump) playerState).isJumpRequest();
             if (jumpRequest) {
-                player.jump();
+                player.jump(input.getHoldTime());
                 ((Jump) playerState).turnOffJumpRequest();
             }
         } else if (playerState instanceof WallAttach) {

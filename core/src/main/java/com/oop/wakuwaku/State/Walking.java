@@ -1,9 +1,9 @@
 package com.oop.wakuwaku.State;
 
 import com.badlogic.gdx.Input;
+import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.PlayerStateHandler;
-import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 
 public class Walking extends PlayerState{
@@ -30,7 +30,7 @@ public class Walking extends PlayerState{
         } else if (input.isPressed(Input.Keys.D)) {
             gameWorld.getPlayer().setDirection(0);
             if (input.isPressed(Input.Keys.SPACE)) {
-                playerStateHandler.changeState(Jump.INSTANCE);
+                playerStateHandler.changeState(Idle.INSTANCE);
                 playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
             } else if (!collisionDetector.isTouchingGround()){
                 playerStateHandler.changeState(Falling.INSTANCE);

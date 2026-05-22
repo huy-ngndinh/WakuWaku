@@ -19,6 +19,7 @@ public class Player extends Sprite{
     private CircleShape shape;
 
     private int direction;
+    private int face = 1; // right, -1 = left
     // dash
     private float dashTimer = 0;
     private float dashTime = Gdx.graphics.getDeltaTime() * 10;//.. là số frame muốn bị block
@@ -49,6 +50,14 @@ public class Player extends Sprite{
         this.direction = direction;
     }
 
+    public int getFace(){
+        return this.face;
+    }
+
+    public void setFace(int face) {
+        this.face = face;
+    }
+
     public int getDirection() {
         return direction;
     }
@@ -67,41 +76,46 @@ public class Player extends Sprite{
     }
 
     public void moveLeft(){
+        this.face = -1;
         this.b2body.setLinearVelocity(new Vector2(-3.5f, 0));
     }
 
     public void moveRight(){
+        this.face = 1;
         this.b2body.setLinearVelocity(new Vector2(3.5f, 0));
     }
 
-    public void jump(){
-        Vector2 currentVelocity = this.b2body.getLinearVelocity();
-        if (currentVelocity.x < 0) this.b2body.applyLinearImpulse(new Vector2(-2f,6f), this.b2body.getWorldCenter(), true);
-        else if (currentVelocity.x > 0) this.b2body.applyLinearImpulse(new Vector2(2f, 6f), this.b2body.getWorldCenter(), true);
-        else this.b2body.applyLinearImpulse(new Vector2(0f, 6f), this.b2body.getWorldCenter(), true);
+    public void jump(int holdTime){
+        float fJump = 0;
+        if(holdTime < 30) { fJump = 3f;}
+        else if(holdTime < 90) { fJump = 5f;}
+        else { fJump = 7f;}
+        
+        float fHorizontal = 2f;
+
+        this.b2body.applyLinearImpulse(new Vector2(this.direction * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
     }
 
     public void fallDown(){
-        Vector2 currentVelocity = this.b2body.getLinearVelocity();
-        currentVelocity.y = -3f;
-        this.b2body.setLinearVelocity(currentVelocity);
+        float fFall = -5f;
+        this.b2body.setLinearVelocity(new Vector2(0, fFall));
     }
 
-    public void fallLeft() {
-        // persist momentum
-        Vector2 currentVelocity = this.b2body.getLinearVelocity();
-        currentVelocity.x = Math.min(-0.5f, currentVelocity.x);
-        currentVelocity.y = -3f;
-        this.b2body.setLinearVelocity(currentVelocity);
-    }
+    // public void fallLeft() {
+    //     // persist momentum
+    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
+    //     currentVelocity.x = Math.min(-0.5f, currentVelocity.x);
+    //     currentVelocity.y = -3f;
+    //     this.b2body.setLinearVelocity(currentVelocity);
+    // }
 
-    public void fallRight() {
-        // persist momentum
-        Vector2 currentVelocity = this.b2body.getLinearVelocity();
-        currentVelocity.x = Math.max(0.5f, currentVelocity.x);
-        currentVelocity.y = -3f;
-        this.b2body.setLinearVelocity(currentVelocity);
-    }
+    // public void fallRight() {
+    //     // persist momentum
+    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
+    //     currentVelocity.x = Math.max(0.5f, currentVelocity.x);
+    //     currentVelocity.y = -3f;
+    //     this.b2body.setLinearVelocity(currentVelocity);
+    // }
 
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.5f));

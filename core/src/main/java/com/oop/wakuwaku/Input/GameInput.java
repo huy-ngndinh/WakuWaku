@@ -13,7 +13,7 @@ public class GameInput extends InputAdapter{
         public boolean isJustPressed(int key) { return Gdx.input.isKeyJustPressed(key); }
 
         private boolean holdingSpace = false;
-        private float holdTime = 0;
+        private int holdTime = 0;
 
         @Override
         public boolean keyDown(int keycode) {
@@ -42,5 +42,8 @@ public class GameInput extends InputAdapter{
 
         public boolean isHoldingSpace() {
             return holdingSpace;
+        }
+        public int getHoldTime() {
+            return holdTime;
         }
 }
