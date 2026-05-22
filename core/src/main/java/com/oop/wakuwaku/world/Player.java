@@ -62,7 +62,7 @@ public class Player extends Sprite{
     public void stop() {
         this.b2body.setLinearVelocity(new Vector2(0, 0));
     }
-d
+
     public void moveLeft(){
         this.b2body.setLinearVelocity(new Vector2(-3.5f, 0));
     }
