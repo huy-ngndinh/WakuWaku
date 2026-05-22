@@ -5,16 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.State.BeforeJump;
-import com.oop.wakuwaku.State.Falling;
-import com.oop.wakuwaku.State.Idle;
-import com.oop.wakuwaku.State.Jump;
-import com.oop.wakuwaku.State.PlayerState;
-import com.oop.wakuwaku.State.Walking;
-import com.oop.wakuwaku.State.WallAttach;
-import com.oop.wakuwaku.State.WallClimb;
-import com.oop.wakuwaku.State.WallKick;
-import com.oop.wakuwaku.State.WallSprint;
+import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.System.AnimationHandler;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.Physics;
@@ -78,7 +69,7 @@ public class GameScreen extends ScreenAdapter {
 //            GameInput.counter++;
 //            System.out.println(GameInput.counter);
 //        }
-        //System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
         // if(playerStateHandler.getCurrentState() instanceof Jump) {
         //     System.out.println(((Jump) playerStateHandler.getCurrentState()).isJumpRequest());
         // }
@@ -115,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
             player.climb();
         } else if (playerState instanceof WallKick) {
             if (((WallKick) playerState).isJumpRequest()) {
-                player.wall_kick(((WallKick) playerState).getWallDirection());
+                player.wall_kick(((WallKick) playerState).getWallDirection(), input.getHoldTime());
                 ((WallKick) playerState).turnOffJumpRequest();
             }
         } else if (playerState instanceof WallSprint) {
@@ -124,7 +115,9 @@ public class GameScreen extends ScreenAdapter {
                 ((WallSprint) playerState).turnOffJumpRequest();
             }
         } else if (playerState instanceof BeforeJump) {
-            System.out.println("In before jump");
+            player.stop();
+        } else if (playerState instanceof BeforeWallKick) {
+            player.slide();
         }
 
         playerStateHandler.updateState(delta, input, collisionDetector, gameworld);

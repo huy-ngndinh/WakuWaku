@@ -86,8 +86,9 @@ public class Player extends Sprite{
     }
 
     public void fallDown(){
-        float fFall = -4f;
-        this.b2body.setLinearVelocity(new Vector2(0, fFall));
+        Vector2 currentVelocity = b2body.getLinearVelocity();
+        currentVelocity.y = -4f;
+        this.b2body.setLinearVelocity(currentVelocity);
     }
 
     public void slide() {
@@ -103,15 +104,13 @@ public class Player extends Sprite{
         else this.b2body.applyLinearImpulse(new Vector2(-1f, 5f), this.b2body.getWorldCenter(), true);
     }
 
-    public void wall_kick(int direction) {
-        if (direction == 1) {
-            // wall kick to right
-            this.b2body.applyLinearImpulse(new Vector2(5f, 3f), this.b2body.getWorldCenter(), true);
-            setDirection(1);
-        } else {
-            // wall kick to left
-            this.b2body.applyLinearImpulse(new Vector2(-5f, 3f), this.b2body.getWorldCenter(), true);
-            setDirection(-1);
-        }
+    public void wall_kick(int direction,  int holdTime) {
+        float fJump;
+        if(holdTime < 30) { fJump = 3f;}
+        else if(holdTime < 90) { fJump = 5f;}
+        else { fJump = 7f;}
+        float fHorizontal = 5f;
+        this.b2body.applyLinearImpulse(new Vector2(fHorizontal * direction, fJump), this.b2body.getWorldCenter(), true);
+        this.direction = direction;
     }
 }
