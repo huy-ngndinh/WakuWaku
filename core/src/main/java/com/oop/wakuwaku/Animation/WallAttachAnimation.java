@@ -22,7 +22,7 @@ public class WallAttachAnimation extends AnimationState {
 
     public TextureRegion getTextureRegion(float stateTime, PlayerState playerState, Player player) {
         TextureRegion animationFrame = animation.getKeyFrame(stateTime, true);
-        if (((WallAttach) playerState).getWallDirection() == 0 && animationFrame.isFlipX()) animationFrame.flip(true, false);
+        if (((WallAttach) playerState).getWallDirection() == -1 && animationFrame.isFlipX()) animationFrame.flip(true, false);
         else if (((WallAttach) playerState).getWallDirection() == 1 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
         return animationFrame;
     }

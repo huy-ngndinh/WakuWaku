@@ -1,6 +1,5 @@
 package com.oop.wakuwaku.world;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -19,10 +18,7 @@ public class Player extends Sprite{
     private CircleShape shape;
 
     private int direction;
-    private int face = 1; // right, -1 = left
-    // dash
-    private float dashTimer = 0;
-    private float dashTime = Gdx.graphics.getDeltaTime() * 10;//.. là số frame muốn bị block
+    private int jumpDirection;
 
     public Player(World world) {
         // define player
@@ -41,6 +37,7 @@ public class Player extends Sprite{
         b2body.createFixture(fdef);
         //def state
         direction = 0;
+        jumpDirection = 0;
     }
 
     /*
@@ -50,13 +47,9 @@ public class Player extends Sprite{
         this.direction = direction;
     }
 
-    public int getFace(){
-        return this.face;
-    }
+    public void setJumpDirection(int jumpDirection) { this.jumpDirection = jumpDirection; }
 
-    public void setFace(int face) {
-        this.face = face;
-    }
+    public int getJumpDirection() { return this.jumpDirection; }
 
     public int getDirection() {
         return direction;
@@ -76,46 +69,26 @@ public class Player extends Sprite{
     }
 
     public void moveLeft(){
-        this.face = -1;
         this.b2body.setLinearVelocity(new Vector2(-3.5f, 0));
     }
 
     public void moveRight(){
-        this.face = 1;
         this.b2body.setLinearVelocity(new Vector2(3.5f, 0));
     }
 
-    public void jump(int holdTime){
-        float fJump = 0;
+    public void jump(int direction, int holdTime){
+        float fJump;
         if(holdTime < 30) { fJump = 3f;}
         else if(holdTime < 90) { fJump = 5f;}
         else { fJump = 7f;}
-        
-        float fHorizontal = 2f;
-
-        this.b2body.applyLinearImpulse(new Vector2(this.direction * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
+        float fHorizontal = 5f;
+        this.b2body.applyLinearImpulse(new Vector2(direction * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
     }
 
     public void fallDown(){
-        float fFall = -5f;
+        float fFall = -4f;
         this.b2body.setLinearVelocity(new Vector2(0, fFall));
     }
-
-    // public void fallLeft() {
-    //     // persist momentum
-    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
-    //     currentVelocity.x = Math.min(-0.5f, currentVelocity.x);
-    //     currentVelocity.y = -3f;
-    //     this.b2body.setLinearVelocity(currentVelocity);
-    // }
-
-    // public void fallRight() {
-    //     // persist momentum
-    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
-    //     currentVelocity.x = Math.max(0.5f, currentVelocity.x);
-    //     currentVelocity.y = -3f;
-    //     this.b2body.setLinearVelocity(currentVelocity);
-    // }
 
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.5f));
@@ -126,46 +99,19 @@ public class Player extends Sprite{
     }
 
     public void wallSprint(int direction) {
-        if (direction == 0) this.b2body.applyLinearImpulse(new Vector2(1f, 5f), this.b2body.getWorldCenter(), true);
+        if (direction == -1) this.b2body.applyLinearImpulse(new Vector2(1f, 5f), this.b2body.getWorldCenter(), true);
         else this.b2body.applyLinearImpulse(new Vector2(-1f, 5f), this.b2body.getWorldCenter(), true);
-    }
-
-    // Dashing
-    public void dash(float delta){
-        // only dash at the first frame of the DASH state
-        if (notDash()) {
-            Vector2 velocity = this.b2body.getLinearVelocity();
-            if (velocity.x > 0) {
-                this.b2body.setLinearVelocity(new Vector2(25f, 0));
-            } else if (velocity.x < 0) {
-                this.b2body.setLinearVelocity(new Vector2(-25f, 0));
-            }
-        }
-        dashTimer += delta;
-    }
-
-    private boolean notDash(){
-        return this.dashTimer == 0;
-    }
-
-    public boolean isInDash(){
-        return this.dashTimer <= this.dashTime;
-    }
-
-    public void resetDashTimer(){
-        this.dashTime = Gdx.graphics.getDeltaTime() * 10;
-        this.dashTimer = 0;
     }
 
     public void wall_kick(int direction) {
         if (direction == 1) {
             // wall kick to right
-            this.b2body.applyLinearImpulse(new Vector2(4f, 3f), this.b2body.getWorldCenter(), true);
-            setDirection(0);
+            this.b2body.applyLinearImpulse(new Vector2(5f, 3f), this.b2body.getWorldCenter(), true);
+            setDirection(1);
         } else {
             // wall kick to left
-            this.b2body.applyLinearImpulse(new Vector2(-4f, 3f), this.b2body.getWorldCenter(), true);
-            setDirection(1);
+            this.b2body.applyLinearImpulse(new Vector2(-5f, 3f), this.b2body.getWorldCenter(), true);
+            setDirection(-1);
         }
     }
 }

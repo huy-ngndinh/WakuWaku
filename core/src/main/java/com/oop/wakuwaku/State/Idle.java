@@ -16,7 +16,7 @@ public class Idle extends PlayerState {
         if (!collisionDetector.isTouchingGround()) {
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        } 
+        }
          else if (input.isPressed(Input.Keys.SPACE)) {
         //    playerStateHandler.changeState(Jump.INSTANCE);
         //    playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
@@ -24,10 +24,10 @@ public class Idle extends PlayerState {
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         }
         else if (input.isPressed(Input.Keys.A)) {
-            gameWorld.getPlayer().setDirection(1);
+            gameWorld.getPlayer().setDirection(-1);
             playerStateHandler.changeState(Walking.INSTANCE);
         } else if (input.isPressed(Input.Keys.D)) {
-            gameWorld.getPlayer().setDirection(0);
+            gameWorld.getPlayer().setDirection(1);
             playerStateHandler.changeState(Walking.INSTANCE);
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(WallAttach.INSTANCE);
