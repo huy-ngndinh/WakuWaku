@@ -82,8 +82,8 @@ public class GameScreen extends ScreenAdapter {
         // if(playerStateHandler.getCurrentState() instanceof Jump) {
         //     System.out.println(((Jump) playerStateHandler.getCurrentState()).isJumpRequest());
         // }
-        
-        // System.out.println(gameworld.getPlayer().getVelocity().y);  
+
+        // System.out.println(gameworld.getPlayer().getVelocity().y);
         input.update(delta);
         draw(delta);
     }
@@ -98,7 +98,7 @@ public class GameScreen extends ScreenAdapter {
             player.stop();
         } else if (playerState instanceof Walking) {
             int direction = player.getDirection();
-            if (direction == 0) player.moveRight();
+            if (direction == 1) player.moveRight();
             else player.moveLeft();
         } else if (playerState instanceof Falling) {
             player.fallDown();
@@ -106,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
             int direction = ((Jump) playerState).getDirection();
             boolean jumpRequest = ((Jump) playerState).isJumpRequest();
             if (jumpRequest) {
-                player.jump(input.getHoldTime());
+                player.jump(direction, input.getHoldTime());
                 ((Jump) playerState).turnOffJumpRequest();
             }
         } else if (playerState instanceof WallAttach) {

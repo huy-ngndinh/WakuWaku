@@ -10,7 +10,7 @@ public class BeforeJump extends PlayerState{
     public static final BeforeJump INSTANCE = new BeforeJump();
 
     public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        
+
     }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
@@ -18,13 +18,11 @@ public class BeforeJump extends PlayerState{
             playerStateHandler.changeState(Jump.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (input.isPressed(Input.Keys.A)) {
-            gameWorld.getPlayer().setFace(-1);
-            gameWorld.getPlayer().setDirection(-1);
+            gameWorld.getPlayer().setJumpDirection(-1);
         } else if (input.isPressed(Input.Keys.D)) {
-            gameWorld.getPlayer().setFace(1);
-            gameWorld.getPlayer().setDirection(1);
+            gameWorld.getPlayer().setJumpDirection(1);
         } else {
-            gameWorld.getPlayer().setDirection(0);
+            gameWorld.getPlayer().setJumpDirection(0);
         }
     }
 

@@ -17,8 +17,7 @@ public class Walking extends PlayerState{
             playerStateHandler.changeState(WallAttach.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (input.isPressed(Input.Keys.A)) {
-            
-            gameWorld.getPlayer().setDirection(1);
+            gameWorld.getPlayer().setDirection(-1);
             if (input.isPressed(Input.Keys.SPACE)) {
                 playerStateHandler.changeState(Jump.INSTANCE);
                 playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
@@ -29,7 +28,7 @@ public class Walking extends PlayerState{
                 playerStateHandler.changeState(Walking.INSTANCE);
             }
         } else if (input.isPressed(Input.Keys.D)) {
-            gameWorld.getPlayer().setDirection(0);
+            gameWorld.getPlayer().setDirection(1);
             if (input.isPressed(Input.Keys.SPACE)) {
                 playerStateHandler.changeState(Idle.INSTANCE);
                 playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);

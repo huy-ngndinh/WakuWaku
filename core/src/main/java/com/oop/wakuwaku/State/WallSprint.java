@@ -11,11 +11,12 @@ public class WallSprint extends PlayerState {
     private int direction;
     private boolean jumpRequest = false;
 
+    // Direction points away from the wall
     public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (collisionDetector.isTouchingLeftWall()) {
             direction = 1;
         } else {
-            direction = 0;
+            direction = -1;
         }
         jumpRequest = true;
     }

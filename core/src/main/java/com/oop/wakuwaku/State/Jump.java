@@ -14,8 +14,9 @@ public class Jump extends PlayerState {
     private int direction;
     // private boolean justJumped = false;
 
-    public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) { 
+    public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         jumpRequest = true;
+        direction = gameWorld.getPlayer().getJumpDirection();
         // justJumped = true;
     }
 
@@ -27,24 +28,21 @@ public class Jump extends PlayerState {
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         float y_velocity = gameWorld.getPlayer().getVelocity().y;
-        
+
         // Skip falling check on the first frame after jump to let impulse apply properly
         // if (justJumped) {
         //     justJumped = false;
         //     return;
-        // }    
-        
+        // }
+
         if (collisionDetector.isTouchingGround() && y_velocity <= 0) {
             playerStateHandler.changeState(Idle.INSTANCE);
-            // System.out.println("Case 1");
         } else if (y_velocity < 0) {
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-            // System.out.println("Case 2");
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(WallAttach.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-            // System.out.println("Case 3");
         }
     }
 
