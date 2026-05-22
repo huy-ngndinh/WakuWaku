@@ -1,0 +1,24 @@
+package com.oop.wakuwaku.State;
+
+import com.oop.wakuwaku.Input.GameInput;
+import com.oop.wakuwaku.System.CollisionDetector;
+import com.oop.wakuwaku.System.PlayerStateHandler;
+import com.oop.wakuwaku.world.GameWorld;
+public class WallClimbOver extends PlayerState {
+
+    public static final WallClimbOver INSTANCE = new WallClimbOver();
+
+    public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
+        
+    }
+
+    public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
+        playerStateHandler.changeState(Idle.INSTANCE);
+        playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+    }
+
+    public void exit() {
+
+    }
+
+}

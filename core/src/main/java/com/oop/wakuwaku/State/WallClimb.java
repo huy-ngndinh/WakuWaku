@@ -1,9 +1,9 @@
 package com.oop.wakuwaku.State;
 
 import com.badlogic.gdx.Input;
+import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.PlayerStateHandler;
-import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 
 public class WallClimb extends PlayerState {
@@ -25,16 +25,18 @@ public class WallClimb extends PlayerState {
     }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        if (collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.D) && input.isPressed(Input.Keys.SPACE)) {
+        if (collisionDetector.isTouchingHook()) {// nếu chạm hook thì cho lơ lửng trên tường
+            playerStateHandler.changeState(WallHanging.INSTANCE);
+            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+        }
+        else if (collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.D) && input.isPressed(Input.Keys.SPACE)) {
             playerStateHandler.changeState(WallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
             playerStateHandler.changeState(WallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        } else if (collisionDetector.isTouchingWall() && !input.isPressed(Input.Keys.D) && !input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
-            playerStateHandler.changeState(WallSprint.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        } else if (!input.isPressed(Input.Keys.K) || !collisionDetector.isTouchingWall()) {
+        }
+        else if (!input.isPressed(Input.Keys.K) || !collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!input.isPressed(Input.Keys.W)) {

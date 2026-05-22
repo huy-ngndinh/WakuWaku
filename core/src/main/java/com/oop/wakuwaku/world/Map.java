@@ -69,6 +69,24 @@ public class Map {
 
             body.setUserData("wall");
         }
+        for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            // define body for the all map object
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
+            fdef.shape = shape;
+            fdef.friction = 0.0f;
+
+            body.createFixture(fdef);
+
+            body.setUserData("hook");
+        }
+        
     }
 
 

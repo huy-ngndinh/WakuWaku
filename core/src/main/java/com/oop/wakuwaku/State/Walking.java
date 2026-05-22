@@ -17,6 +17,7 @@ public class Walking extends PlayerState{
             playerStateHandler.changeState(WallAttach.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (input.isPressed(Input.Keys.A)) {
+            
             gameWorld.getPlayer().setDirection(1);
             if (input.isPressed(Input.Keys.SPACE)) {
                 playerStateHandler.changeState(Jump.INSTANCE);

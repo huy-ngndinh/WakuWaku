@@ -13,8 +13,8 @@ import com.oop.wakuwaku.State.PlayerState;
 import com.oop.wakuwaku.State.Walking;
 import com.oop.wakuwaku.State.WallAttach;
 import com.oop.wakuwaku.State.WallClimb;
+import com.oop.wakuwaku.State.WallHanging;
 import com.oop.wakuwaku.State.WallKick;
-import com.oop.wakuwaku.State.WallSprint;
 import com.oop.wakuwaku.System.AnimationHandler;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.Physics;
@@ -110,7 +110,7 @@ public class GameScreen extends ScreenAdapter {
                 ((Jump) playerState).turnOffJumpRequest();
             }
         } else if (playerState instanceof WallAttach) {
-            player.slide();
+            player.slide(); // trượt tường
         } else if (playerState instanceof WallClimb) {
             player.climb();
         } else if (playerState instanceof WallKick) {
@@ -118,13 +118,11 @@ public class GameScreen extends ScreenAdapter {
                 player.wall_kick(((WallKick) playerState).getWallDirection());
                 ((WallKick) playerState).turnOffJumpRequest();
             }
-        } else if (playerState instanceof WallSprint) {
-            if (((WallSprint) playerState).isJumpRequest()) {
-                player.wallSprint(((WallSprint) playerState).getWallDirection());
-                ((WallSprint) playerState).turnOffJumpRequest();
-            }
-        } else if (playerState instanceof BeforeJump) {
+        }else if (playerState instanceof BeforeJump) {
             System.out.println("In before jump");
+        }
+        else if (playerState instanceof WallHanging) {
+            player.hang();
         }
 
         playerStateHandler.updateState(delta, input, collisionDetector, gameworld);

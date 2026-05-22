@@ -1,6 +1,5 @@
 package com.oop.wakuwaku.world;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -18,11 +17,7 @@ public class Player extends Sprite{
     private Body b2body;
     private CircleShape shape;
 
-    private int direction;
-    private int face = 1; // right, -1 = left
-    // dash
-    private float dashTimer = 0;
-    private float dashTime = Gdx.graphics.getDeltaTime() * 10;//.. là số frame muốn bị block
+    private int direction;    
 
     public Player(World world) {
         // define player
@@ -49,15 +44,6 @@ public class Player extends Sprite{
     public void setDirection(int direction) {
         this.direction = direction;
     }
-
-    public int getFace(){
-        return this.face;
-    }
-
-    public void setFace(int face) {
-        this.face = face;
-    }
-
     public int getDirection() {
         return direction;
     }
@@ -76,12 +62,10 @@ public class Player extends Sprite{
     }
 
     public void moveLeft(){
-        this.face = -1;
         this.b2body.setLinearVelocity(new Vector2(-3.5f, 0));
     }
 
     public void moveRight(){
-        this.face = 1;
         this.b2body.setLinearVelocity(new Vector2(3.5f, 0));
     }
 
@@ -93,7 +77,7 @@ public class Player extends Sprite{
         
         float fHorizontal = 2f;
 
-        this.b2body.applyLinearImpulse(new Vector2(this.direction * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
+        this.b2body.applyLinearImpulse(new Vector2(this.getDirection() * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
     }
 
     public void fallDown(){
@@ -117,10 +101,12 @@ public class Player extends Sprite{
     //     this.b2body.setLinearVelocity(currentVelocity);
     // }
 
+    public void hang(){
+        this.b2body.setTransform(3f,5f, 0);
+    }
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.5f));
     }
-
     public void climb() {
         this.b2body.setLinearVelocity(new Vector2(0, 1f));
     }
@@ -129,34 +115,6 @@ public class Player extends Sprite{
         if (direction == 0) this.b2body.applyLinearImpulse(new Vector2(1f, 5f), this.b2body.getWorldCenter(), true);
         else this.b2body.applyLinearImpulse(new Vector2(-1f, 5f), this.b2body.getWorldCenter(), true);
     }
-
-    // Dashing
-    public void dash(float delta){
-        // only dash at the first frame of the DASH state
-        if (notDash()) {
-            Vector2 velocity = this.b2body.getLinearVelocity();
-            if (velocity.x > 0) {
-                this.b2body.setLinearVelocity(new Vector2(25f, 0));
-            } else if (velocity.x < 0) {
-                this.b2body.setLinearVelocity(new Vector2(-25f, 0));
-            }
-        }
-        dashTimer += delta;
-    }
-
-    private boolean notDash(){
-        return this.dashTimer == 0;
-    }
-
-    public boolean isInDash(){
-        return this.dashTimer <= this.dashTime;
-    }
-
-    public void resetDashTimer(){
-        this.dashTime = Gdx.graphics.getDeltaTime() * 10;
-        this.dashTimer = 0;
-    }
-
     public void wall_kick(int direction) {
         if (direction == 1) {
             // wall kick to right

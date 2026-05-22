@@ -13,17 +13,19 @@ public class CollisionDetector implements ContactListener {
     private boolean leftWallContact;
     private boolean rightWallContact;
     private boolean groundContact;
-
+    private boolean hookContact;
     public CollisionDetector() {
         leftWallContact = false;
         rightWallContact = false;
         groundContact = false;
+        hookContact = false;
     }
 
     public void resetContact() {
         leftWallContact = false;
         rightWallContact = false;
         groundContact = false;
+        hookContact = false;
     }
 
     @Override
@@ -49,6 +51,9 @@ public class CollisionDetector implements ContactListener {
                 groundContact = true;
             }
         }
+        if (checkHookCollision(fixtureA, fixtureB) || checkHookCollision(fixtureB, fixtureA)) {
+            hookContact = true;
+        }
     }
 
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -67,6 +72,14 @@ public class CollisionDetector implements ContactListener {
 
     public boolean isTouchingGround() {
         return groundContact;
+    }
+
+    public boolean isTouchingHook() {
+        return hookContact;
+    }
+
+    private boolean checkHookCollision(Fixture A, Fixture B) {
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("hook"));
     }
 
     private boolean checkWallCollision(Fixture A, Fixture B) {
