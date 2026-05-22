@@ -22,12 +22,15 @@ public class Jump extends PlayerState {
         float y_velocity = gameWorld.getPlayer().getVelocity().y;
         if (collisionDetector.isTouchingGround()) {
             playerStateHandler.changeState(Idle.INSTANCE);
+            System.out.println("Case 1");
         } else if (y_velocity < 0) {
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            System.out.println("Case 2");
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(WallAttach.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            System.out.println("Case 3");
         }
     }
 

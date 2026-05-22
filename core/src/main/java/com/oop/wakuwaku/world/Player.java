@@ -85,7 +85,6 @@ public class Player extends Sprite{
         Vector2 currentVelocity = this.b2body.getLinearVelocity();
         currentVelocity.y = -3f;
         this.b2body.setLinearVelocity(currentVelocity);
-        System.out.println("fall down");
     }
 
     public void fallLeft() {

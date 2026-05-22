@@ -1,6 +1,7 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Main;
@@ -47,6 +48,7 @@ public class GameScreen extends ScreenAdapter {
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
 
+        Gdx.input.setInputProcessor(input);
     }
 
     @Override
@@ -60,6 +62,12 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         logic(delta);
+//        if (input.isPressed(Input.Keys.SPACE)) {
+//            GameInput.counter++;
+//            System.out.println(GameInput.counter);
+//        }
+        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+        input.update(delta);
         draw(delta);
     }
 
@@ -100,6 +108,8 @@ public class GameScreen extends ScreenAdapter {
                 player.wallSprint(((WallSprint) playerState).getWallDirection());
                 ((WallSprint) playerState).turnOffJumpRequest();
             }
+        } else if (playerState instanceof BeforeJump) {
+            System.out.println("In before jump");
         }
 
         playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
