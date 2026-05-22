@@ -1,4 +1,4 @@
-package com.oop.wakuwaku.screen;
+package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.System.*;
-import com.oop.wakuwaku.input.GameInput;
+import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 import com.oop.wakuwaku.world.Player;
 

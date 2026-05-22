@@ -1,4 +1,4 @@
-package com.oop.wakuwaku.input;
+package com.oop.wakuwaku.Input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;

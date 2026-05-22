@@ -2,7 +2,7 @@ package com.oop.wakuwaku.State;
 
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.PlayerStateHandler;
-import com.oop.wakuwaku.input.GameInput;
+import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 
 public class WallSprint extends PlayerState {

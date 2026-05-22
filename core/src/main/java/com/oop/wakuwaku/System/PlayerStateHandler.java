@@ -2,7 +2,7 @@ package com.oop.wakuwaku.System;
 
 import com.oop.wakuwaku.Animation.*;
 import com.oop.wakuwaku.State.*;
-import com.oop.wakuwaku.input.GameInput;
+import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.world.GameWorld;
 
 /**

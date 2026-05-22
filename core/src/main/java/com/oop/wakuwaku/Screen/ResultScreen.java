@@ -1,4 +1,4 @@
-package com.oop.wakuwaku.screen;
+package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
