@@ -88,7 +88,6 @@ public class MenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 showPopup = true;
-                System.out.println("Nut Settings da duoc bam!");
             }
         });
 
@@ -105,7 +104,6 @@ public class MenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 showPopup = false;
-                System.out.println("Nut Close da duoc bam!");
             }
         });
     }
