@@ -27,13 +27,12 @@ import com.oop.wakuwaku.Main;
 public class MenuScreen extends ScreenAdapter {
     private Main game;
     private Stage stage;
-    private Texture bgTex, playTex, setTex, popupTex, closeTex;
+    private Texture bgTex, playTex, setTex, popupTex, closeTex, catHeadTex;
     private ImageButton play, sett, closeBtn;
+    private float musicVolume = 0.5f, sliderMinX = 0f, sliderMaxX = 1f, sliderY;
+    private float catWith = 100, catHeight = 100, catX, catY;
     private FitViewport viewport;
     private boolean showPopup = false;
-
-    private Slider musicSlider, effectSlider;
-    private Skin skin;
 
     private final float VIRTUAL_WIDTH = 1280;
     private final float VIRTUAL_HEIGHT = 720;
@@ -48,55 +47,40 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage); 
 
-        skin = new Skin(Gdx.files.internal("cloud-form-ui.json"));
-
         bgTex = new Texture("background.jpg");
         playTex = new Texture("play.png");
         setTex  = new Texture("settings.png");
         popupTex = new Texture("settings_panel.png");
         closeTex = new Texture("close.png");
+        catHeadTex = new Texture("cat_head.png");
 
         play = new ImageButton(new TextureRegionDrawable(new TextureRegion(playTex)));
         sett = new ImageButton(new TextureRegionDrawable(new TextureRegion(setTex)));
         closeBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(closeTex)));
 
-        musicSlider = new Slider(0, 1, 0.1f, false, skin);
-        musicSlider.setValue(0.5f);
-        musicSlider.setSize(300, 200);
+        // size
+        play.setSize(410, 220);
+        play.setPosition(870, 120);
+        sett.setSize(410, 210);
+        sett.setPosition(870, -20);
+        closeBtn.setSize(235, 125);
+        closeBtn.setPosition(521, 235);
 
-        Table root = new Table();
-        root.setFillParent(true);
-        stage.addActor(root);
-
-        Table menuButtons = new Table();
-        menuButtons.right().bottom(); 
-        menuButtons.add(play).size(410, 220).padLeft(1110).padBottom(-59);
-        menuButtons.row();
-        menuButtons.add(sett).size(410, 210).padLeft(1110);
-        menuButtons.add(closeBtn).size(235, 125).padLeft(-3).padBottom(-30);
-
-        root.add(menuButtons).expand().right().bottom().padRight(-3).padBottom(-30);
+        stage.addActor(play);
+        stage.addActor(sett);
+        stage.addActor(closeBtn);
 
         play.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                    if(!showPopup)   game.setScreen(new GameScreen(game));
-                }
+                if(!showPopup)   game.setScreen(new GameScreen(game));
+            }
         });
 
         sett.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 showPopup = true;
-            }
-        });
-
-        musicSlider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                float vol = musicSlider.getValue();
-                // Cập nhật âm lượng thực tế
-                System.out.println("Music Volume: " + vol);
             }
         });
 
@@ -116,20 +100,10 @@ public class MenuScreen extends ScreenAdapter {
         game.batch.begin();
         game.batch.draw(bgTex, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         if (showPopup) {
-            float pW = popupTex.getWidth() / 2f;
-            float pH = popupTex.getHeight() / 2f;
-            float pX = (VIRTUAL_WIDTH - pW) / 2f;
-            float pY = (VIRTUAL_HEIGHT - pH) / 2f;
-            musicSlider.setVisible(true);
-            game.batch.draw(popupTex, pX, pY, pW, pH);
-            musicSlider.setPosition(pX + 500, pY + 320);
+            game.batch.draw(popupTex, 40, 25, 1200, 670);
             closeBtn.setVisible(true);
-            closeBtn.setPosition(pX + 481, pY + 210);
-            stage.addActor(closeBtn);
-            stage.addActor(musicSlider);
         }
         else {
-            musicSlider.setVisible(false);
             closeBtn.setVisible(false);
         }
         game.batch.end();
@@ -144,6 +118,7 @@ public class MenuScreen extends ScreenAdapter {
         playTex.dispose();
         setTex.dispose();
         popupTex.dispose();
+        catHeadTex.dispose();
     }
 
     @Override
