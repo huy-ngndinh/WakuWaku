@@ -108,7 +108,7 @@ public class GameScreen extends ScreenAdapter {
             // case stop
             case "Idle":
             case "BeforeJump":
-            case "WallHanging":
+            // case "WallHanging":
                 player.stop();
                 break;
             //case move
