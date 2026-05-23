@@ -91,10 +91,28 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(currentVelocity);
     }
 
+    // public void fallLeft() {
+    //     // persist momentum
+    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
+    //     currentVelocity.x = Math.min(-0.5f, currentVelocity.x);
+    //     currentVelocity.y = -3f;
+    //     this.b2body.setLinearVelocity(currentVelocity);
+    // }
+
+    // public void fallRight() {
+    //     // persist momentum
+    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
+    //     currentVelocity.x = Math.max(0.5f, currentVelocity.x);
+    //     currentVelocity.y = -3f;
+    //     this.b2body.setLinearVelocity(currentVelocity);
+    // }
+
+    public void teleport(float x, float y) {
+        this.b2body.setTransform(new Vector2(x, y), 0);
+    }
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.5f));
     }
-
     public void climb() {
         this.b2body.setLinearVelocity(new Vector2(0, 1f));
     }
@@ -104,7 +122,7 @@ public class Player extends Sprite{
         else this.b2body.applyLinearImpulse(new Vector2(-1f, 5f), this.b2body.getWorldCenter(), true);
     }
 
-    public void wall_kick(int direction,  int holdTime) {
+    public void wall_kick(int direction, int holdTime) {
         float fJump;
         if(holdTime < 30) { fJump = 3f;}
         else if(holdTime < 90) { fJump = 5f;}

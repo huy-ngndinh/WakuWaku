@@ -1,11 +1,16 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.State.*;
+import com.oop.wakuwaku.State.Jump;
+import com.oop.wakuwaku.State.PlayerState;
+import com.oop.wakuwaku.State.WallClimbOver;
+import com.oop.wakuwaku.State.WallHanging;
+import com.oop.wakuwaku.State.WallKick;
 import com.oop.wakuwaku.System.AnimationHandler;
 import com.oop.wakuwaku.System.CollisionDetector;
 import com.oop.wakuwaku.System.Physics;
@@ -65,16 +70,21 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         logic(delta);
-//        if (input.isPressed(Input.Keys.SPACE)) {
-//            GameInput.counter++;
-//            System.out.println(GameInput.counter);
-//        }
-        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
-        // if(playerStateHandler.getCurrentState() instanceof Jump) {
-        //     System.out.println(((Jump) playerStateHandler.getCurrentState()).isJumpRequest());
-        // }
+        // Debuging state
+        //System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
 
-        // System.out.println(gameworld.getPlayer().getVelocity().y);
+//        if(playerStateHandler.getCurrentState() instanceof WallHanging){
+//            System.out.println("Hanging");
+//        }
+//        if(playerStateHandler.getCurrentState() instanceof WallClimbOver){
+//            System.out.println("Climbing over");
+        //}
+
+        //collision debug
+        if(collisionDetector.isTouchingHook()) {
+            System.out.println("Hook");
+        }
+       // System.out.println(gameworld.getPlayer().getPosition());
         input.update(delta);
         draw(delta);
     }
@@ -85,39 +95,52 @@ public class GameScreen extends ScreenAdapter {
         PlayerState playerState = playerStateHandler.getCurrentState();
         Player player = gameworld.getPlayer();
 
-        if (playerState instanceof Idle) {
-            player.stop();
-        } else if (playerState instanceof Walking) {
-            int direction = player.getDirection();
-            if (direction == 1) player.moveRight();
-            else player.moveLeft();
-        } else if (playerState instanceof Falling) {
-            player.fallDown();
-        } else if (playerState instanceof Jump) {
-            int direction = ((Jump) playerState).getDirection();
-            boolean jumpRequest = ((Jump) playerState).isJumpRequest();
-            if (jumpRequest) {
-                player.jump(direction, input.getHoldTime());
-                ((Jump) playerState).turnOffJumpRequest();
-            }
-        } else if (playerState instanceof WallAttach) {
-            player.slide();
-        } else if (playerState instanceof WallClimb) {
-            player.climb();
-        } else if (playerState instanceof WallKick) {
-            if (((WallKick) playerState).isJumpRequest()) {
-                player.wall_kick(((WallKick) playerState).getWallDirection(), input.getHoldTime());
-                ((WallKick) playerState).turnOffJumpRequest();
-            }
-        } else if (playerState instanceof WallSprint) {
-            if (((WallSprint) playerState).isJumpRequest()) {
-                player.wallSprint(((WallSprint) playerState).getWallDirection());
-                ((WallSprint) playerState).turnOffJumpRequest();
-            }
-        } else if (playerState instanceof BeforeJump) {
-            player.stop();
-        } else if (playerState instanceof BeforeWallKick) {
-            player.slide();
+        switch (playerState.getClass().getSimpleName()) {
+            // case stop
+            case "Idle":
+            case "BeforeJump":
+            case "WallHanging":
+                player.stop();
+                break;
+            //case move
+            case "Walking":
+                int direction = player.getDirection();
+                if (direction == 1) player.moveRight();
+                else player.moveLeft();
+                break;
+
+            case "Falling":
+                player.fallDown();
+                break;
+
+            case "Jump":
+                Jump jumpState = (Jump) playerState;
+                if (jumpState.isJumpRequest()) {
+                    player.jump(jumpState.getDirection(), input.getHoldTimeSpace());
+                    jumpState.turnOffJumpRequest();
+                }
+                break;
+            case "BeforeWallKick":
+            case "WallAttach":
+                player.slide(); // trượt tường
+                break;
+
+            case "WallClimb":
+                player.climb();
+                break;
+
+            case "WallKick":
+                WallKick wallKickState = (WallKick) playerState;
+                if (wallKickState.isJumpRequest()) {
+                    player.wall_kick(wallKickState.getWallDirection(), input.getHoldTimeSpace());
+                    wallKickState.turnOffJumpRequest();
+                }
+                break;
+
+            //case locked animation
+            case "WallClimbOver":
+                player.teleport(10f, 10f);
+                break;
         }
 
         playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
