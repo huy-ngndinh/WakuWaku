@@ -17,8 +17,10 @@ public class BeforeJump extends PlayerState{
             playerStateHandler.changeState(Jump.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (input.isPressed(Input.Keys.A)) {
+            gameWorld.getPlayer().setDirection(-1);
             gameWorld.getPlayer().setJumpDirection(-1);
         } else if (input.isPressed(Input.Keys.D)) {
+            gameWorld.getPlayer().setDirection(1);
             gameWorld.getPlayer().setJumpDirection(1);
         } else {
             gameWorld.getPlayer().setJumpDirection(0);
