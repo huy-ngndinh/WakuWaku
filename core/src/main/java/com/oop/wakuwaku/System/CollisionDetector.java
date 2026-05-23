@@ -63,10 +63,10 @@ public class CollisionDetector implements ContactListener {
             if (!fixtureB.getBody().getUserData().equals("player"))
                 normal.scl(-1);
             if (normal.x > 0.5f) {
-                leftWallContact = true;
+                leftHookContact = true;
             }
             if (normal.x < -0.5f){
-                rightWallContact = true;
+                rightHookContact = true;
             }
         }
     }

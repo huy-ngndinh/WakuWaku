@@ -28,5 +28,5 @@ public abstract class PlayerState {
     /**
      * Called before the player exit this state
      */
-    public abstract void exit();
+    public abstract void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld);
 }

@@ -7,17 +7,24 @@ import com.oop.wakuwaku.world.GameWorld;
 public class WallClimbOver extends PlayerState {
 
     public static final WallClimbOver INSTANCE = new WallClimbOver();
+    private int direction;
 
     public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        
+        if (collisionDetector.isTouchingLeftWall()) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
     }
+
+    public int getDirection() { return direction; }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         playerStateHandler.changeState(Idle.INSTANCE);
         playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
     }
 
-    public void exit() {
+    public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
 
     }
 

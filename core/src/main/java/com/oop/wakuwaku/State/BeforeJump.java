@@ -27,7 +27,7 @@ public class BeforeJump extends PlayerState{
         }
     }
 
-    public void exit() {
+    public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
 
     }
 }

@@ -71,7 +71,7 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         logic(delta);
         // Debuging state
-        //System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
 
 //        if(playerStateHandler.getCurrentState() instanceof WallHanging){
 //            System.out.println("Hanging");
@@ -81,9 +81,9 @@ public class GameScreen extends ScreenAdapter {
         //}
 
         //collision debug
-        if(collisionDetector.isTouchingHook()) {
-            System.out.println("Hook");
-        }
+//        if(collisionDetector.isTouchingHook()) {
+//            System.out.println("Hook");
+//        }
        // System.out.println(gameworld.getPlayer().getPosition());
         input.update(delta);
         draw(delta);
@@ -139,7 +139,8 @@ public class GameScreen extends ScreenAdapter {
 
             //case locked animation
             case "WallClimbOver":
-                player.teleport(10f, 10f);
+                WallClimbOver wallClimbOverState = (WallClimbOver) playerState;
+                player.teleport(wallClimbOverState.getDirection(), 2f, 3f);
                 break;
         }
 

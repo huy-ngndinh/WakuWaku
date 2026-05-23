@@ -31,7 +31,7 @@ public class GameInput extends InputAdapter{
             if (keycode == Input.Keys.SPACE) {
                 holdingSpace = false;
 
-                System.out.println("Held for: " + holdTimeSpace + " frames");
+//                System.out.println("Held for: " + holdTimeSpace + " frames");
             }
             return true;
         }
