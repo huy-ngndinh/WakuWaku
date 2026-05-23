@@ -1,5 +1,6 @@
 package com.oop.wakuwaku.System;
 
+import com.badlogic.gdx.Game;
 import com.oop.wakuwaku.Animation.*;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.State.*;
@@ -10,10 +11,17 @@ import com.oop.wakuwaku.world.GameWorld;
  */
 public class PlayerStateHandler {
 
+
+    private final GameInput gameInput;
+    private final CollisionDetector collisionDetector;
+    private final GameWorld gameWorld;
     private final AnimationHandler animationHandler;
     private PlayerState currentState;
 
-    public PlayerStateHandler(AnimationHandler animationHandler) {
+    public PlayerStateHandler(GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld, AnimationHandler animationHandler) {
+        this.gameInput = input;
+        this.collisionDetector = collisionDetector;
+        this.gameWorld = gameWorld;
         this.animationHandler = animationHandler;
         currentState = new Idle();
     }
@@ -25,42 +33,20 @@ public class PlayerStateHandler {
      * @param collisionDetector
      * @param gameWorld
      */
-    public void updateState(float delta, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        currentState.update(delta, this, input, collisionDetector, gameWorld);
+    public void updateState(float delta) {
+        currentState.update(delta, this, gameInput, collisionDetector, gameWorld);
     }
 
     /**
      * Change current state. Called by the states themselves.
      * @param newState
      */
-    public void changeState(PlayerState newState) {
+    public void changeState(float delta, PlayerState newState) {
         if (currentState.equals(newState)) return;
+        currentState.exit(delta, this, gameInput, collisionDetector, gameWorld);
         this.currentState = newState;
-        if (newState instanceof Idle) {
-            animationHandler.updateAnimationState(IdleAnimation.INSTANCE);
-        } else if(newState instanceof Walking) {
-            animationHandler.updateAnimationState(WalkingAnimation.INSTANCE);
-        } else if (newState instanceof Jump) {
-            animationHandler.updateAnimationState(JumpAnimation.INSTANCE);
-        } else if (newState instanceof Falling) {
-            animationHandler.updateAnimationState(FallingAnimation.INSTANCE);
-        } else if (newState instanceof WallAttach) {
-            animationHandler.updateAnimationState(WallAttachAnimation.INSTANCE);
-        } else if (newState instanceof WallClimb) {
-            animationHandler.updateAnimationState(WallClimbAnimation.INSTANCE);
-        } else if (newState instanceof WallKick) {
-            animationHandler.updateAnimationState(WallKickAnimation.INSTANCE);
-        } else if (newState instanceof WallSprint) {
-            animationHandler.updateAnimationState(WallSprintAnimation.INSTANCE);
-        } else if(newState instanceof BeforeJump){
-            animationHandler.updateAnimationState(BeforeJumpAnimation.INSTANCE);
-        } else if (newState instanceof BeforeWallKick) {
-            animationHandler.updateAnimationState(BeforeWallKickAnimation.INSTANCE);
-        } else if (newState instanceof WallHanging) {
-            animationHandler.updateAnimationState(WallHangingAnimation.INSTANCE);
-        } else if (newState instanceof WallClimbOver) {
-            animationHandler.updateAnimationState(WallClimbOverAnimation.INSTANCE);
-        }
+        currentState.enter(delta,this, gameInput, collisionDetector, gameWorld);
+        animationHandler.updateAnimationState(currentState);
     }
 
     public PlayerState getCurrentState() {

@@ -9,21 +9,15 @@ public class WallKick extends PlayerState {
 
     public static final WallKick INSTANCE = new WallKick();
 
-    private int direction;
     private boolean jumpRequest = false;
 
-    // Direction points away from the wall
     public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        if (collisionDetector.isTouchingLeftWall()) {
-            direction = 1;
-        } else {
-            direction = -1;
-        }
         jumpRequest = true;
-    }
-
-    public int getWallDirection() {
-        return direction;
+        if (collisionDetector.isTouchingLeftWall()) {
+            gameWorld.getPlayer().setDirection(1);
+        } else {
+            gameWorld.getPlayer().setDirection(-1);
+        }
     }
 
     public boolean isJumpRequest() { return jumpRequest;}
@@ -32,13 +26,11 @@ public class WallKick extends PlayerState {
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (collisionDetector.isTouchingGround()) {
-            playerStateHandler.changeState(Idle.INSTANCE);
+            playerStateHandler.changeState(delta, Idle.INSTANCE);
         } else if (gameWorld.getPlayer().getVelocity().y < 0) {
-            playerStateHandler.changeState(Falling.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            playerStateHandler.changeState(delta, Falling.INSTANCE);
         }else if(collisionDetector.isTouchingWall() && input.isPressed(Input.Keys.K)) {
-            playerStateHandler.changeState(WallAttach.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         }
     }
 

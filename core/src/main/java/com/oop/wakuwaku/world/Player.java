@@ -14,8 +14,7 @@ import com.oop.wakuwaku.System.Physics;
  */
 public class Player extends Sprite{
 
-    private Body b2body;
-    private CircleShape shape;
+    private final Body b2body;
 
     private int direction;
     private int jumpDirection;
@@ -30,7 +29,7 @@ public class Player extends Sprite{
         b2body.setUserData("player");
         // fixture def: chứa hình dạng và physics của body
         FixtureDef fdef = new FixtureDef();
-        shape = new CircleShape();
+        CircleShape shape = new CircleShape();
         shape.setRadius(0.5f);
         fdef.shape = shape;
         fdef.friction = 0.0f;
@@ -76,13 +75,13 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(new Vector2(3.5f, 0));
     }
 
-    public void jump(int direction, int holdTime){
+    public void jump(int holdTime){
         float fJump;
         if(holdTime < 30) { fJump = 3f;}
         else if(holdTime < 90) { fJump = 5f;}
         else { fJump = 7f;}
         float fHorizontal = 5f;
-        this.b2body.applyLinearImpulse(new Vector2(direction * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
+        this.b2body.applyLinearImpulse(new Vector2(this.jumpDirection * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
     }
 
     public void fallDown(){
@@ -91,28 +90,12 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(currentVelocity);
     }
 
-    // public void fallLeft() {
-    //     // persist momentum
-    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
-    //     currentVelocity.x = Math.min(-0.5f, currentVelocity.x);
-    //     currentVelocity.y = -3f;
-    //     this.b2body.setLinearVelocity(currentVelocity);
-    // }
-
-    // public void fallRight() {
-    //     // persist momentum
-    //     Vector2 currentVelocity = this.b2body.getLinearVelocity();
-    //     currentVelocity.x = Math.max(0.5f, currentVelocity.x);
-    //     currentVelocity.y = -3f;
-    //     this.b2body.setLinearVelocity(currentVelocity);
-    // }
-
-    public void teleport(int direction, float x, float y) {
+    public void teleport(float x, float y) {
         Vector2 currentPosition = b2body.getPosition();
         if (direction == -1) {
-            this.b2body.setTransform(new Vector2(currentPosition.x + x, currentPosition.y + y), 0);
-        } else {
             this.b2body.setTransform(new Vector2(currentPosition.x - x, currentPosition.y + y), 0);
+        } else {
+            this.b2body.setTransform(new Vector2(currentPosition.x + x, currentPosition.y + y), 0);
         }
 
     }
@@ -123,19 +106,17 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(new Vector2(0, 1f));
     }
 
-    public void wallSprint(int direction) {
-        if (direction == -1) this.b2body.applyLinearImpulse(new Vector2(1f, 5f), this.b2body.getWorldCenter(), true);
-        else this.b2body.applyLinearImpulse(new Vector2(-1f, 5f), this.b2body.getWorldCenter(), true);
-    }
-
-    public void wall_kick(int direction, int holdTime) {
+    public void wall_kick(int holdTime) {
         float fJump;
-        if(holdTime < 30) { fJump = 3f;}
-        else if(holdTime < 90) { fJump = 5f;}
-        else { fJump = 7f;}
+        if(holdTime < 30) {
+            fJump = 3f;
+        } else if(holdTime < 90) {
+            fJump = 5f;
+        } else {
+            fJump = 7f;
+        }
         float fHorizontal = 5f;
         this.b2body.applyLinearImpulse(new Vector2(fHorizontal * direction, fJump), this.b2body.getWorldCenter(), true);
-        this.direction = direction;
     }
 
     public void setGravity(float gravity) {

@@ -22,8 +22,8 @@ public class WallClimbAnimation extends AnimationState{
 
     public TextureRegion getTextureRegion(float stateTime, PlayerState playerState, Player player) {
         TextureRegion animationFrame = animation.getKeyFrame(stateTime, true);
-        if (((WallClimb) playerState).getWallDirection() == -1 && animationFrame.isFlipX()) animationFrame.flip(true, false);
-        else if (((WallClimb) playerState).getWallDirection() == 1 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
+        if (player.getDirection() == 1 && animationFrame.isFlipX()) animationFrame.flip(true, false);
+        else if (player.getDirection() == -1 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
         return animationFrame;
     }
 }

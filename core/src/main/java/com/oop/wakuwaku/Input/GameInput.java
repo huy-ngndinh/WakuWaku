@@ -10,7 +10,6 @@ public class GameInput extends InputAdapter{
      * @return <code>True</code> if the key is pressed, <code>False</code> otherwise
      */
         public boolean isPressed(int key) { return Gdx.input.isKeyPressed(key); }
-        public boolean isJustPressed(int key) { return Gdx.input.isKeyJustPressed(key); }
 
         private boolean holdingSpace = false;
         private int holdTimeSpace = 0;
@@ -30,8 +29,6 @@ public class GameInput extends InputAdapter{
             // xử lí space key release
             if (keycode == Input.Keys.SPACE) {
                 holdingSpace = false;
-
-//                System.out.println("Held for: " + holdTimeSpace + " frames");
             }
             return true;
         }
@@ -41,9 +38,11 @@ public class GameInput extends InputAdapter{
                 holdTimeSpace += 1;
             }
         }
+
         public boolean isHoldingSpace() {
             return holdingSpace;
         }
+
         public int getHoldTimeSpace() {
             return holdTimeSpace;
         }

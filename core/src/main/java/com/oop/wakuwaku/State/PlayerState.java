@@ -10,8 +10,7 @@ import com.oop.wakuwaku.world.GameWorld;
  */
 public abstract class PlayerState {
     /**
-     * Called manually when the player enter this state for the first time.
-     * Required for following states: falling, wallAttach, wallClimb and wallKick state.
+     * Called when the player enter this state for the first time.
      */
     public abstract void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld);
 
@@ -26,7 +25,7 @@ public abstract class PlayerState {
     public abstract void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld);
 
     /**
-     * Called before the player exit this state
+     * Called before the player exit this state.
      */
     public abstract void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld);
 }

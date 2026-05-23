@@ -14,32 +14,31 @@ public class Walking extends PlayerState{
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
-            playerStateHandler.changeState(WallAttach.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         } else if (input.isPressed(Input.Keys.A)) {
             gameWorld.getPlayer().setDirection(-1);
+            gameWorld.getPlayer().setJumpDirection(-1);
             if (input.isPressed(Input.Keys.SPACE)) {
-                playerStateHandler.changeState(BeforeJump.INSTANCE);
+                playerStateHandler.changeState(delta, BeforeJump.INSTANCE);
                 playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
             } else if (!collisionDetector.isTouchingGround()){
-                playerStateHandler.changeState(Falling.INSTANCE);
-                playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+                playerStateHandler.changeState(delta, Falling.INSTANCE);
             } else {
-                playerStateHandler.changeState(Walking.INSTANCE);
+                playerStateHandler.changeState(delta, Walking.INSTANCE);
             }
         } else if (input.isPressed(Input.Keys.D)) {
             gameWorld.getPlayer().setDirection(1);
+            gameWorld.getPlayer().setJumpDirection(1);
             if (input.isPressed(Input.Keys.SPACE)) {
-                playerStateHandler.changeState(BeforeJump.INSTANCE);
-                playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+                playerStateHandler.changeState(delta, BeforeJump.INSTANCE);
             } else if (!collisionDetector.isTouchingGround()){
-                playerStateHandler.changeState(Falling.INSTANCE);
-                playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+                playerStateHandler.changeState(delta, Falling.INSTANCE);
             } else {
-                playerStateHandler.changeState(Walking.INSTANCE);
+                playerStateHandler.changeState(delta, Walking.INSTANCE);
             }
         } else {
-            playerStateHandler.changeState(Idle.INSTANCE);
+            gameWorld.getPlayer().setJumpDirection(0);
+            playerStateHandler.changeState(delta, Idle.INSTANCE);
         }
     }
 
