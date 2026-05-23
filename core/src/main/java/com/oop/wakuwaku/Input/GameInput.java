@@ -13,37 +13,38 @@ public class GameInput extends InputAdapter{
         public boolean isJustPressed(int key) { return Gdx.input.isKeyJustPressed(key); }
 
         private boolean holdingSpace = false;
-        private int holdTime = 0;
+        private int holdTimeSpace = 0;
 
         @Override
         public boolean keyDown(int keycode) {
+            // xử lí space key press
             if (keycode == Input.Keys.SPACE) {
                 holdingSpace = true;
-                holdTime = 0;      // reset timer
+                holdTimeSpace = 0;      // reset timer
             }
             return true;
         }
 
         @Override
         public boolean keyUp(int keycode) {
+            // xử lí space key release
             if (keycode == Input.Keys.SPACE) {
                 holdingSpace = false;
 
-                System.out.println("Held for: " + holdTime);
+                System.out.println("Held for: " + holdTimeSpace + " frames");
             }
             return true;
         }
 
         public void update(float delta) {
             if (holdingSpace) {
-                holdTime += 1;
+                holdTimeSpace += 1;
             }
         }
-
         public boolean isHoldingSpace() {
             return holdingSpace;
         }
-        public int getHoldTime() {
-            return holdTime;
+        public int getHoldTimeSpace() {
+            return holdTimeSpace;
         }
 }

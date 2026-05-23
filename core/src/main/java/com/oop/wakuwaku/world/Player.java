@@ -106,8 +106,8 @@ public class Player extends Sprite{
     //     this.b2body.setLinearVelocity(currentVelocity);
     // }
 
-    public void hang(){
-        this.b2body.setTransform(3f,5f, 0);
+    public void teleport(float x, float y) {
+        this.b2body.setTransform(new Vector2(x, y), 0);
     }
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.5f));

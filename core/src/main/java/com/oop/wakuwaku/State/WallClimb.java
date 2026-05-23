@@ -26,7 +26,8 @@ public class WallClimb extends PlayerState {
     }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        if (collisionDetector.isTouchingHook()) {// nếu chạm hook thì cho lơ lửng trên tường
+        if (collisionDetector.isTouchingHook() && input.isPressed(Input.Keys.J)) {// nếu chạm hook thì cho lơ lửng trên tường
+            System.out.println("Hooked while climbing");
             playerStateHandler.changeState(WallHanging.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         }

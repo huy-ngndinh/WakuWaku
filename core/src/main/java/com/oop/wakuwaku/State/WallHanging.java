@@ -23,9 +23,11 @@ public class WallHanging extends PlayerState {
         if(input.isPressed(Input.Keys.J)){
             playerStateHandler.changeState(WallClimbOver.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+
         }
         // nếu ko cho leo qua tường thì cho rơi
         else {
+            System.out.println("Stopped hanging");
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         }

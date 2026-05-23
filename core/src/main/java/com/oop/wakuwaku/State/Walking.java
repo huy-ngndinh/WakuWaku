@@ -19,7 +19,7 @@ public class Walking extends PlayerState{
         } else if (input.isPressed(Input.Keys.A)) {
             gameWorld.getPlayer().setDirection(-1);
             if (input.isPressed(Input.Keys.SPACE)) {
-                playerStateHandler.changeState(Jump.INSTANCE);
+                playerStateHandler.changeState(BeforeJump.INSTANCE);
                 playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
             } else if (!collisionDetector.isTouchingGround()){
                 playerStateHandler.changeState(Falling.INSTANCE);
@@ -30,7 +30,7 @@ public class Walking extends PlayerState{
         } else if (input.isPressed(Input.Keys.D)) {
             gameWorld.getPlayer().setDirection(1);
             if (input.isPressed(Input.Keys.SPACE)) {
-                playerStateHandler.changeState(Idle.INSTANCE);
+                playerStateHandler.changeState(BeforeJump.INSTANCE);
                 playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
             } else if (!collisionDetector.isTouchingGround()){
                 playerStateHandler.changeState(Falling.INSTANCE);
