@@ -1,16 +1,20 @@
 package com.oop.wakuwaku.System;
 
 import com.oop.wakuwaku.Animation.BeforeJumpAnimation;
+import com.oop.wakuwaku.Animation.BeforeWallKickAnimation;
 import com.oop.wakuwaku.Animation.FallingAnimation;
 import com.oop.wakuwaku.Animation.IdleAnimation;
 import com.oop.wakuwaku.Animation.JumpAnimation;
 import com.oop.wakuwaku.Animation.WalkingAnimation;
 import com.oop.wakuwaku.Animation.WallAttachAnimation;
 import com.oop.wakuwaku.Animation.WallClimbAnimation;
+import com.oop.wakuwaku.Animation.WallClimbOverAnimation;
+import com.oop.wakuwaku.Animation.WallHangingAnimation;
 import com.oop.wakuwaku.Animation.WallKickAnimation;
 import com.oop.wakuwaku.Animation.WallSprintAnimation;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.State.BeforeJump;
+import com.oop.wakuwaku.State.BeforeWallKick;
 import com.oop.wakuwaku.State.Falling;
 import com.oop.wakuwaku.State.Idle;
 import com.oop.wakuwaku.State.Jump;
@@ -18,6 +22,8 @@ import com.oop.wakuwaku.State.PlayerState;
 import com.oop.wakuwaku.State.Walking;
 import com.oop.wakuwaku.State.WallAttach;
 import com.oop.wakuwaku.State.WallClimb;
+import com.oop.wakuwaku.State.WallClimbOver;
+import com.oop.wakuwaku.State.WallHanging;
 import com.oop.wakuwaku.State.WallKick;
 import com.oop.wakuwaku.State.WallSprint;
 import com.oop.wakuwaku.world.GameWorld;
@@ -63,15 +69,20 @@ public class PlayerStateHandler {
             animationHandler.updateAnimationState(FallingAnimation.INSTANCE);
         } else if (newState instanceof WallAttach) {
             animationHandler.updateAnimationState(WallAttachAnimation.INSTANCE);
+        } else if (newState instanceof WallHanging) {
+            animationHandler.updateAnimationState(WallHangingAnimation.INSTANCE);
         } else if (newState instanceof WallClimb) {
             animationHandler.updateAnimationState(WallClimbAnimation.INSTANCE);
         } else if (newState instanceof WallKick) {
             animationHandler.updateAnimationState(WallKickAnimation.INSTANCE);
         } else if (newState instanceof WallSprint) {
             animationHandler.updateAnimationState(WallSprintAnimation.INSTANCE);
-        }
-        else if(newState instanceof BeforeJump){
+        } else if(newState instanceof BeforeJump){
             animationHandler.updateAnimationState(BeforeJumpAnimation.INSTANCE);
+        } else if (newState instanceof BeforeWallKick) {
+            animationHandler.updateAnimationState(BeforeWallKickAnimation.INSTANCE);
+        } else if (newState instanceof WallClimbOver) {
+            animationHandler.updateAnimationState(WallClimbOverAnimation.INSTANCE);
         }
     }
 

@@ -26,19 +26,17 @@ public class WallClimb extends PlayerState {
     }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        if (collisionDetector.isTouchingHook() && input.isPressed(Input.Keys.J)) {// nếu chạm hook thì cho lơ lửng trên tường
+        if (collisionDetector.isTouchingHook()) {// nếu chạm hook thì cho lơ lửng trên tường
             System.out.println("Hooked while climbing");
             playerStateHandler.changeState(WallHanging.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        }
-        else if (collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.D) && input.isPressed(Input.Keys.SPACE)) {
-            playerStateHandler.changeState(WallKick.INSTANCE);
+        } else if (collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.D) && input.isPressed(Input.Keys.SPACE)) {
+            playerStateHandler.changeState(BeforeWallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
-            playerStateHandler.changeState(WallKick.INSTANCE);
+            playerStateHandler.changeState(BeforeWallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        }
-        else if (!input.isPressed(Input.Keys.K) || !collisionDetector.isTouchingWall()) {
+        } else if (!input.isPressed(Input.Keys.K) || !collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(Falling.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!input.isPressed(Input.Keys.W)) {

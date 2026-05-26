@@ -13,20 +13,23 @@ public class CollisionDetector implements ContactListener {
     private boolean leftWallContact;
     private boolean rightWallContact;
     private boolean groundContact;
-    private boolean hookContact;
+    private boolean leftHookContact;
+    private boolean rightHookContact;
 
     public CollisionDetector() {
         leftWallContact = false;
         rightWallContact = false;
         groundContact = false;
-        hookContact = false;
+        leftHookContact = false;
+        rightHookContact = false;
     }
 
     public void resetContact() {
         leftWallContact = false;
         rightWallContact = false;
         groundContact = false;
-        hookContact = false;
+        leftHookContact = false;
+        rightHookContact = false;
     }
 
     @Override
@@ -57,10 +60,13 @@ public class CollisionDetector implements ContactListener {
         if (checkHookCollision(fixtureA, fixtureB) || checkHookCollision(fixtureB, fixtureA)) {
             WorldManifold worldManifold = contact.getWorldManifold();
             Vector2 normal = worldManifold.getNormal();
-            if (fixtureA.getBody().getUserData().equals("player"))
+            if (!fixtureB.getBody().getUserData().equals("player"))
                 normal.scl(-1);
-            if (normal.y > 0.1f) {
-                hookContact = true;
+            if (normal.x > 0.1f) {
+                leftHookContact = true;
+            }
+            if (normal.x < -0.1f){
+                rightHookContact = true;
             }
         }
     }
@@ -85,7 +91,7 @@ public class CollisionDetector implements ContactListener {
     }
 
     public boolean isTouchingHook() {
-        return hookContact;
+        return leftHookContact || rightHookContact;
     }
 
     private boolean checkHookCollision(Fixture A, Fixture B) {

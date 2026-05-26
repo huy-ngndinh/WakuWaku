@@ -27,13 +27,10 @@ public class WallAttach extends PlayerState {
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.D) && input.isPressed(Input.Keys.SPACE)) {
-            playerStateHandler.changeState(WallKick.INSTANCE);
+            playerStateHandler.changeState(BeforeWallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!collisionDetector.isTouchingLeftWall() && input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
-            playerStateHandler.changeState(WallKick.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        } else if (collisionDetector.isTouchingWall() && !input.isPressed(Input.Keys.D) && !input.isPressed(Input.Keys.A) && input.isPressed(Input.Keys.SPACE)) {
-            playerStateHandler.changeState(WallSprint.INSTANCE);
+            playerStateHandler.changeState(BeforeWallKick.INSTANCE);
             playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
         } else if (!input.isPressed(Input.Keys.K) || !collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(Falling.INSTANCE);

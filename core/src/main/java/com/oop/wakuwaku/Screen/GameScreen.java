@@ -1,15 +1,12 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.Jump;
 import com.oop.wakuwaku.State.PlayerState;
-import com.oop.wakuwaku.State.WallClimbOver;
-import com.oop.wakuwaku.State.WallHanging;
 import com.oop.wakuwaku.State.WallKick;
 import com.oop.wakuwaku.System.AnimationHandler;
 import com.oop.wakuwaku.System.CollisionDetector;
@@ -70,30 +67,21 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         logic(delta);
-
         // Debuging state
-        //System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
 
-        if(playerStateHandler.getCurrentState() instanceof WallHanging){
-            System.out.println("Hanging");
-        }
-        if(playerStateHandler.getCurrentState() instanceof WallClimbOver){
-            System.out.println("Climbing over");
-        }
+//        if(playerStateHandler.getCurrentState() instanceof WallHanging){
+//            System.out.println("Hanging");
+//        }
+//        if(playerStateHandler.getCurrentState() instanceof WallClimbOver){
+//            System.out.println("Climbing over");
+        //}
 
         //collision debug
         if(collisionDetector.isTouchingHook()) {
             System.out.println("Hook");
         }
-
-        //key debug
-        if(input.isPressed(Input.Keys.J)){
-            System.out.println("Pressed J");
-        }
-
-
        // System.out.println(gameworld.getPlayer().getPosition());
-
         input.update(delta);
         draw(delta);
     }
@@ -129,7 +117,7 @@ public class GameScreen extends ScreenAdapter {
                     jumpState.turnOffJumpRequest();
                 }
                 break;
-
+            case "BeforeWallKick":
             case "WallAttach":
                 player.slide(); // trượt tường
                 break;
@@ -141,11 +129,11 @@ public class GameScreen extends ScreenAdapter {
             case "WallKick":
                 WallKick wallKickState = (WallKick) playerState;
                 if (wallKickState.isJumpRequest()) {
-                    player.wall_kick(wallKickState.getWallDirection());
+                    player.wall_kick(wallKickState.getWallDirection(), input.getHoldTimeSpace());
                     wallKickState.turnOffJumpRequest();
                 }
                 break;
-            
+
             //case locked animation
             case "WallClimbOver":
                 player.teleport(10f, 10f);

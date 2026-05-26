@@ -55,7 +55,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="ground" visible="0">
+ <objectgroup id="2" name="ground">
   <object id="3" x="0" y="1472" width="256" height="32"/>
   <object id="4" x="256" y="1504" width="256" height="32"/>
   <object id="5" x="512" y="1536" width="416" height="32"/>
@@ -111,7 +111,7 @@
   <object id="116" x="1408" y="416" width="96" height="32"/>
   <object id="117" x="1472" y="384" width="96" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="wall" visible="0">
+ <objectgroup id="3" name="wall">
   <object id="8" x="0" y="192" width="31.5567" height="1279.23"/>
   <object id="9" x="1568" y="224.52" width="31.5567" height="1310.71"/>
   <object id="10" x="1408" y="1280" width="32" height="224"/>
@@ -170,6 +170,6 @@
   <object id="65" x="672" y="736" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="hook">
-  <object id="120" name="h1" x="130.125" y="1444.76" width="27.875" height="25.125"/>
+  <object id="120" name="h1" x="-25.875" y="1308.26" width="59.375" height="99.125"/>
  </objectgroup>
 </map>
