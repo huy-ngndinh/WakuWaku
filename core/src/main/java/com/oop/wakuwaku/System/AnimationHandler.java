@@ -38,7 +38,6 @@ public class AnimationHandler {
         // Initialize the Animation with the frame interval and array of frames
         runAnimation = new Animation<TextureRegion>(1f / RUN_ANIMATION_FRAMES, runRegion);
         idleAnimation = new Animation<TextureRegion>(1f / IDLE_ANIMATION_FRAMES, idleRegion);
-
     }
 
     public TextureRegion getCurrentAnimationFrame(float deltaTime, Player player, PlayerStateHandler playerStateHandler) {
