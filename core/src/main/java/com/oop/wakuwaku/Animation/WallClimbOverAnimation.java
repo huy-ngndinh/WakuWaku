@@ -21,7 +21,7 @@ public class WallClimbOverAnimation extends AnimationState {
 
     public TextureRegion getTextureRegion(float stateTime, PlayerState playerState, Player player) {
         TextureRegion animationFrame = animation.getKeyFrame(stateTime, false);
-        if (player.getDirection() == 0 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
+        if (player.getDirection() == -1 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
         else if (player.getDirection() == 1 && animationFrame.isFlipX()) animationFrame.flip(true, false);
         return animationFrame;
     }

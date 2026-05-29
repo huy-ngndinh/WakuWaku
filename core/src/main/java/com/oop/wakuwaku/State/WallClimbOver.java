@@ -9,15 +9,13 @@ public class WallClimbOver extends PlayerState {
     public static final WallClimbOver INSTANCE = new WallClimbOver();
 
     public void enter(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        
     }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        playerStateHandler.changeState(Idle.INSTANCE);
-        playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+        playerStateHandler.changeState(delta, Idle.INSTANCE);
     }
 
-    public void exit() {
+    public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
 
     }
 

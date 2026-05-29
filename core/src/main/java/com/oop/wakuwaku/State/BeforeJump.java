@@ -14,8 +14,7 @@ public class BeforeJump extends PlayerState{
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (!input.isHoldingSpace()) {
-            playerStateHandler.changeState(Jump.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            playerStateHandler.changeState(delta, Jump.INSTANCE);
         } else if (input.isPressed(Input.Keys.A)) {
             gameWorld.getPlayer().setDirection(-1);
             gameWorld.getPlayer().setJumpDirection(-1);
@@ -27,7 +26,7 @@ public class BeforeJump extends PlayerState{
         }
     }
 
-    public void exit() {
+    public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
 
     }
 }

@@ -14,26 +14,21 @@ public class Idle extends PlayerState {
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (!collisionDetector.isTouchingGround()) {
-            playerStateHandler.changeState(Falling.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        }
-         else if (input.isPressed(Input.Keys.SPACE)) {
-        //    playerStateHandler.changeState(Jump.INSTANCE);
-        //    playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-            playerStateHandler.changeState(BeforeJump.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
-        }
-        else if (input.isPressed(Input.Keys.A)) {
+            playerStateHandler.changeState(delta, Falling.INSTANCE);
+        } else if (input.isPressed(Input.Keys.SPACE)) {
+            playerStateHandler.changeState(delta, BeforeJump.INSTANCE);
+        } else if (input.isPressed(Input.Keys.A)) {
             gameWorld.getPlayer().setDirection(-1);
-            playerStateHandler.changeState(Walking.INSTANCE);
+            gameWorld.getPlayer().setJumpDirection(-1);
+            playerStateHandler.changeState(delta, Walking.INSTANCE);
         } else if (input.isPressed(Input.Keys.D)) {
             gameWorld.getPlayer().setDirection(1);
-            playerStateHandler.changeState(Walking.INSTANCE);
+            gameWorld.getPlayer().setJumpDirection(1);
+            playerStateHandler.changeState(delta, Walking.INSTANCE);
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
-            playerStateHandler.changeState(WallAttach.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         }
     }
 
-    public void exit() {}
+    public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {}
 }

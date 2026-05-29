@@ -62,10 +62,10 @@ public class CollisionDetector implements ContactListener {
             Vector2 normal = worldManifold.getNormal();
             if (!fixtureB.getBody().getUserData().equals("player"))
                 normal.scl(-1);
-            if (normal.x > 0.1f) {
+            if (normal.x > 0.5f) {
                 leftHookContact = true;
             }
-            if (normal.x < -0.1f){
+            if (normal.x < -0.5f){
                 rightHookContact = true;
             }
         }

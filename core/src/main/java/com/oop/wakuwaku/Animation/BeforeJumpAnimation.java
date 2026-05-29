@@ -8,11 +8,11 @@ import com.oop.wakuwaku.world.Player;
 public class BeforeJumpAnimation extends AnimationState{
     public static final BeforeJumpAnimation INSTANCE = new BeforeJumpAnimation();
 
-    private final int ANIMATION_FRAME = 6;
+    private final int ANIMATION_FRAME = 1;
     private final Animation<TextureRegion> animation;
 
     private BeforeJumpAnimation() {
-        animation = initializeAnimation("animation/idle.png", 1f);
+        animation = initializeAnimation("animation/beforeJump.png", 1f);
     }
 
     protected int getAnimationFrameCount() {

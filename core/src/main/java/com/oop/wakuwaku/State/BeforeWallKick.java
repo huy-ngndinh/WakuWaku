@@ -14,12 +14,11 @@ public class BeforeWallKick extends PlayerState {
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (!input.isHoldingSpace()) {
-            playerStateHandler.changeState(WallKick.INSTANCE);
-            playerStateHandler.getCurrentState().enter(delta, playerStateHandler, input, collisionDetector, gameWorld);
+            playerStateHandler.changeState(delta, WallKick.INSTANCE);
         }
     }
 
-    public void exit() {
+    public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
 
     }
 }

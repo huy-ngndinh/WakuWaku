@@ -18,7 +18,7 @@ import com.oop.wakuwaku.world.Player;
 
 /** First screen of the application.*/
 public class GameScreen extends ScreenAdapter {
-    private Main game;
+    private final Main game;
 
     // Box2d
     private Physics physics;
@@ -28,13 +28,13 @@ public class GameScreen extends ScreenAdapter {
     // Animation
     private AnimationHandler animationHandler;
 
-    //gameinput
+    // Game input
     private GameInput input;
 
     // Game world (Map, Player)
     private GameWorld gameworld;
 
-    //render
+    // Renderer
     private Render render;
 
     public GameScreen(Main game) {
@@ -48,10 +48,10 @@ public class GameScreen extends ScreenAdapter {
         collisionDetector = new CollisionDetector();
         physics.getWorld().setContactListener(collisionDetector);
         animationHandler = new AnimationHandler();
-        playerStateHandler = new PlayerStateHandler(this.animationHandler);
         gameworld = new GameWorld(physics.getWorld());
-        render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
+        playerStateHandler = new PlayerStateHandler(input, collisionDetector, gameworld, animationHandler);
+        render = new Render(gameworld.getMap().getTiledMap());
 
         Gdx.input.setInputProcessor(input);
     }
@@ -66,9 +66,12 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        input.update(delta);
+
         logic(delta);
         // Debuging state
-        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+//        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+//        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName() + ": " + animationHandler.getCurrentAnimationState().getClass().getSimpleName());
 
 //        if(playerStateHandler.getCurrentState() instanceof WallHanging){
 //            System.out.println("Hanging");
@@ -78,11 +81,10 @@ public class GameScreen extends ScreenAdapter {
         //}
 
         //collision debug
-        if(collisionDetector.isTouchingHook()) {
-            System.out.println("Hook");
-        }
+//        if(collisionDetector.isTouchingHook()) {
+//            System.out.println("Hook");
+//        }
        // System.out.println(gameworld.getPlayer().getPosition());
-        input.update(delta);
         draw(delta);
     }
 
@@ -113,7 +115,7 @@ public class GameScreen extends ScreenAdapter {
             case "Jump":
                 Jump jumpState = (Jump) playerState;
                 if (jumpState.isJumpRequest()) {
-                    player.jump(jumpState.getDirection(), input.getHoldTimeSpace());
+                    player.jump(input.getHoldTimeSpace());
                     jumpState.turnOffJumpRequest();
                 }
                 break;
@@ -129,18 +131,17 @@ public class GameScreen extends ScreenAdapter {
             case "WallKick":
                 WallKick wallKickState = (WallKick) playerState;
                 if (wallKickState.isJumpRequest()) {
-                    player.wall_kick(wallKickState.getWallDirection(), input.getHoldTimeSpace());
+                    player.wall_kick(input.getHoldTimeSpace());
                     wallKickState.turnOffJumpRequest();
                 }
                 break;
 
             //case locked animation
             case "WallClimbOver":
-                player.teleport(10f, 10f);
+                player.teleport(2f, 3f);
                 break;
         }
-
-        playerStateHandler.updateState(delta, input, collisionDetector, gameworld);
+        playerStateHandler.updateState(delta);
     }
 
     private void draw(float delta){
@@ -148,12 +149,13 @@ public class GameScreen extends ScreenAdapter {
         render.reset();
         // draw map
         render.draw(gameworld.getPlayer());
-        // draw player/animation
-        TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
-        render.drawPlayer(gameworld.getPlayer(), animationRegion);
         // update physics
         collisionDetector.resetContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
+        // draw player/animation
+        TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
+        render.drawPlayer(gameworld.getPlayer(), animationRegion);
+        // debug mode, comment out when finished
         physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
 
@@ -168,9 +170,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void hide() {
-        Gdx.input.setInputProcessor(null);
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
