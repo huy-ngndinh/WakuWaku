@@ -70,7 +70,7 @@ public class GameScreen extends ScreenAdapter {
 
         logic(delta);
         // Debuging state
-       System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+    //    System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
 //        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName() + ": " + animationHandler.getCurrentAnimationState().getClass().getSimpleName());
 
 //        if(playerStateHandler.getCurrentState() instanceof WallHanging){
@@ -85,7 +85,7 @@ public class GameScreen extends ScreenAdapter {
 //            System.out.println("Hook");
 //        }
        // System.out.println(gameworld.getPlayer().getPosition());
-    //    System.out.println(gameworld.getPlayer().getVelocity());
+       System.out.println(gameworld.getPlayer().getVelocity());
         draw(delta);
     }
 
@@ -126,7 +126,7 @@ public class GameScreen extends ScreenAdapter {
                 break;
 
             case "WallClimb":
-                player.climb();
+                player.climbUp(1f);
                 break;
 
             case "WallKick":
@@ -139,7 +139,7 @@ public class GameScreen extends ScreenAdapter {
 
             //case locked animation
             case "WallClimbOver":
-                player.climbOver(0.2f,0.2f);
+                player.climbUp(2f);
                 break;
         }
         playerStateHandler.updateState(delta);

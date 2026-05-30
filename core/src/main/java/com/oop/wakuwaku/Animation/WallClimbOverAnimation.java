@@ -12,7 +12,7 @@ public class WallClimbOverAnimation extends AnimationState {
     private final Animation<TextureRegion> animation;
 
     private WallClimbOverAnimation() {
-        animation = initializeAnimation("animation/ClimbOver.png", 2f);
+        animation = initializeAnimation("animation/ClimbOver.png", 0.5f);
     }
 
     protected int getAnimationFrameCount() {

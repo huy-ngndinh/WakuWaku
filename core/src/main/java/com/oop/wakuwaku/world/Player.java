@@ -90,19 +90,18 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(currentVelocity);
     }
 
-    public void climbOver(float x,float y) {
-        //up first
-        this.b2body.applyLinearImpulse(new Vector2(0,y), this.b2body.getWorldCenter(), true);
-        
-        // right/left
-        this.b2body.applyLinearImpulse(new Vector2(x*this.direction,0), this.b2body.getWorldCenter(), true);
+    
 
-    }
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.5f));
     }
-    public void climb() {
-        this.b2body.setLinearVelocity(new Vector2(0, 1f));
+    public void climbUp(float y) {
+        this.b2body.setLinearVelocity(new Vector2(0, y));
+    }
+    public void climbHorizon(float x){
+        // this.b2body.setLinearVelocity(new Vector2(x*direction, 0));
+        // this.b2body.applyLinearImpulse(new Vector2(x * direction, 0), this.b2body.getWorldCenter(), true);
+        this.b2body.setTransform(new Vector2(this.b2body.getPosition().x + x*direction,this.b2body.getPosition().y), 0f);
     }
 
     public void wall_kick(int holdTime) {

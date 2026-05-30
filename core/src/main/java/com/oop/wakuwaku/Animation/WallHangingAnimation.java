@@ -8,11 +8,11 @@ import com.oop.wakuwaku.world.Player;
 public class WallHangingAnimation extends AnimationState {
     public static final WallHangingAnimation INSTANCE = new WallHangingAnimation();
 
-    private final int ANIMATION_FRAME = 6;
+    private final int ANIMATION_FRAME = 3;
     private final Animation<TextureRegion> animation;
 
     private WallHangingAnimation() {
-        animation = initializeAnimation("animation/wallAttach.png", 1f);
+        animation = initializeAnimation("animation/WallHanging.png", 1f);
     }
 
     protected int getAnimationFrameCount() {
