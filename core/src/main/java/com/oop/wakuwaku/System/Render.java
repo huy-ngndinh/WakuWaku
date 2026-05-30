@@ -55,7 +55,7 @@ public class Render {
         viewport.apply();
         camera.position.set(player.getPosition().x, player.getPosition().y, 0);
         camera.zoom = 0.6f;
-        camera.update();
+        //camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();
     }

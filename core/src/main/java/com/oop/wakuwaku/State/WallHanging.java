@@ -20,7 +20,7 @@ public class WallHanging extends PlayerState {
         }
         // nếu ko cho leo qua tường thì cho rơi
         else if (input.isPressed(Input.Keys.SPACE)){
-            System.out.println("Stopped hanging");
+            //System.out.println("Stopped hanging");
             playerStateHandler.changeState(delta, Falling.INSTANCE);
         }
     }

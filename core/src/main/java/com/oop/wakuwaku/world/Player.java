@@ -35,7 +35,7 @@ public class Player extends Sprite{
         fdef.friction = 0.0f;
         b2body.createFixture(fdef);
         //def state
-        direction = 0;
+        direction = 1;
         jumpDirection = 0;
     }
 
@@ -90,13 +90,12 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(currentVelocity);
     }
 
-    public void teleport(float x, float y) {
-        Vector2 currentPosition = b2body.getPosition();
-        if (direction == -1) {
-            this.b2body.setTransform(new Vector2(currentPosition.x - x, currentPosition.y + y), 0);
-        } else {
-            this.b2body.setTransform(new Vector2(currentPosition.x + x, currentPosition.y + y), 0);
-        }
+    public void climbOver(float x,float y) {
+        //up first
+        this.b2body.applyLinearImpulse(new Vector2(0,y), this.b2body.getWorldCenter(), true);
+        
+        // right/left
+        this.b2body.applyLinearImpulse(new Vector2(x*this.direction,0), this.b2body.getWorldCenter(), true);
 
     }
     public void slide() {

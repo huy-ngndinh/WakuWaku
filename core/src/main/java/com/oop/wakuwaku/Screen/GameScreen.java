@@ -70,21 +70,22 @@ public class GameScreen extends ScreenAdapter {
 
         logic(delta);
         // Debuging state
-//        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
+       System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
 //        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName() + ": " + animationHandler.getCurrentAnimationState().getClass().getSimpleName());
 
 //        if(playerStateHandler.getCurrentState() instanceof WallHanging){
 //            System.out.println("Hanging");
 //        }
-//        if(playerStateHandler.getCurrentState() instanceof WallClimbOver){
-//            System.out.println("Climbing over");
-        //}
+    //    if(playerStateHandler.getCurrentState() instanceof WallClimbOver){
+    //        System.out.println("Climbing over");
+    //     }
 
         //collision debug
 //        if(collisionDetector.isTouchingHook()) {
 //            System.out.println("Hook");
 //        }
        // System.out.println(gameworld.getPlayer().getPosition());
+    //    System.out.println(gameworld.getPlayer().getVelocity());
         draw(delta);
     }
 
@@ -98,7 +99,7 @@ public class GameScreen extends ScreenAdapter {
             // case stop
             case "Idle":
             case "BeforeJump":
-            // case "WallHanging":
+            case "WallHanging":
                 player.stop();
                 break;
             //case move
@@ -138,7 +139,7 @@ public class GameScreen extends ScreenAdapter {
 
             //case locked animation
             case "WallClimbOver":
-                player.teleport(2f, 3f);
+                player.climbOver(0.2f,0.2f);
                 break;
         }
         playerStateHandler.updateState(delta);

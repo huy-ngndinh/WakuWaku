@@ -8,11 +8,11 @@ import com.oop.wakuwaku.world.Player;
 public class WallClimbOverAnimation extends AnimationState {
     public static final WallClimbOverAnimation INSTANCE = new WallClimbOverAnimation();
 
-    private final int ANIMATION_FRAME = 3;
+    private final int ANIMATION_FRAME = 6;
     private final Animation<TextureRegion> animation;
 
     private WallClimbOverAnimation() {
-        animation = initializeAnimation("animation/jump.png", 0.4f);
+        animation = initializeAnimation("animation/ClimbOver.png", 2f);
     }
 
     protected int getAnimationFrameCount() {
@@ -21,8 +21,8 @@ public class WallClimbOverAnimation extends AnimationState {
 
     public TextureRegion getTextureRegion(float stateTime, PlayerState playerState, Player player) {
         TextureRegion animationFrame = animation.getKeyFrame(stateTime, false);
-        if (player.getDirection() == -1 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
-        else if (player.getDirection() == 1 && animationFrame.isFlipX()) animationFrame.flip(true, false);
+        if (player.getDirection() == 1 && !animationFrame.isFlipX()) animationFrame.flip(true, false);
+        else if (player.getDirection() == -1 && animationFrame.isFlipX()) animationFrame.flip(true, false);
         return animationFrame;
     }
 }
