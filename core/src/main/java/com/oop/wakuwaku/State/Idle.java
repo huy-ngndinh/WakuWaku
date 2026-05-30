@@ -28,6 +28,9 @@ public class Idle extends PlayerState {
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         }
+        else if(input.isPressed(Input.Keys.J) && collisionDetector.isTouchingHook()) {
+            playerStateHandler.changeState(delta, WallClimbOver.INSTANCE);
+        }
     }
 
     public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {}

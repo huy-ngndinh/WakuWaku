@@ -85,7 +85,7 @@ public class GameScreen extends ScreenAdapter {
 //            System.out.println("Hook");
 //        }
        // System.out.println(gameworld.getPlayer().getPosition());
-       System.out.println(gameworld.getPlayer().getVelocity());
+    //    System.out.println(gameworld.getPlayer().getVelocity());
         draw(delta);
     }
 
@@ -139,7 +139,8 @@ public class GameScreen extends ScreenAdapter {
 
             //case locked animation
             case "WallClimbOver":
-                player.climbUp(2f);
+                player.climbUp(3f); 
+                player.climbHorizon(5f);
                 break;
         }
         playerStateHandler.updateState(delta);

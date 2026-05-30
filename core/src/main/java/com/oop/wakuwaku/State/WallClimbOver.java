@@ -24,12 +24,9 @@ public class WallClimbOver extends PlayerState {
         if (gameWorld.getPlayer().getPosition().y - startPos.y > dif) {
             playerStateHandler.changeState(delta, Idle.INSTANCE);
         }
-        // System.out.println(startPos + " " + gameWorld.getPlayer().getPosition());
     }
 
     public void exit(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        gameWorld.getPlayer().climbHorizon(0.2f);
-        // System.out.println(gameWorld.getPlayer().getPosition() + " " + gameWorld.getPlayer().getVelocity());
     }
 
 }

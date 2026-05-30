@@ -8,11 +8,11 @@ import com.oop.wakuwaku.world.Player;
 public class WallClimbOverAnimation extends AnimationState {
     public static final WallClimbOverAnimation INSTANCE = new WallClimbOverAnimation();
 
-    private final int ANIMATION_FRAME = 6;
+    private final int ANIMATION_FRAME = 8;
     private final Animation<TextureRegion> animation;
 
     private WallClimbOverAnimation() {
-        animation = initializeAnimation("animation/ClimbOver.png", 0.5f);
+        animation = initializeAnimation("animation/ClimbOver.png", 0.4f);
     }
 
     protected int getAnimationFrameCount() {

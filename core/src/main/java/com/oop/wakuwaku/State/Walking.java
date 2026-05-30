@@ -15,7 +15,11 @@ public class Walking extends PlayerState{
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(delta, WallAttach.INSTANCE);
-        } else if (input.isPressed(Input.Keys.A)) {
+        }
+        else if(input.isPressed(Input.Keys.J) && collisionDetector.isTouchingHook()) {
+            playerStateHandler.changeState(delta, WallClimbOver.INSTANCE);
+        }
+        else if (input.isPressed(Input.Keys.A)) {
             gameWorld.getPlayer().setDirection(-1);
             gameWorld.getPlayer().setJumpDirection(-1);
             if (input.isPressed(Input.Keys.SPACE)) {

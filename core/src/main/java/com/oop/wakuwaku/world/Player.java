@@ -100,8 +100,8 @@ public class Player extends Sprite{
     }
     public void climbHorizon(float x){
         // this.b2body.setLinearVelocity(new Vector2(x*direction, 0));
-        // this.b2body.applyLinearImpulse(new Vector2(x * direction, 0), this.b2body.getWorldCenter(), true);
-        this.b2body.setTransform(new Vector2(this.b2body.getPosition().x + x*direction,this.b2body.getPosition().y), 0f);
+        this.b2body.applyLinearImpulse(new Vector2(x * direction, 0), this.b2body.getWorldCenter(), true);
+        // this.b2body.setTransform(new Vector2(this.b2body.getPosition().x + x*direction,this.b2body.getPosition().y), 0f);
     }
 
     public void wall_kick(int holdTime) {
