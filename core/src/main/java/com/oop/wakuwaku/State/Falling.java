@@ -20,8 +20,9 @@ public class Falling extends PlayerState {
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         }
-        fallCoeff += 0.1f;
+        fallCoeff += 0.01f;
     }
+
     public float getFallCoeff (){
         return this.fallCoeff;
     }

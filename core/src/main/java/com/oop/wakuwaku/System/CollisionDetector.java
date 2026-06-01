@@ -43,10 +43,10 @@ public class CollisionDetector implements ContactListener {
             Vector2 normal = worldManifold.getNormal();
             if (!fixtureB.getBody().getUserData().equals("player"))
                 normal.scl(-1);
-            if (normal.x > 0.5f) {
+            if (normal.x > 0.2f) {
                 leftWallContact = true;
             }
-            if (normal.x < -0.5f) {
+            if (normal.x < -0.2f) {
                 rightWallContact = true;
             }
         }
@@ -55,7 +55,7 @@ public class CollisionDetector implements ContactListener {
             Vector2 normal = worldManifold.getNormal();
             if (fixtureA.getBody().getUserData().equals("player"))
                 normal.scl(-1);
-            if (normal.y > 0.5f) {
+            if (normal.y > 0.2f) {
                 groundContact = true;
             }
         }
@@ -64,10 +64,10 @@ public class CollisionDetector implements ContactListener {
             Vector2 normal = worldManifold.getNormal();
             if (!fixtureB.getBody().getUserData().equals("player"))
                 normal.scl(-1);
-            if (normal.x > 0.5f) {
+            if (normal.x > 0.2f) {
                 leftHookContact = true;
             }
-            if (normal.x < -0.5f){
+            if (normal.x < -0.2f){
                 rightHookContact = true;
             }
         }
@@ -101,7 +101,7 @@ public class CollisionDetector implements ContactListener {
     }
 
     private boolean checkWallCollision(Fixture A, Fixture B) {
-        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wallcoliision"));
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wallclimb"));
     }
 
     private boolean checkGroundCollision(Fixture A, Fixture B) {

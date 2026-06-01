@@ -68,34 +68,37 @@ public class Player extends Sprite{
     }
 
     public void moveLeft(){
-        this.b2body.setLinearVelocity(new Vector2(-3.5f, 0));
+        this.b2body.setLinearVelocity(new Vector2(-5f, 0));
     }
 
     public void moveRight(){
-        this.b2body.setLinearVelocity(new Vector2(3.5f, 0));
+        this.b2body.setLinearVelocity(new Vector2(5f, 0));
     }
 
     public void jump(int holdTime){
-        float fJump;
-        if(holdTime < 30) { fJump = 5f;}
-        else if(holdTime < 90) { fJump = 7f;}
-        else { fJump = 9f;}
-        float fHorizontal = 5f;
+        float fJump,fHorizontal;
+        if(holdTime < 30) { fJump = 4f;fHorizontal = 3f;}
+        else if(holdTime < 90) { fJump = 6f;fHorizontal = 5f;}
+        else { fJump = 8f;fHorizontal = 6f;}
         this.b2body.applyLinearImpulse(new Vector2(this.jumpDirection * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
     }
 
-    public void fallDown(float delta){
-        Vector2 currentVelocity = b2body.getLinearVelocity();
-        currentVelocity.y = -6f;
-        this.b2body.setLinearVelocity(currentVelocity);
+    public void fallDown(float fallCoeff){
+        Vector2 initV = b2body.getLinearVelocity();
+        initV.y = -6f;
 
-        
+        Vector2 updateV = new Vector2(
+            initV.x*(float)Math.exp(-fallCoeff),
+            initV.y*(float)Math.exp(fallCoeff)
+        );
+
+        this.b2body.setLinearVelocity(updateV);
     }
 
     
 
     public void slide() {
-        this.b2body.setLinearVelocity(new Vector2(0, -0.5f));
+        this.b2body.setLinearVelocity(new Vector2(0, -0.3f));
     }
     public void climbUp(float y) {
         this.b2body.setLinearVelocity(new Vector2(0, y));
@@ -109,11 +112,11 @@ public class Player extends Sprite{
     public void wall_kick(int holdTime) {
         float fJump;
         if(holdTime < 30) {
-            fJump = 3f;
+            fJump = 4f;
         } else if(holdTime < 90) {
-            fJump = 5f;
+            fJump = 6f;
         } else {
-            fJump = 7f;
+            fJump = 8f;
         }
         float fHorizontal = 5f;
         this.b2body.applyLinearImpulse(new Vector2(fHorizontal * direction, fJump), this.b2body.getWorldCenter(), true);
