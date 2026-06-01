@@ -9,7 +9,7 @@ public class IdleAnimation extends AnimationState {
 
     public static final IdleAnimation INSTANCE = new IdleAnimation();
 
-    private final int ANIMATION_FRAME = 6;
+    private final int ANIMATION_FRAME = 5;
     private final Animation<TextureRegion> animation;
 
     private IdleAnimation() {

@@ -8,11 +8,11 @@ import com.oop.wakuwaku.world.Player;
 public class BeforeWallKickAnimation extends AnimationState {
     public static final BeforeWallKickAnimation INSTANCE = new BeforeWallKickAnimation();
 
-    private final int ANIMATION_FRAME = 1;
+    private final int ANIMATION_FRAME = 5;
     private final Animation<TextureRegion> animation;
 
     private BeforeWallKickAnimation() {
-        animation = initializeAnimation("animation/beforeWallKick.png", 1f);
+        animation = initializeAnimation("animation/beforeWallkick.png", 1f);
     }
 
     protected int getAnimationFrameCount() {
