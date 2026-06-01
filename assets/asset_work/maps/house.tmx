@@ -216,8 +216,8 @@
   <object id="68" x="1120" y="672" width="32" height="192"/>
  </objectgroup>
  <objectgroup id="8" name="hook">
-  <object id="16" x="928" y="1088" width="16.3636" height="9.90909"/>
-  <object id="19" x="1007.03" y="1088.06" width="17" height="9.8125"/>
-  <object id="50" x="593.196" y="608.815" width="14.75" height="10"/>
+  <object id="16" x="927.813" y="1096.44" width="16.3636" height="9.90909"/>
+  <object id="19" x="1007.28" y="1097.93" width="17" height="9.8125"/>
+  <object id="50" x="593.438" y="617.176" width="14.75" height="10"/>
  </objectgroup>
 </map>

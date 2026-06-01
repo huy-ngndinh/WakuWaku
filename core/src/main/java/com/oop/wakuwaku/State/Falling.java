@@ -20,6 +20,9 @@ public class Falling extends PlayerState {
         } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         }
+        else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingHook()) {
+            playerStateHandler.changeState(delta, WallHanging.INSTANCE);
+        }
         fallCoeff += 0.01f;
     }
 

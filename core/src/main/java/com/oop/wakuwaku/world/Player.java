@@ -88,7 +88,7 @@ public class Player extends Sprite{
         initV.y = -4f;
 
         Vector2 updateV = new Vector2(
-            initV.x*(float)Math.exp(-fallCoeff),
+            Math.max(2f*direction,initV.x*(float)Math.exp(-0.05*fallCoeff)),
             Math.max(-10f,initV.y*(float)Math.exp(fallCoeff))
         );
 
