@@ -85,11 +85,11 @@ public class Player extends Sprite{
 
     public void fallDown(float fallCoeff){
         Vector2 initV = b2body.getLinearVelocity();
-        initV.y = -6f;
+        initV.y = -4f;
 
         Vector2 updateV = new Vector2(
             initV.x*(float)Math.exp(-fallCoeff),
-            initV.y*(float)Math.exp(fallCoeff)
+            Math.max(-10f,initV.y*(float)Math.exp(fallCoeff))
         );
 
         this.b2body.setLinearVelocity(updateV);

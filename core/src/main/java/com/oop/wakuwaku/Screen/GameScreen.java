@@ -88,7 +88,7 @@ public class GameScreen extends ScreenAdapter {
        // System.out.println(gameworld.getPlayer().getPosition());
     //    System.out.println(gameworld.getPlayer().getVelocity());
 
-    System.out.println("Delta time: " + delta);
+    // System.out.println("Delta time: " + delta);
 
         draw(delta);
     }
@@ -163,7 +163,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
         render.drawPlayer(gameworld.getPlayer(), animationRegion);
         // debug mode, comment out when finished
-        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+        //physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
 
     @Override
