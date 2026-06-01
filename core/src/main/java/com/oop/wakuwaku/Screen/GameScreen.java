@@ -85,8 +85,8 @@ public class GameScreen extends ScreenAdapter {
 //        if(collisionDetector.isTouchingHook()) {
 //            System.out.println("Hook");
 //        }
-       // System.out.println(gameworld.getPlayer().getPosition());
-       System.out.println(gameworld.getPlayer().getVelocity());
+    // System.out.println(gameworld.getPlayer().getPosition());
+    //    System.out.println(gameworld.getPlayer().getVelocity());
 
     // System.out.println("Delta time: " + delta);
 
