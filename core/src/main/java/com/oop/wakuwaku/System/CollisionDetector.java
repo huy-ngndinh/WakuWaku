@@ -12,7 +12,9 @@ public class CollisionDetector implements ContactListener {
 
     private boolean leftWallContact;
     private boolean rightWallContact;
+    
     private boolean groundContact;
+
     private boolean leftHookContact;
     private boolean rightHookContact;
 
@@ -99,7 +101,7 @@ public class CollisionDetector implements ContactListener {
     }
 
     private boolean checkWallCollision(Fixture A, Fixture B) {
-        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wall"));
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wallcoliision"));
     }
 
     private boolean checkGroundCollision(Fixture A, Fixture B) {

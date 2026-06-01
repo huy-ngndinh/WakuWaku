@@ -77,17 +77,19 @@ public class Player extends Sprite{
 
     public void jump(int holdTime){
         float fJump;
-        if(holdTime < 30) { fJump = 3f;}
-        else if(holdTime < 90) { fJump = 5f;}
-        else { fJump = 7f;}
+        if(holdTime < 30) { fJump = 5f;}
+        else if(holdTime < 90) { fJump = 7f;}
+        else { fJump = 9f;}
         float fHorizontal = 5f;
         this.b2body.applyLinearImpulse(new Vector2(this.jumpDirection * fHorizontal, fJump), this.b2body.getWorldCenter(), true);
     }
 
-    public void fallDown(){
+    public void fallDown(float delta){
         Vector2 currentVelocity = b2body.getLinearVelocity();
-        currentVelocity.y = -4f;
+        currentVelocity.y = -6f;
         this.b2body.setLinearVelocity(currentVelocity);
+
+        
     }
 
     

@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
+import com.oop.wakuwaku.State.Falling;
 import com.oop.wakuwaku.State.Jump;
 import com.oop.wakuwaku.State.PlayerState;
 import com.oop.wakuwaku.State.WallKick;
@@ -86,6 +87,9 @@ public class GameScreen extends ScreenAdapter {
 //        }
        // System.out.println(gameworld.getPlayer().getPosition());
     //    System.out.println(gameworld.getPlayer().getVelocity());
+
+    System.out.println("Delta time: " + delta);
+
         draw(delta);
     }
 
@@ -110,7 +114,8 @@ public class GameScreen extends ScreenAdapter {
                 break;
 
             case "Falling":
-                player.fallDown();
+                Falling fallState = (Falling) playerState;
+                player.fallDown(fallState.getFallCoeff());
                 break;
 
             case "Jump":
