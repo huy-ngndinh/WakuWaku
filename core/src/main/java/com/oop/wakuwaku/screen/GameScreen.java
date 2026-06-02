@@ -14,9 +14,9 @@ public class GameScreen extends ScreenAdapter {
     private Main game;
 
     public static final float TILE_PIXEL = 32f;
-    public static final float UNIT = 1f / TILE_PIXEL; 
+    public static final float UNIT = 1f / TILE_PIXEL;
 
-    
+
     // Box2d
     private Physics physics;
 
@@ -32,14 +32,14 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void show() { 
+    public void show() {
 
         physics = new Physics();
         gameworld = new GameWorld(physics.getWorld());
         render = new Render(gameworld.getMap().getTiledMap());
         input = new GameInput();
 
-    }       
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -54,6 +54,14 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         input(delta);
         // logic();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            game.setScreen(new ResultScreen(game, 1));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            game.setScreen(new ResultScreen(game, 2));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            game.setScreen(new ResultScreen(game, 3));
+        }
         draw();
     }
 
@@ -72,8 +80,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void logic(){
-        
-    }   
+
+    }
 
     private void draw(){
 
@@ -107,6 +115,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        
+
     }
 }

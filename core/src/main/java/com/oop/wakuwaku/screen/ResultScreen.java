@@ -5,28 +5,32 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.oop.wakuwaku.FactManager;
 import com.oop.wakuwaku.Main;
 
+
 public class ResultScreen extends ScreenAdapter {
 
-    private Main game;
+    private final Main game;
     private Stage stage;
     private Skin skin;
+    private int factIndex;
 
-    public ResultScreen(Main game) {
+    public ResultScreen(Main game, int factIndex) { // thêm tham số
         this.game = game;
+        this.factIndex = factIndex;
     }
 
     @Override
@@ -36,63 +40,60 @@ public class ResultScreen extends ScreenAdapter {
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        Image bg = new Image(new Texture("Pixelart.jpeg"));
+        // Background
+        Image bg = new Image(new Texture("ResultAsset/BGResultScreen.png"));
         bg.setFillParent(true);
 
 
-        Stack rootStack = new Stack();
-        rootStack.setFillParent(true);
+        //  Label
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
+            Gdx.files.internal("ResultAsset/aseprite.ttf")
+        );
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 15;
+        parameter.color = Color.BLACK;
+        BitmapFont arcadeFont = generator.generateFont(parameter);
 
-        Table root = new Table();
-        root.setFillParent(true);
+        generator.dispose();
 
-        // Stack for board & Mission + Text
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = arcadeFont;
 
-        Texture menu_up = new Texture("continue.png");
-        Texture menu_down = new Texture("continue.png");
-        Texture boardTexture = new Texture("board.png");
-        Label factText = new Label(FactManager.getFact(1),skin);
+        Label factText = new Label(FactManager.getFact(factIndex), labelStyle);
         factText.setWrap(true);
         factText.setAlignment(Align.center);
+        float fontScale = stage.getWidth() / 800f;
+        factText.setFontScale(fontScale);
 
-        Image board = new Image(boardTexture);
+        Image board = new Image(new Texture("ResultAsset/newfact.png"));
 
-        Table missionTable = new Table();
-        missionTable.center();
-        missionTable.add(factText).center().width(200).pad(20);
-        //missionTable.setFillParent(true);
+        Table factTable = new Table();
+        factTable.add(factText)
+            .center().expandX()
+            .fillX()
+            .pad(20);;
+        //factTable.add(factText).center().width(200).pad(20);
 
-        Stack stack = new Stack();
-        stack.add(board);
-        stack.add(missionTable);
+        Stack boardStack = new Stack();
+        boardStack.add(board);
+        boardStack.add(factTable);
 
-        ImageButton menuButton = new ImageButton(
-            new TextureRegionDrawable(new TextureRegion(menu_up)),
-            new TextureRegionDrawable(new TextureRegion(menu_down))
+        Texture buttonSheet = new Texture("ResultAsset/NextButton.png");
+        int halfWidth = buttonSheet.getWidth() / 2;
+        int btnHeight = buttonSheet.getHeight();
+
+        TextureRegion normal  = new TextureRegion(buttonSheet,0,0, halfWidth, btnHeight);
+        TextureRegion pressed = new TextureRegion(buttonSheet, halfWidth, 0, halfWidth, btnHeight);
+
+        ImageButton nextButton = new ImageButton(
+            new TextureRegionDrawable(normal),
+            new TextureRegionDrawable(pressed)
         );
-
-        Texture fs_up = new Texture("home.png");
-        Texture fs_down = new Texture("home.png");
-        ImageButton Out = new ImageButton(
-            new TextureRegionDrawable(new TextureRegion(fs_up)),
-            new TextureRegionDrawable(new TextureRegion(fs_down))
-        );
-
-        Texture game_end = new Texture("pixel kit UI.png");
-        ImageButton Endbutton = new ImageButton(
-            new TextureRegionDrawable(new TextureRegion(game_end))
-        );
+        nextButton.getImage().setScaling(Scaling.fit);
+        nextButton.getImageCell().grow();
 
         Sound clickSound = Gdx.audio.newSound(Gdx.files.internal("click.mp3"));
-        menuButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                clickSound.play();
-                game.setScreen(new GameScreen(game));
-            }
-        });
-
-        Out.addListener(new ClickListener() {
+        nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickSound.play();
@@ -100,50 +101,33 @@ public class ResultScreen extends ScreenAdapter {
             }
         });
 
-        Table returnTable = new Table();
-        menuButton.getImage().setScaling(Scaling.fit);
-        menuButton.getImageCell().grow();
-        Out.getImage().setScaling(Scaling.fit);
-        Out.getImageCell().grow();
-
-        returnTable.add(menuButton).width(100).height(100);
-        returnTable.add(Out).width(100).height(100);;
-
-
-
-        root.add(stack).padBottom(20)
-            .width(500)
-            .height(300);
+        // Layout
+        Table root = new Table();
+        root.setFillParent(true);
         root.row();
-        root.add(returnTable).center();
 
+        root.add(boardStack)
+            .width(stage.getWidth() * 0.7f)
+            .height(stage.getHeight() * 0.65f)
+            .padTop(stage.getHeight() * 0.05f)
+            .top()
+        ;
+        root.row();
+        root.add(nextButton)
+            .width(stage.getWidth() * 0.4f)
+            .height(stage.getHeight() * 0.4f)
+            .padTop(-stage.getHeight() * 0.1f);
+        Stack rootStack = new Stack();
+        rootStack.setFillParent(true);
         rootStack.add(bg);
         rootStack.add(root);
+
         stage.addActor(rootStack);
-        /*
-        root.add(Endbutton)
-            .width(200)
-            .height(80)
-            .pad(10);*/
-
-
-        /*root.add(menuButton)
-            .width(200)
-            .height(80)
-            .pad(10);
-
-        root.add(Out)
-            .width(200)
-            .height(80)
-            .pad(10);*/
     }
-
-
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
-
         stage.act(delta);
         stage.draw();
     }
@@ -151,6 +135,8 @@ public class ResultScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        stage.clear();
+        show();
     }
 
     @Override
