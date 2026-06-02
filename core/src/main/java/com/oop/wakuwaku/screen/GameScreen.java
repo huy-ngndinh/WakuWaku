@@ -1,6 +1,7 @@
 package com.oop.wakuwaku.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Main;
@@ -63,6 +64,13 @@ public class GameScreen extends ScreenAdapter {
         System.out.println(playerStateHandler.getCurrentState());
         System.out.println(collisionDetector.isTouchingGround());
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            game.setScreen(new ResultScreen(game, 1));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            game.setScreen(new ResultScreen(game, 2));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            game.setScreen(new ResultScreen(game, 3));
+        }
         draw(delta);
 //        System.out.println(collisionDetector.isTouchingLeftWall() + " " + collisionDetector.isTouchingRightWall());
     }
