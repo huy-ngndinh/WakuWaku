@@ -1,7 +1,6 @@
 package com.oop.wakuwaku.System;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -37,7 +36,7 @@ public class SettingsPopup {
         this.clickSound = Gdx.audio.newSound(Gdx.files.internal("click.mp3"));
     }
 
-    public void updateAndDraw(Viewport viewport, Music currentMusic) {
+    public void updateAndDraw(Viewport viewport) {
         if (!game.showPopup) return;
 
         if (Gdx.input.isTouched()) {
@@ -80,11 +79,9 @@ public class SettingsPopup {
             isTouching_Effect = false;
         }
 
-        if (currentMusic != null) {
-            currentMusic.setVolume(musicVolume);
-        }
+        game.music.setVolume(musicVolume);
 
-        game.batch.draw(popupTex, 40, 25, 1200, 670);
+        game.batch.draw(popupTex, 340, 200, 600, 360);
 
         game.batch.draw(closeTex, closeX, closeY, closeW, closeH);
 

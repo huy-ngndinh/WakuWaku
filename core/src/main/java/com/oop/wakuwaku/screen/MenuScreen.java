@@ -2,31 +2,26 @@ package com.oop.wakuwaku.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.oop.wakuwaku.Main;
+import com.oop.wakuwaku.System.Game_Button;
 
 public class MenuScreen extends ScreenAdapter {
     private Main game;
     private Stage stage;
-    private Texture bgTex, playTex, setTex;
-    private ImageButton play, sett;
+    private Texture bgTex;
     private FitViewport viewport;
-    private Music music;
-    private Sound clickSound;
     private float stateTime = 0f;
     private Animation<TextureRegion> bgAnimation;
+    private Game_Button PlayButton, SettingsButton;
 
     private final float VIRTUAL_WIDTH = 1280;
     private final float VIRTUAL_HEIGHT = 720;
@@ -41,14 +36,9 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage); 
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("minecraft.mp3"));
-        music.setLooping(true);
-        music.play();
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("click.mp3"));
-
         bgTex = new Texture("startscreen.png");
-        playTex = new Texture("play.png");
-        setTex  = new Texture("settings.png");
+        PlayButton = new Game_Button(game, "start.png", "start.png", 430, 165, 153, 36);
+        SettingsButton = new Game_Button(game, "Settings.png", "Settings.png", 420, 105, 243, 36);
 
         TextureRegion[][] tmp = TextureRegion.split(bgTex, bgTex.getWidth() / 2, bgTex.getHeight());
         TextureRegion[] bgFrames = new TextureRegion[2];
@@ -57,30 +47,21 @@ public class MenuScreen extends ScreenAdapter {
         bgAnimation = new Animation<TextureRegion>(0.5f, bgFrames);
         bgAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        play = new ImageButton(new TextureRegionDrawable(new TextureRegion(playTex)));
-        sett = new ImageButton(new TextureRegionDrawable(new TextureRegion(setTex)));
+        stage.addActor(PlayButton);
+        stage.addActor(SettingsButton);
 
-        // size and position
-        play.setSize(410, 220);
-        play.setPosition(870, 120);
-        sett.setSize(410, 210);
-        sett.setPosition(870, -20);
-
-        stage.addActor(play);
-        stage.addActor(sett);
-
-        play.addListener(new ClickListener() {
+        PlayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play();
-                if(!game.showPopup)   game.setScreen(new GameScreen(game));
+                if (game.showPopup) return;
+                game.setScreen(new GameScreen(game));
             }
         });
 
-        sett.addListener(new ClickListener() {
+        SettingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play();
+                if (game.showPopup) return;
                 game.showPopup = true;
             }
         });
@@ -95,23 +76,27 @@ public class MenuScreen extends ScreenAdapter {
 
         game.batch.setProjectionMatrix(viewport.getCamera().combined);
         game.batch.begin();
-
         game.batch.draw(currentFrame, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        game.settingsPopup.updateAndDraw(viewport, music);
-
         game.batch.end();
+
+        if (game.showPopup) {
+            PlayButton.setVisible(false);
+            SettingsButton.setVisible(false);
+        } else {
+            PlayButton.setVisible(true);
+            SettingsButton.setVisible(true);
+        }
         stage.act(delta);
         stage.draw();
+        game.batch.begin();
+        game.settingsPopup.updateAndDraw(viewport);
+        game.batch.end();
     }
 
     @Override
     public void dispose () {
         stage.dispose();
         bgTex.dispose();
-        playTex.dispose();
-        setTex.dispose();
-        music.dispose();
-        clickSound.dispose();
     }
 
     @Override
