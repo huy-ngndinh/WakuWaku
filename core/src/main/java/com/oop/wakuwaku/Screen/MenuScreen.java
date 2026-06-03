@@ -21,7 +21,7 @@ public class MenuScreen extends ScreenAdapter {
     private FitViewport viewport;
     private float stateTime = 0f;
     private Animation<TextureRegion> bgAnimation;
-    private Game_Button PlayButton, SettingsButton;
+    private Game_Button PlayButton, SettingsButton, Exit_Button;
 
     private final float VIRTUAL_WIDTH = 1280;
     private final float VIRTUAL_HEIGHT = 720;
@@ -36,9 +36,10 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        bgTex = new Texture("startscreen.png");
-        PlayButton = new Game_Button(game, "start.png", "start.png", 430, 165, 153, 36);
-        SettingsButton = new Game_Button(game, "Settings.png", "Settings.png", 420, 105, 243, 36);
+        bgTex = new Texture("Buttons/startscreen.png");
+        PlayButton = new Game_Button(game, "Buttons/start.png", "Buttons/start.png", 430, 165, 153, 36);
+        SettingsButton = new Game_Button(game, "Buttons/Settings.png", "Buttons/Settings.png", 420, 105, 243, 36);
+        Exit_Button = new Game_Button(game, "Buttons/Exit.png", "Buttons/Exit1.png", 568, 250, 144, 48);
 
         TextureRegion[][] tmp = TextureRegion.split(bgTex, bgTex.getWidth() / 2, bgTex.getHeight());
         TextureRegion[] bgFrames = new TextureRegion[2];
@@ -49,6 +50,7 @@ public class MenuScreen extends ScreenAdapter {
 
         stage.addActor(PlayButton);
         stage.addActor(SettingsButton);
+        stage.addActor(Exit_Button);
 
         PlayButton.addListener(new ClickListener() {
             @Override
@@ -63,6 +65,14 @@ public class MenuScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 if (game.showPopup) return;
                 game.showPopup = true;
+            }
+        });
+
+        Exit_Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!game.showPopup) return;
+                game.showPopup = false;
             }
         });
     }
@@ -82,14 +92,16 @@ public class MenuScreen extends ScreenAdapter {
         if (game.showPopup) {
             PlayButton.setVisible(false);
             SettingsButton.setVisible(false);
+            Exit_Button.setVisible(true);
         } else {
             PlayButton.setVisible(true);
             SettingsButton.setVisible(true);
+            Exit_Button.setVisible(false);
         }
         stage.act(delta);
-        stage.draw();
         game.batch.begin();
         game.settingsPopup.updateAndDraw(viewport);
+        stage.draw();
         game.batch.end();
     }
 

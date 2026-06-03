@@ -9,14 +9,15 @@ import com.oop.wakuwaku.Main;
 public class SettingsPopup {
     private final Main game;
     private final Texture popupTex;
-    private final Texture catHeadTex;
+    private final Texture PawTex;
+    private final Texture Music_BarTex, Effect_BarTex;
 
     public float musicVolume = 0.5f;
     public float effectVolume = 0.5f;
 
-    private final int sliderMinX = 625, sliderMaxX = 825;
-    private final int sliderY_music = 400, sliderY_effect = 450;
-    private final int catWidth = 72, catHeight = 65;
+    private final int sliderMinX = 625, sliderMaxX = 850;
+    private final int sliderY_music = 428, sliderY_effect = 358;
+    private final int catWidth = 46, catHeight = 42;
 
 
     private boolean isTouching_Music = false;
@@ -25,8 +26,10 @@ public class SettingsPopup {
 
     public SettingsPopup(Main game) {
         this.game = game;
-        this.popupTex = new Texture("settings_panel.png");
-        this.catHeadTex = new Texture("cat_head.png");
+        this.popupTex = new Texture("Buttons/settings_panel.png");
+        this.PawTex = new Texture("Buttons/Paw.png");
+        this.Music_BarTex = new Texture("Buttons/Bar.png");
+        this.Effect_BarTex = new Texture("Buttons/Bar.png");
     }
 
     public void updateAndDraw(Viewport viewport) {
@@ -66,17 +69,19 @@ public class SettingsPopup {
         game.batch.draw(popupTex, 340, 200, 600, 360);
 
 
-        float musicCatX = sliderMinX + musicVolume * (sliderMaxX - sliderMinX) - catWidth / 2f;
-        float musicCatY = sliderY_music - catHeight / 2f;
-        game.batch.draw(catHeadTex, musicCatX, musicCatY, catWidth, catHeight);
+        float CatX_music = sliderMinX + musicVolume * (sliderMaxX - sliderMinX) - catWidth / 2f;
+        game.batch.draw(Music_BarTex, sliderMinX - 15, sliderY_music, sliderMaxX - sliderMinX + 30, 30);
+        game.batch.draw(PawTex, CatX_music, sliderY_music - 3, catWidth, catHeight);
 
-        float catX_effect = sliderMinX + effectVolume * (sliderMaxX - sliderMinX) - catWidth / 2f;
-        float catY_effect = sliderY_effect - catHeight / 2f;
-        game.batch.draw(catHeadTex, catX_effect, catY_effect, catWidth, catHeight);
+        float CatX_effect = sliderMinX + effectVolume * (sliderMaxX - sliderMinX) - catWidth / 2f;
+        game.batch.draw(Effect_BarTex, sliderMinX - 15, sliderY_effect, sliderMaxX - sliderMinX + 30, 30);
+        game.batch.draw(PawTex, CatX_effect, sliderY_effect - 3, catWidth, catHeight);
     }
 
     public void dispose() {
         popupTex.dispose();
-        catHeadTex.dispose();
+        PawTex.dispose();
+        Music_BarTex.dispose();
+        Effect_BarTex.dispose();
     }
 }

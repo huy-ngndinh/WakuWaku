@@ -28,6 +28,7 @@ public class Main extends Game {
         touchPos = new Vector2();
         font = new BitmapFont();
         music = Gdx.audio.newMusic(Gdx.files.internal("minecraft.mp3"));
+        music.play();
         music.setLooping(true);
         clickSound = Gdx.audio.newSound(Gdx.files.internal("click.mp3"));
     }
