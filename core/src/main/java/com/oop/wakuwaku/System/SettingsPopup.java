@@ -12,8 +12,8 @@ public class SettingsPopup {
     private final Texture PawTex;
     private final Texture Music_BarTex, Effect_BarTex;
 
-    public float musicVolume = 0.5f;
-    public float effectVolume = 0.5f;
+    public static float musicVolume = 0.5f;
+    public static float effectVolume = 0.5f;
 
     private final int sliderMinX = 625, sliderMaxX = 850;
     private final int sliderY_music = 428, sliderY_effect = 358;
@@ -26,10 +26,10 @@ public class SettingsPopup {
 
     public SettingsPopup(Main game) {
         this.game = game;
-        this.popupTex = new Texture("Buttons/settings_panel.png");
-        this.PawTex = new Texture("Buttons/Paw.png");
-        this.Music_BarTex = new Texture("Buttons/Bar.png");
-        this.Effect_BarTex = new Texture("Buttons/Bar.png");
+        popupTex = new Texture("Buttons/settings_panel.png");
+        PawTex = new Texture("Buttons/Paw.png");
+        Music_BarTex = new Texture("Buttons/Bar.png");
+        Effect_BarTex = new Texture("Buttons/Bar.png");
     }
 
     public void updateAndDraw(Viewport viewport) {

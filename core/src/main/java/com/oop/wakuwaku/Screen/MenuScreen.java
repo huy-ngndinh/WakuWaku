@@ -109,6 +109,9 @@ public class MenuScreen extends ScreenAdapter {
     public void dispose () {
         stage.dispose();
         bgTex.dispose();
+        SettingsButton.dispose();
+        PlayButton.dispose();
+        Exit_Button.dispose();
     }
 
     @Override
