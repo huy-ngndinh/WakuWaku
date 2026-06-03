@@ -1,6 +1,7 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Input.GameInput;
@@ -70,6 +71,14 @@ public class GameScreen extends ScreenAdapter {
         input.update(delta);
 
         logic(delta);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            game.setScreen(new ResultScreen(game, 1));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            game.setScreen(new ResultScreen(game, 2));
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            game.setScreen(new ResultScreen(game, 3));
+        }
         // Debuging state
     //    System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
 //        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName() + ": " + animationHandler.getCurrentAnimationState().getClass().getSimpleName());
@@ -144,7 +153,7 @@ public class GameScreen extends ScreenAdapter {
 
             //case locked animation
             case "WallClimbOver":
-                player.climbUp(3f); 
+                player.climbUp(3f);
                 player.climbHorizon(5f);
                 break;
         }
