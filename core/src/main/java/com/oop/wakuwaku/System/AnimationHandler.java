@@ -1,68 +1,82 @@
 package com.oop.wakuwaku.System;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.oop.wakuwaku.Animation.AnimationState;
+import com.oop.wakuwaku.Animation.BeforeJumpAnimation;
+import com.oop.wakuwaku.Animation.BeforeWallKickAnimation;
+import com.oop.wakuwaku.Animation.FallingAnimation;
+import com.oop.wakuwaku.Animation.IdleAnimation;
+import com.oop.wakuwaku.Animation.JumpAnimation;
+import com.oop.wakuwaku.Animation.WalkingAnimation;
+import com.oop.wakuwaku.Animation.WallAttachAnimation;
+import com.oop.wakuwaku.Animation.WallClimbAnimation;
+import com.oop.wakuwaku.Animation.WallClimbOverAnimation;
+import com.oop.wakuwaku.Animation.WallHangingAnimation;
+import com.oop.wakuwaku.Animation.WallKickAnimation;
+import com.oop.wakuwaku.State.BeforeJump;
+import com.oop.wakuwaku.State.BeforeWallKick;
+import com.oop.wakuwaku.State.Falling;
+import com.oop.wakuwaku.State.Idle;
+import com.oop.wakuwaku.State.Jump;
+import com.oop.wakuwaku.State.PlayerState;
+import com.oop.wakuwaku.State.Walking;
+import com.oop.wakuwaku.State.WallAttach;
+import com.oop.wakuwaku.State.WallClimb;
+import com.oop.wakuwaku.State.WallClimbOver;
+import com.oop.wakuwaku.State.WallHanging;
+import com.oop.wakuwaku.State.WallKick;
 import com.oop.wakuwaku.world.Player;
 
+/**
+ * Master class for managing animation state.
+ */
 public class AnimationHandler {
 
-    private static final int IDLE_ANIMATION_FRAMES = 8;
-    private static final int RUN_ANIMATION_FRAMES = 10;
-    private final Animation<TextureRegion> runAnimation;
-    private final Animation<TextureRegion> idleAnimation;
-
     private float stateTime = 0f;
+    private AnimationState currentAnimationState;
 
-    public AnimationHandler() {
-        // Load the sprite sheet as a Texture
-        Texture runTexture = new Texture(Gdx.files.internal("animation/cat-run.png"));
-        Texture idleTexture = new Texture(Gdx.files.internal("animation/cat-idle.png"));
-        // Use the split utility method to create a 2D array of TextureRegions. This is
-        // possible because this sprite sheet contains frames of equal size and they are
-        // all aligned.
-        TextureRegion[][] tempRunRegion = TextureRegion.split(runTexture, runTexture.getWidth() / RUN_ANIMATION_FRAMES, runTexture.getHeight());
-        TextureRegion[][] tempIdleRegion = TextureRegion.split(idleTexture, idleTexture.getWidth() / IDLE_ANIMATION_FRAMES, idleTexture.getHeight());
-        // Place the regions into a 1D array in the correct order, starting from the top
-        // left, going across first. The Animation constructor requires a 1D array.
-        TextureRegion[] runRegion = new TextureRegion[RUN_ANIMATION_FRAMES];
-        for (int i = 0; i < RUN_ANIMATION_FRAMES; i++) {
-            runRegion[i] = tempRunRegion[0][i];
+    /**
+     * Update the current animation state
+     * @param newAnimationState
+     */
+    public void updateAnimationState(PlayerState newState) {
+        if (newState instanceof Idle) {
+            this.currentAnimationState = IdleAnimation.INSTANCE;
+        } else if(newState instanceof Walking) {
+            this.currentAnimationState = WalkingAnimation.INSTANCE;
+        } else if (newState instanceof Jump) {
+            this.currentAnimationState = JumpAnimation.INSTANCE;
+        } else if (newState instanceof Falling) {
+            this.currentAnimationState = FallingAnimation.INSTANCE;
+        } else if (newState instanceof WallAttach) {
+            this.currentAnimationState = WallAttachAnimation.INSTANCE;
+        } else if (newState instanceof WallClimb) {
+            this.currentAnimationState = WallClimbAnimation.INSTANCE;
+        } else if (newState instanceof WallKick) {
+            this.currentAnimationState = WallKickAnimation.INSTANCE;
+        } else if(newState instanceof BeforeJump){
+            this.currentAnimationState = BeforeJumpAnimation.INSTANCE;
+        } else if (newState instanceof BeforeWallKick) {
+            this.currentAnimationState = BeforeWallKickAnimation.INSTANCE;
+        } else if (newState instanceof WallHanging) {
+            this.currentAnimationState = WallHangingAnimation.INSTANCE;
+        } else if (newState instanceof WallClimbOver) {
+            this.currentAnimationState = WallClimbOverAnimation.INSTANCE;
         }
-        TextureRegion[] idleRegion = new TextureRegion[IDLE_ANIMATION_FRAMES];
-        for (int i = 0; i < IDLE_ANIMATION_FRAMES; i++) {
-            idleRegion[i] = tempIdleRegion[0][i];
-        }
-
-        // Initialize the Animation with the frame interval and array of frames
-        runAnimation = new Animation<TextureRegion>(1f / RUN_ANIMATION_FRAMES, runRegion);
-        idleAnimation = new Animation<TextureRegion>(1f / IDLE_ANIMATION_FRAMES, idleRegion);
+        stateTime = 0f;
     }
 
+    /**
+     * Get the current animation frame
+     * @param deltaTime
+     * @param player
+     * @param playerStateHandler
+     * @return
+     */
     public TextureRegion getCurrentAnimationFrame(float deltaTime, Player player, PlayerStateHandler playerStateHandler) {
-        PlayerStateHandler.State currentState = playerStateHandler.getCurrentState();
-        if (playerStateHandler.isDifferentState()) {
-            stateTime = 0;
-        } else {
-            stateTime += deltaTime;
-        }
-        TextureRegion runFrame;
-        switch (currentState) {
-            case PlayerStateHandler.State.STAND:
-                return idleAnimation.getKeyFrame(stateTime, true);
-            case PlayerStateHandler.State.DASH:
-            case PlayerStateHandler.State.FALL:
-            case PlayerStateHandler.State.JUMP:
-            case PlayerStateHandler.State.WALK:
-                runFrame = runAnimation.getKeyFrame(stateTime, true);
-                if (player.getDirection() == 1 && runFrame.isFlipX()) {
-                    runFrame.flip(true, false);
-                } else if (player.getDirection() == 0 && !runFrame.isFlipX()) {
-                    runFrame.flip(true, false);
-                }
-                return runFrame;
-        }
-        return idleAnimation.getKeyFrame(stateTime, true);
+        PlayerState currentState = playerStateHandler.getCurrentState();
+        TextureRegion animationFrame = currentAnimationState.getTextureRegion(stateTime, currentState, player);
+        stateTime += deltaTime;
+        return animationFrame;
     }
 }

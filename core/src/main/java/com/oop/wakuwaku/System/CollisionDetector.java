@@ -1,43 +1,75 @@
 package com.oop.wakuwaku.System;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.WorldManifold;
 
 public class CollisionDetector implements ContactListener {
-    private int wallContactCounter;
-    private int groundContactCounter;
 
     private boolean leftWallContact;
     private boolean rightWallContact;
+    
+    private boolean groundContact;
+
+    private boolean leftHookContact;
+    private boolean rightHookContact;
 
     public CollisionDetector() {
-        wallContactCounter = 0;
-        groundContactCounter = 0;
         leftWallContact = false;
         rightWallContact = false;
+        groundContact = false;
+        leftHookContact = false;
+        rightHookContact = false;
     }
 
-    public void resetWallContact() {
+    public void resetContact() {
         leftWallContact = false;
         rightWallContact = false;
+        groundContact = false;
+        leftHookContact = false;
+        rightHookContact = false;
     }
 
     @Override
     public void preSolve(Contact contact, Manifold manifold) {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
-        if (!checkWallCollision(fixtureA, fixtureB) && !checkWallCollision(fixtureB, fixtureA)) return;
-
-        WorldManifold worldManifold = contact.getWorldManifold();
-        Vector2 normal = worldManifold.getNormal();
-        if (!fixtureB.getBody().getUserData().equals("player")) normal.scl(-1);
-
-        if (normal.x > 0.5f) {
-            leftWallContact = true;
+        if (checkWallCollision(fixtureA, fixtureB) || checkWallCollision(fixtureB, fixtureA)) {
+            WorldManifold worldManifold = contact.getWorldManifold();
+            Vector2 normal = worldManifold.getNormal();
+            if (!fixtureB.getBody().getUserData().equals("player"))
+                normal.scl(-1);
+            if (normal.x > 0.2f) {
+                leftWallContact = true;
+            }
+            if (normal.x < -0.2f) {
+                rightWallContact = true;
+            }
         }
-
-        if (normal.x < -0.5f) {
-            rightWallContact = true;
+        if (checkGroundCollision(fixtureA, fixtureB) || checkGroundCollision(fixtureB, fixtureA)) {
+            WorldManifold worldManifold = contact.getWorldManifold();
+            Vector2 normal = worldManifold.getNormal();
+            if (fixtureA.getBody().getUserData().equals("player"))
+                normal.scl(-1);
+            if (normal.y > 0.2f) {
+                groundContact = true;
+            }
+        }
+        if (checkHookCollision(fixtureA, fixtureB) || checkHookCollision(fixtureB, fixtureA)) {
+            WorldManifold worldManifold = contact.getWorldManifold();
+            Vector2 normal = worldManifold.getNormal();
+            if (!fixtureB.getBody().getUserData().equals("player"))
+                normal.scl(-1);
+            if (normal.x > 0.2f) {
+                leftHookContact = true;
+            }
+            if (normal.x < -0.2f){
+                rightHookContact = true;
+            }
         }
     }
 
@@ -57,37 +89,30 @@ public class CollisionDetector implements ContactListener {
     }
 
     public boolean isTouchingGround() {
-        return groundContactCounter > 0;
+        return groundContact;
     }
 
-    private boolean checkCollision(Fixture A, Fixture B) {
-        return
-        (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wall")) ||
-        (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("ground"));
+    public boolean isTouchingHook() {
+        return leftHookContact || rightHookContact;
+    }
+
+    private boolean checkHookCollision(Fixture A, Fixture B) {
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("hook"));
     }
 
     private boolean checkWallCollision(Fixture A, Fixture B) {
-        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wall"));
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("wallclimb"));
     }
 
-    private boolean checkCollisionGround(Fixture A, Fixture B) {
-        return
-        (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("ground"));
+    private boolean checkGroundCollision(Fixture A, Fixture B) {
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("ground"));
     }
 
     @Override
     public void beginContact(Contact contact) {
-        Fixture fixtureA = contact.getFixtureA();
-        Fixture fixtureB = contact.getFixtureB();
-        if (checkCollisionGround(fixtureA, fixtureB)) groundContactCounter++;
-        if (checkCollisionGround(fixtureB, fixtureA)) groundContactCounter++;
     }
 
     @Override
     public void endContact(Contact contact) {
-        Fixture fixtureA = contact.getFixtureA();
-        Fixture fixtureB = contact.getFixtureB();
-        if (checkCollisionGround(fixtureA, fixtureB)) groundContactCounter--;
-        if (checkCollisionGround(fixtureB, fixtureA)) groundContactCounter--;
     }
 }
