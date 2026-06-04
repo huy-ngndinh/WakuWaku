@@ -172,7 +172,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
         render.drawPlayer(gameworld.getPlayer(), animationRegion);
         // debug mode, comment out when finished
-        //physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
 
     @Override
