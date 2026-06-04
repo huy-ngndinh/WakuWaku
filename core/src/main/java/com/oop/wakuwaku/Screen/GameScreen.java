@@ -6,15 +6,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.State.Falling;
-import com.oop.wakuwaku.State.Jump;
-import com.oop.wakuwaku.State.PlayerState;
-import com.oop.wakuwaku.State.WallKick;
-import com.oop.wakuwaku.System.AnimationHandler;
-import com.oop.wakuwaku.System.CollisionDetector;
-import com.oop.wakuwaku.System.Physics;
-import com.oop.wakuwaku.System.PlayerStateHandler;
-import com.oop.wakuwaku.System.Render;
+import com.oop.wakuwaku.State.*;
+import com.oop.wakuwaku.System.*;
 import com.oop.wakuwaku.world.GameWorld;
 import com.oop.wakuwaku.world.Player;
 
@@ -72,32 +65,13 @@ public class GameScreen extends ScreenAdapter {
 
         logic(delta);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            game.setScreen(new ResultScreen(game, 1));
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            game.setScreen(new ResultScreen(game, 2));
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            game.setScreen(new ResultScreen(game, 3));
+        // if the player touches the goal -> start a timer to the next screen
+        if (playerStateHandler.getCurrentState() instanceof Goal) {
+            Goal currentState = (Goal) playerStateHandler.getCurrentState();
+            if (currentState.frameCountEnded()) {
+                game.setScreen(new ResultScreen(game, 1));
+            }
         }
-        // Debuging state
-    //    System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName());
-//        System.out.println(playerStateHandler.getCurrentState().getClass().getSimpleName() + ": " + animationHandler.getCurrentAnimationState().getClass().getSimpleName());
-
-//        if(playerStateHandler.getCurrentState() instanceof WallHanging){
-//            System.out.println("Hanging");
-//        }
-    //    if(playerStateHandler.getCurrentState() instanceof WallClimbOver){
-    //        System.out.println("Climbing over");
-    //     }
-
-        //collision debug
-//        if(collisionDetector.isTouchingHook()) {
-//            System.out.println("Hook");
-//        }
-    // System.out.println(gameworld.getPlayer().getPosition());
-    //    System.out.println(gameworld.getPlayer().getVelocity());
-
-    // System.out.println("Delta time: " + delta);
 
         draw(delta);
     }
@@ -112,8 +86,12 @@ public class GameScreen extends ScreenAdapter {
             // case stop
             case "Idle":
             case "BeforeJump":
-            case "WallHanging":
+            case "Goal":
                 player.stop();
+                break;
+            // case stop with Y coordinate clamping
+            case "WallHanging":
+                player.hanging(collisionDetector.getHookBoundingBoxTop());
                 break;
             //case move
             case "Walking":
@@ -164,15 +142,20 @@ public class GameScreen extends ScreenAdapter {
         // reset
         render.reset();
         // draw map
-        render.draw(gameworld.getPlayer());
+        render.drawMap(gameworld.getPlayer());
         // update physics
         collisionDetector.resetContact();
         physics.simulate(Gdx.graphics.getDeltaTime());
+        // begin rendering
+        render.beginRender();
         // draw player/animation
         TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
         render.drawPlayer(gameworld.getPlayer(), animationRegion);
+        if (playerStateHandler.getCurrentState() instanceof BeforeJump) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), 0);
+        else if (playerStateHandler.getCurrentState() instanceof BeforeWallKick) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), -gameworld.getPlayer().getDirection());
+        render.endRender();
         // debug mode, comment out when finished
-        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+//        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
     }
 
     @Override

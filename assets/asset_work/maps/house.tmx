@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="142">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="151">
  <tileset firstgid="1" source="house.tsx"/>
  <tileset firstgid="2701" source="decor.tsx"/>
  <layer id="1" name="background" width="30" height="50">
@@ -140,10 +140,12 @@
  </objectgroup>
  <objectgroup id="4" name="wallclimb">
   <object id="65" x="480" y="1376.39" width="32" height="95.9932"/>
-  <object id="78" x="896" y="1120" height="64"/>
-  <object id="79" x="895.924" y="1057.4" width="31.32" height="126.346"/>
-  <object id="88" x="0.351282" y="896.243" width="32" height="95.8353"/>
+  <object id="88" x="0.351282" y="896.243" width="35.9305" height="95.8353"/>
   <object id="116" x="768" y="1024" width="32" height="63.2214"/>
+  <object id="142" x="898.344" y="1056" width="29.6559" height="128"/>
+ </objectgroup>
+ <objectgroup id="7" name="goal">
+  <object id="144" x="871.828" y="845.497" width="16.4548" height="18.503"/>
  </objectgroup>
  <objectgroup id="5" name="hook">
   <object id="64" x="785.232" y="1024.12" width="15.5644" height="10.9725"/>

@@ -31,12 +31,12 @@ public class WallKick extends PlayerState {
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
         wallReattachCooldown = Math.max(0, wallReattachCooldown - 1);
-        if (collisionDetector.isTouchingGround()) {
+        if(collisionDetector.isTouchingWall() && input.isPressed(Input.Keys.K) && wallReattachCooldown == 0) {
+            playerStateHandler.changeState(delta, WallAttach.INSTANCE);
+        } else if (collisionDetector.isTouchingGround()) {
             playerStateHandler.changeState(delta, Idle.INSTANCE);
         } else if (gameWorld.getPlayer().getVelocity().y < 0) {
             playerStateHandler.changeState(delta, Falling.INSTANCE);
-        }else if(collisionDetector.isTouchingWall() && input.isPressed(Input.Keys.K) && wallReattachCooldown == 0) {
-            playerStateHandler.changeState(delta, WallAttach.INSTANCE);
         }
     }
 

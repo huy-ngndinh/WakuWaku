@@ -1,30 +1,8 @@
 package com.oop.wakuwaku.System;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.oop.wakuwaku.Animation.AnimationState;
-import com.oop.wakuwaku.Animation.BeforeJumpAnimation;
-import com.oop.wakuwaku.Animation.BeforeWallKickAnimation;
-import com.oop.wakuwaku.Animation.FallingAnimation;
-import com.oop.wakuwaku.Animation.IdleAnimation;
-import com.oop.wakuwaku.Animation.JumpAnimation;
-import com.oop.wakuwaku.Animation.WalkingAnimation;
-import com.oop.wakuwaku.Animation.WallAttachAnimation;
-import com.oop.wakuwaku.Animation.WallClimbAnimation;
-import com.oop.wakuwaku.Animation.WallClimbOverAnimation;
-import com.oop.wakuwaku.Animation.WallHangingAnimation;
-import com.oop.wakuwaku.Animation.WallKickAnimation;
-import com.oop.wakuwaku.State.BeforeJump;
-import com.oop.wakuwaku.State.BeforeWallKick;
-import com.oop.wakuwaku.State.Falling;
-import com.oop.wakuwaku.State.Idle;
-import com.oop.wakuwaku.State.Jump;
-import com.oop.wakuwaku.State.PlayerState;
-import com.oop.wakuwaku.State.Walking;
-import com.oop.wakuwaku.State.WallAttach;
-import com.oop.wakuwaku.State.WallClimb;
-import com.oop.wakuwaku.State.WallClimbOver;
-import com.oop.wakuwaku.State.WallHanging;
-import com.oop.wakuwaku.State.WallKick;
+import com.oop.wakuwaku.Animation.*;
+import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.world.Player;
 
 /**
@@ -62,6 +40,8 @@ public class AnimationHandler {
             this.currentAnimationState = WallHangingAnimation.INSTANCE;
         } else if (newState instanceof WallClimbOver) {
             this.currentAnimationState = WallClimbOverAnimation.INSTANCE;
+        } else if (newState instanceof Goal) {
+            this.currentAnimationState = GoalAnimation.INSTANCE;
         }
         stateTime = 0f;
     }

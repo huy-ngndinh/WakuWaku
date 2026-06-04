@@ -15,13 +15,12 @@ public class Falling extends PlayerState {
     }
 
     public void update(float delta, PlayerStateHandler playerStateHandler, GameInput input, CollisionDetector collisionDetector, GameWorld gameWorld) {
-        if (collisionDetector.isTouchingGround()) {
-            playerStateHandler.changeState(delta, Idle.INSTANCE);
-        } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
+        if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingWall()) {
             playerStateHandler.changeState(delta, WallAttach.INSTANCE);
-        }
-        else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingHook()) {
+        } else if (input.isPressed(Input.Keys.K) && collisionDetector.isTouchingHook()) {
             playerStateHandler.changeState(delta, WallHanging.INSTANCE);
+        } else if (collisionDetector.isTouchingGround()) {
+            playerStateHandler.changeState(delta, Idle.INSTANCE);
         }
         fallCoeff += 0.01f;
     }
