@@ -1,6 +1,7 @@
 package com.oop.wakuwaku.world;
 
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -22,91 +23,42 @@ public class Map {
     private PolygonShape shape;
     private FixtureDef fdef;
     private TiledMap map;
-    private Map mapObject;
-
     private Body body;
+
     public Map(World world) {
 
-//        map = new TmxMapLoader().load("./asset_work/living-ketchen.tmx");
         map = new TmxMapLoader().load("./asset_work/maps/house.tmx");
         bdef = new BodyDef();
         shape = new PolygonShape();
         fdef = new FixtureDef();
-
-        // create Ground objects
-        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            // define body for the all map object
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
-            fdef.shape = shape;
-            fdef.friction = 0.0f;
-
-            body.createFixture(fdef);
-
-            body.setUserData("ground");
-        }
-        // Create Wall objects
-        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            // define body for the all map object
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
-            fdef.shape = shape;
-            fdef.friction = 0.0f;
-
-            body.createFixture(fdef);
-
-            body.setUserData("wallcollision");
-        }
-        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            // define body for the all map object
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
-            fdef.shape = shape;
-            fdef.friction = 0.0f;
-
-            body.createFixture(fdef);
-
-            body.setUserData("wallclimb");
-        }
-        for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            // define body for the all map object
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
-            fdef.shape = shape;
-            fdef.friction = 0.0f;
-
-            body.createFixture(fdef);
-
-            body.setUserData("hook");
-        }
-        
+        // create collision hitbox
+        // use layer name instead of layer id because id depends on layer order in tsx file
+        createBody(world, map.getLayers().get("ground").getObjects(), "ground");
+        createBody(world, map.getLayers().get("wallcollision").getObjects(), "wallcollision");
+        createBody(world, map.getLayers().get("wallclimb").getObjects(), "wallclimb");
+        createBody(world, map.getLayers().get("hook").getObjects(), "hook");
+        createBody(world, map.getLayers().get("goal").getObjects(), "goal");
     }
 
+    private void createBody(World world, MapObjects mapObjects, String type) {
+        for(MapObject object : mapObjects) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
+            // define body for the all map object
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) * UNIT, (rect.getY() + rect.getHeight() / 2) * UNIT);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox((rect.getWidth() / 2) * UNIT, (rect.getHeight() / 2) * UNIT);
+            fdef.shape = shape;
+            fdef.friction = 0.0f;
+
+            body.createFixture(fdef);
+
+            body.setUserData(type);
+        }
+    }
 
     /**
      * Return the <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/maps/tiled/TiledMap.java"><code>TiledMap</code></a> instance. Only one should exist per level and is managed by this class.

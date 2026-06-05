@@ -1,6 +1,7 @@
 package com.oop.wakuwaku.System;
 
 import com.oop.wakuwaku.Input.GameInput;
+import com.oop.wakuwaku.State.Goal;
 import com.oop.wakuwaku.State.Idle;
 import com.oop.wakuwaku.State.PlayerState;
 import com.oop.wakuwaku.world.GameWorld;
@@ -33,7 +34,12 @@ public class PlayerStateHandler {
      * @param gameWorld
      */
     public void updateState(float delta) {
-        currentState.update(delta, this, gameInput, collisionDetector, gameWorld);
+        // Touch goal
+        if (!(currentState instanceof Goal) && collisionDetector.isTouchingGoal()) {
+            changeState(delta, Goal.INSTANCE);
+        } else {
+            currentState.update(delta, this, gameInput, collisionDetector, gameWorld);
+        }
     }
 
     /**

@@ -60,6 +60,10 @@ public class Player extends Sprite{
 
     public Vector2 getVelocity() { return b2body.getLinearVelocity(); }
 
+    public float getWidth() { return 0.5f * 2; }
+
+    public float getHeight() { return 0.5f * 2; }
+
     /*
     Basic movements
      */
@@ -95,14 +99,14 @@ public class Player extends Sprite{
         this.b2body.setLinearVelocity(updateV);
     }
 
-    
-
     public void slide() {
         this.b2body.setLinearVelocity(new Vector2(0, -0.3f));
     }
+
     public void climbUp(float y) {
         this.b2body.setLinearVelocity(new Vector2(0, y));
     }
+
     public void climbHorizon(float x){
         // this.b2body.setLinearVelocity(new Vector2(x*direction, 0));
         this.b2body.applyLinearImpulse(new Vector2(x * direction, 0), this.b2body.getWorldCenter(), true);
@@ -120,6 +124,12 @@ public class Player extends Sprite{
         }
         float fHorizontal = 5f;
         this.b2body.applyLinearImpulse(new Vector2(fHorizontal * direction, fJump), this.b2body.getWorldCenter(), true);
+    }
+
+    public void hanging(float hookBoundingBoxTop) {
+        this.b2body.setLinearVelocity(new Vector2(0, 0));
+        float newYCenter = hookBoundingBoxTop - 0.5f;
+        b2body.setTransform(b2body.getPosition().x, newYCenter, b2body.getAngle());
     }
 
     public void setGravity(float gravity) {
