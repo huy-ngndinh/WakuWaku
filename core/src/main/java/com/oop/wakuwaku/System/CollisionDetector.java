@@ -1,22 +1,22 @@
 package com.oop.wakuwaku.System;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
+import com.badlogic.gdx.physics.box2d.*;
 
 public class CollisionDetector implements ContactListener {
 
     private boolean leftWallContact;
     private boolean rightWallContact;
-    
+
     private boolean groundContact;
 
     private boolean leftHookContact;
     private boolean rightHookContact;
+
+    private boolean goalContact;
+
+    private float hookBoundingBoxTop;
 
     public CollisionDetector() {
         leftWallContact = false;
@@ -62,14 +62,21 @@ public class CollisionDetector implements ContactListener {
         if (checkHookCollision(fixtureA, fixtureB) || checkHookCollision(fixtureB, fixtureA)) {
             WorldManifold worldManifold = contact.getWorldManifold();
             Vector2 normal = worldManifold.getNormal();
-            if (!fixtureB.getBody().getUserData().equals("player"))
+            if (!fixtureB.getBody().getUserData().equals("player")) {
                 normal.scl(-1);
+                setHookBoundingBoxTop(getBoundingBoxTop(fixtureB));
+            } else {
+                setHookBoundingBoxTop(getBoundingBoxTop(fixtureA));
+            }
             if (normal.x > 0.2f) {
                 leftHookContact = true;
             }
             if (normal.x < -0.2f){
                 rightHookContact = true;
             }
+        }
+        if (checkGoalCollision(fixtureA, fixtureB) || checkGoalCollision(fixtureB, fixtureA)) {
+            goalContact = true;
         }
     }
 
@@ -96,6 +103,10 @@ public class CollisionDetector implements ContactListener {
         return leftHookContact || rightHookContact;
     }
 
+    public boolean isTouchingGoal() {
+        return goalContact;
+    }
+
     private boolean checkHookCollision(Fixture A, Fixture B) {
         return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("hook"));
     }
@@ -106,6 +117,35 @@ public class CollisionDetector implements ContactListener {
 
     private boolean checkGroundCollision(Fixture A, Fixture B) {
         return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("ground"));
+    }
+
+    private boolean checkGoalCollision(Fixture A, Fixture B) {
+        return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("goal"));
+    }
+
+    /**
+     * Get the top Y coordinate of the fixture
+     * @param fixture The fixture
+     * @return Top Y coordinate value
+     */
+    private float getBoundingBoxTop(Fixture fixture) {
+        PolygonShape shape = (PolygonShape) fixture.getShape();
+        Vector2 v = new Vector2();
+        float topY = Float.NEGATIVE_INFINITY;
+
+        for (int i = 0; i < shape.getVertexCount(); i++) {
+            shape.getVertex(i, v);
+            topY = Math.max(topY, fixture.getBody().getPosition().y + v.y);
+        }
+        return topY;
+    }
+
+    private void setHookBoundingBoxTop(float value) {
+        hookBoundingBoxTop = value;
+    }
+
+    public float getHookBoundingBoxTop() {
+        return hookBoundingBoxTop;
     }
 
     @Override
