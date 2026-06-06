@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,6 +25,7 @@ public class Render {
     private final OrthographicCamera camera;
     private final OrthogonalTiledMapRenderer mapRenderer;
 
+    // Transition
     private final Texture transitionTexture;
     private final InTransition inTransition;
     private final OutTransition outTransition;
@@ -50,7 +50,6 @@ public class Render {
 
         mapRenderer = new OrthogonalTiledMapRenderer(map, Physics.UNIT);
         mapRenderer.setView(camera);
-
     }
 
     public void reset() {
@@ -122,12 +121,6 @@ public class Render {
             yPosition = outTransition.getYPosition();
         }
 
-//        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-//        pixmap.setColor(Color.BLUE);
-//        pixmap.fill();
-//        Texture pixel = new Texture(pixmap);
-//        pixmap.dispose();
-
         batch.draw(transitionTexture, 0, yPosition, width, height);
     }
 
@@ -153,6 +146,17 @@ public class Render {
         } else {
             return outTransition.isTransitionFinished();
         }
+    }
+
+    public void drawUI(UserInterfaceHandler uihandler) {
+        uiViewport.apply();
+        batch.setProjectionMatrix(uiViewport.getCamera().combined);
+        uihandler.drawSettingPanel(batch);
+    }
+
+    public void drawStage(UserInterfaceHandler uihandler) {
+        uiViewport.apply();
+        uihandler.getStage().draw();
     }
 
     /**

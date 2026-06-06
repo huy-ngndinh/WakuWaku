@@ -40,9 +40,8 @@ public class GameScreen extends ScreenAdapter {
     // Renderer
     private Render render;
 
-    private Stage stage;
-    private GameButton pauseButton;
-    private SettingsPanel settingsPanel;
+    // UI handler
+    private UserInterfaceHandler uihandler;
 
 
     public GameScreen(Main game) {
@@ -60,22 +59,14 @@ public class GameScreen extends ScreenAdapter {
         input = new GameInput();
         playerStateHandler = new PlayerStateHandler(input, collisionDetector, gameworld, animationHandler);
         render = new Render(gameworld.getMap().getTiledMap());
+        uihandler = new UserInterfaceHandler(render, game);
 
         render.setTransition(false);
 
-        stage = new Stage(render.getUIViewport());
-
-        pauseButton = new GameButton(new Texture("Buttons/Pause.png"), new Texture("Buttons/Pause1.png"), 980, 630, 70, 64);
-        settingsPanel = new SettingsPanel(game, stage, new Texture("Buttons/settings_panel.png"), new Texture("Buttons/Paw.png"),
-            new Texture("Buttons/Bar.png"), new Texture("Buttons/Close.png"), new Texture("Buttons/Close1.png"),
-            new Texture("Buttons/Exit.png"), new Texture("Buttons/Exit1.png"));
-
-
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(uihandler.getStage());
         multiplexer.addProcessor(input);
         Gdx.input.setInputProcessor(multiplexer);
-        pauseBtn();
     }
 
     @Override
@@ -84,19 +75,17 @@ public class GameScreen extends ScreenAdapter {
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
         render.updateViewport(width, height);
         // Resize your screen here. The parameters represent the new window size.
-        stage.getViewport().update(width, height, false);
     }
 
 
     @Override
     public void render(float delta) {
-        settingsPanel.update(render.getUIViewport());
+        uihandler.updateSettingPanel();
 
-        if(settingsPanel.isVisible()) {
-            pauseButton.setVisible(false);
-        }
-        else {
-            pauseButton.setVisible(true);
+        if (uihandler.isSettingPanelVisible()) {
+            uihandler.setPauseButton(false);
+        } else {
+            uihandler.setPauseButton(true);
             input.update(delta);
 
             // if the player touches the goal -> start a timer to goal animation before transition
@@ -104,20 +93,13 @@ public class GameScreen extends ScreenAdapter {
                 Goal currentState = (Goal) playerStateHandler.getCurrentState();
                 if (currentState.frameCountEnded()) render.setTransition(true);
                 // if the out transition finished, go to result screen
-                if (render.isTransitionFinished(true)) game.setScreen(new ResultScreen(game, 1));
+                if (render.isTransitionFinished(true)) {
+                    RandomFact fact = new RandomFact();
+                    game.setScreen(new ResultScreen(game, fact.getRandomFact()));
+                }
             }
 
             logic(delta);
-
-            // if the player touches the goal -> start a timer to the next screen
-            if (playerStateHandler.getCurrentState() instanceof Goal) {
-                Goal currentState = (Goal) playerStateHandler.getCurrentState();
-                if (currentState.frameCountEnded()) {
-                    RandomFact fact = new RandomFact();
-                    game.setScreen(new ResultScreen(game, fact.getRandomFact()));
-                    return;
-                }
-            }
 
             try {
                 collisionDetector.isInGame();
@@ -127,7 +109,7 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        stage.act(delta);
+        uihandler.getStage().act(delta);
 
         draw(delta);
     }
@@ -216,13 +198,10 @@ public class GameScreen extends ScreenAdapter {
         // physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
 
         // draw UI
-        render.getUIViewport().apply();
-        render.getSpriteBatch().setProjectionMatrix(render.getUIViewport().getCamera().combined);
         render.beginRender();
-        settingsPanel.draw(render.getSpriteBatch());
+        render.drawUI(uihandler);
         render.endRender();
-        stage.getViewport().apply();
-        stage.draw();
+        render.drawStage(uihandler);
 
         if (render.isTransitionBegin(false)) {
             render.beginRender();
@@ -235,16 +214,6 @@ public class GameScreen extends ScreenAdapter {
             render.drawTransition(delta, true);
             render.endRender();
         }
-    }
-
-    private void pauseBtn() {
-        stage.addActor(pauseButton);
-        pauseButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                settingsPanel.setVisible(true);
-            }
-        });
     }
 
     @Override
