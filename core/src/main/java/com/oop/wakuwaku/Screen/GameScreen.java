@@ -3,16 +3,11 @@ package com.oop.wakuwaku.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.oop.wakuwaku.Exception.OutOfBoundException;
 import com.oop.wakuwaku.FactManager.RandomFact;
 import com.oop.wakuwaku.Input.GameButton;
 import com.oop.wakuwaku.Input.GameInput;
-import com.oop.wakuwaku.Input.SettingsPanel;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.System.*;
@@ -21,6 +16,8 @@ import com.oop.wakuwaku.world.Player;
 
 /** First screen of the application.*/
 public class GameScreen extends ScreenAdapter {
+    private enum TransitionDirection { MENU, RESULT };
+    private TransitionDirection currentTransitionDirection = TransitionDirection.RESULT;
     private final Main game;
 
     // Box2d
@@ -88,17 +85,6 @@ public class GameScreen extends ScreenAdapter {
             uihandler.setPauseButton(true);
             input.update(delta);
 
-            // if the player touches the goal -> start a timer to goal animation before transition
-            if (playerStateHandler.getCurrentState() instanceof Goal) {
-                Goal currentState = (Goal) playerStateHandler.getCurrentState();
-                if (currentState.frameCountEnded()) render.setTransition(true);
-                // if the out transition finished, go to result screen
-                if (render.isTransitionFinished(true)) {
-                    RandomFact fact = new RandomFact();
-                    game.setScreen(new ResultScreen(game, fact.getRandomFact()));
-                }
-            }
-
             logic(delta);
 
             try {
@@ -109,8 +95,23 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        uihandler.getStage().act(delta);
+        // if the player touches the goal -> start a timer to goal animation before transition
+        if (playerStateHandler.getCurrentState() instanceof Goal) {
+            Goal currentState = (Goal) playerStateHandler.getCurrentState();
+            if (currentState.frameCountEnded()) render.setTransition(true);
+        }
 
+        // if the out transition finished, go to result screen
+        if (render.isTransitionFinished(true)) {
+            if (currentTransitionDirection == TransitionDirection.RESULT) {
+                RandomFact fact = new RandomFact();
+                game.setScreen(new ResultScreen(game, fact.getRandomFact()));
+            } else {
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+
+        uihandler.getStage().act(delta);
         draw(delta);
     }
 
@@ -209,11 +210,16 @@ public class GameScreen extends ScreenAdapter {
             render.endRender();
         }
 
-        if (playerStateHandler.getCurrentState() instanceof Goal) {
+        if ((playerStateHandler.getCurrentState() instanceof Goal) || render.isTransitionBegin(true)) {
             render.beginRender();
             render.drawTransition(delta, true);
             render.endRender();
         }
+    }
+
+    public void exitToMenu() {
+        currentTransitionDirection = TransitionDirection.MENU;
+        render.setTransition(true);
     }
 
     @Override

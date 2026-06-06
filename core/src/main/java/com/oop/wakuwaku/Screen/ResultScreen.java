@@ -160,12 +160,6 @@ public class ResultScreen extends ScreenAdapter {
             yPosition = outTransition.getYPosition();
         }
 
-//        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-//        pixmap.setColor(Color.BLUE);
-//        pixmap.fill();
-//        Texture pixel = new Texture(pixmap);
-//        pixmap.dispose();
-
         batch.draw(transitionTexture, 0, yPosition, width, height);
     }
 

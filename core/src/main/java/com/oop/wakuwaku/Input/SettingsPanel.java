@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.oop.wakuwaku.Screen.GameScreen;
 import com.oop.wakuwaku.Screen.MenuScreen;
 import com.oop.wakuwaku.Main;
 
@@ -38,7 +39,8 @@ public class SettingsPanel {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
+//                game.setScreen(new MenuScreen(game));
+                if (game.getScreen() instanceof GameScreen) ((GameScreen) game.getScreen()).exitToMenu();
             }
         });
         stage.addActor(CloseButton);
