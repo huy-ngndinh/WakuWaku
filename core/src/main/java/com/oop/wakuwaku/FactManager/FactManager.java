@@ -1,4 +1,4 @@
-package com.oop.wakuwaku.FactManger;
+package com.oop.wakuwaku.FactManager;
 
 public class FactManager {
     public static String getFact(int level) {

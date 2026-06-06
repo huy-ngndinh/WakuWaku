@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.oop.wakuwaku.FactManger.FactManager;
+import com.oop.wakuwaku.FactManager.FactManager;
 import com.oop.wakuwaku.Main;
 
 
