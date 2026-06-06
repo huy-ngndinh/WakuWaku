@@ -2,44 +2,45 @@ package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.oop.wakuwaku.Main;
-import com.oop.wakuwaku.System.Game_Button;
+import com.oop.wakuwaku.Input.GameButton;
+import com.oop.wakuwaku.Input.SettingsPanel;
 
 public class MenuScreen extends ScreenAdapter {
     private final Main game;
-    private Stage stage;
-    private Texture bgTex;
-    private FitViewport viewport;
+    private final Stage stage;
+    private final Texture bgTex, settingsTex, playTex;
+    private final GameButton settingsButton, playButton;
+    private final SettingsPanel settingsPanel;
+    private final FitViewport viewport;
     private float stateTime = 0f;
     private Animation<TextureRegion> bgAnimation;
-    private Game_Button PlayButton, SettingsButton, Exit_Button;
-
     private final float VIRTUAL_WIDTH = 1280;
     private final float VIRTUAL_HEIGHT = 720;
 
     public MenuScreen(Main game){
         this.game = game;
+        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        stage = new Stage(viewport);
+        bgTex = new Texture("Buttons/startscreen.png");
+        settingsTex = new Texture("Buttons/Settings.png");
+        playTex = new Texture("Buttons/start.png");
+        settingsButton = new GameButton(settingsTex, settingsTex, 420, 105, 243, 36);
+        playButton = new GameButton(playTex, playTex, 430, 165, 153, 36);
+        settingsPanel = new SettingsPanel(game, stage, new Texture("Buttons/settings_panel.png"), new Texture("Buttons/Paw.png"),
+                new Texture("Buttons/Bar.png"), new Texture("Buttons/Close.png"), new Texture("Buttons/Close1.png"),
+                new Texture("Buttons/Exit.png"), new Texture("Buttons/Exit1.png"));
     }
 
     @Override
     public void show() {
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
-
-        bgTex = new Texture("Buttons/startscreen.png");
-        PlayButton = new Game_Button(game, "Buttons/start.png", "Buttons/start.png", 430, 165, 153, 36);
-        SettingsButton = new Game_Button(game, "Buttons/Settings.png", "Buttons/Settings.png", 420, 105, 243, 36);
-        Exit_Button = new Game_Button(game, "Buttons/Exit.png", "Buttons/Exit1.png", 568, 250, 144, 48);
 
         TextureRegion[][] tmp = TextureRegion.split(bgTex, bgTex.getWidth() / 2, bgTex.getHeight());
         TextureRegion[] bgFrames = new TextureRegion[2];
@@ -48,59 +49,41 @@ public class MenuScreen extends ScreenAdapter {
         bgAnimation = new Animation<TextureRegion>(0.5f, bgFrames);
         bgAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        stage.addActor(PlayButton);
-        stage.addActor(SettingsButton);
-        stage.addActor(Exit_Button);
+        stage.addActor(playButton);
+        stage.addActor(settingsButton);
 
-        PlayButton.addListener(new ClickListener() {
+        settingsButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (game.showPopup) return;
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                settingsPanel.setVisible(true);
+            }
+        });
+
+        playButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(game));
-            }
-        });
-
-        SettingsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (game.showPopup) return;
-                game.showPopup = true;
-            }
-        });
-
-        Exit_Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (!game.showPopup) return;
-                game.showPopup = false;
             }
         });
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(0, 0, 0, 1);
+        settingsPanel.update(viewport);
+        stage.act(delta);
 
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = bgAnimation.getKeyFrame(stateTime);
 
         game.batch.setProjectionMatrix(viewport.getCamera().combined);
         game.batch.begin();
-        game.batch.draw(currentFrame, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        game.batch.end();
-
-        if (game.showPopup) {
-            PlayButton.setVisible(false);
-            SettingsButton.setVisible(false);
-            Exit_Button.setVisible(true);
-        } else {
-            PlayButton.setVisible(true);
-            SettingsButton.setVisible(true);
-            Exit_Button.setVisible(false);
+        if (currentFrame != null) {
+            game.batch.draw(currentFrame, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         }
-        stage.act(delta);
+        game.batch.end();
         game.batch.begin();
-        game.settingsPopup.updateAndDraw(viewport);
+        settingsPanel.draw(game.batch);
         stage.draw();
         game.batch.end();
     }
@@ -109,9 +92,9 @@ public class MenuScreen extends ScreenAdapter {
     public void dispose () {
         stage.dispose();
         bgTex.dispose();
-        SettingsButton.dispose();
-        PlayButton.dispose();
-        Exit_Button.dispose();
+        settingsTex.dispose();
+        playTex.dispose();
+        GameButton.dispose();
     }
 
     @Override
