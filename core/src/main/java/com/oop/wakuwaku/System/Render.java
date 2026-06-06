@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.oop.wakuwaku.Transition.InTransition;
 import com.oop.wakuwaku.Transition.OutTransition;
 import com.oop.wakuwaku.world.Player;
@@ -19,7 +20,8 @@ import com.oop.wakuwaku.world.Player;
  */
 public class Render {
     private final FitViewport viewport;
-    private final ScreenViewport screenviewport;
+    private final ScreenViewport transitionViewport;
+    private final ScreenViewport uiViewport;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
     private final OrthogonalTiledMapRenderer mapRenderer;
@@ -34,11 +36,14 @@ public class Render {
 
         viewport = new FitViewport(30, 20, camera);
 
-        screenviewport = new ScreenViewport();
-        screenviewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        transitionViewport = new ScreenViewport();
+        transitionViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
-        inTransition = new InTransition(screenviewport);
-        outTransition = new OutTransition(screenviewport);
+        uiViewport = new ScreenViewport();
+        uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
+        inTransition = new InTransition(transitionViewport);
+        outTransition = new OutTransition(transitionViewport);
         transitionTexture = new Texture(Gdx.files.internal("asset_work/transition/transition.png"));
 
         batch = new SpriteBatch();
@@ -103,10 +108,10 @@ public class Render {
     }
 
     public void drawTransition(float delta, boolean type) {
-        screenviewport.apply();
-        batch.setProjectionMatrix(screenviewport.getCamera().combined);
-        float width = screenviewport.getWorldWidth();
-        float height = screenviewport.getWorldHeight();
+        transitionViewport.apply();
+        batch.setProjectionMatrix(transitionViewport.getCamera().combined);
+        float width = transitionViewport.getWorldWidth();
+        float height = transitionViewport.getWorldHeight();
 
         float yPosition;
         if (!type) {
@@ -157,7 +162,8 @@ public class Render {
      */
     public void updateViewport(int width, int height){
         viewport.update(width, height, true);
-        screenviewport.update(width, height, true);
+        transitionViewport.update(width, height, true);
+        uiViewport.update(width, height, false);
     }
 
     /**
@@ -166,5 +172,13 @@ public class Render {
      */
     public OrthographicCamera getCamera() {
         return camera;
+    }
+
+    public Viewport getUIViewport() {
+        return uiViewport;
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return batch;
     }
 }

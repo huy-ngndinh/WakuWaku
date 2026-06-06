@@ -1,10 +1,18 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.oop.wakuwaku.Exception.OutOfBoundException;
+import com.oop.wakuwaku.FactManager.RandomFact;
+import com.oop.wakuwaku.Input.GameButton;
 import com.oop.wakuwaku.Input.GameInput;
+import com.oop.wakuwaku.Input.SettingsPanel;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.System.*;
@@ -32,6 +40,11 @@ public class GameScreen extends ScreenAdapter {
     // Renderer
     private Render render;
 
+    private Stage stage;
+    private GameButton pauseButton;
+    private SettingsPanel settingsPanel;
+
+
     public GameScreen(Main game) {
         this.game = game;
     }
@@ -47,8 +60,22 @@ public class GameScreen extends ScreenAdapter {
         input = new GameInput();
         playerStateHandler = new PlayerStateHandler(input, collisionDetector, gameworld, animationHandler);
         render = new Render(gameworld.getMap().getTiledMap());
+
         render.setTransition(false);
-        Gdx.input.setInputProcessor(input);
+
+        stage = new Stage(render.getUIViewport());
+
+        pauseButton = new GameButton(new Texture("Buttons/Pause.png"), new Texture("Buttons/Pause1.png"), 980, 630, 70, 64);
+        settingsPanel = new SettingsPanel(game, stage, new Texture("Buttons/settings_panel.png"), new Texture("Buttons/Paw.png"),
+            new Texture("Buttons/Bar.png"), new Texture("Buttons/Close.png"), new Texture("Buttons/Close1.png"),
+            new Texture("Buttons/Exit.png"), new Texture("Buttons/Exit1.png"));
+
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(input);
+        Gdx.input.setInputProcessor(multiplexer);
+        pauseBtn();
     }
 
     @Override
@@ -57,21 +84,50 @@ public class GameScreen extends ScreenAdapter {
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
         render.updateViewport(width, height);
         // Resize your screen here. The parameters represent the new window size.
+        stage.getViewport().update(width, height, false);
     }
+
 
     @Override
     public void render(float delta) {
-        input.update(delta);
+        settingsPanel.update(render.getUIViewport());
 
-        logic(delta);
-
-        // if the player touches the goal -> start a timer to goal animation before transition
-        if (playerStateHandler.getCurrentState() instanceof Goal) {
-            Goal currentState = (Goal) playerStateHandler.getCurrentState();
-            if (currentState.frameCountEnded()) render.setTransition(true);
-            // if the out transition finished, go to result screen
-            if (render.isTransitionFinished(true)) game.setScreen(new ResultScreen(game, 1));
+        if(settingsPanel.isVisible()) {
+            pauseButton.setVisible(false);
         }
+        else {
+            pauseButton.setVisible(true);
+            input.update(delta);
+
+            // if the player touches the goal -> start a timer to goal animation before transition
+            if (playerStateHandler.getCurrentState() instanceof Goal) {
+                Goal currentState = (Goal) playerStateHandler.getCurrentState();
+                if (currentState.frameCountEnded()) render.setTransition(true);
+                // if the out transition finished, go to result screen
+                if (render.isTransitionFinished(true)) game.setScreen(new ResultScreen(game, 1));
+            }
+
+            logic(delta);
+
+            // if the player touches the goal -> start a timer to the next screen
+            if (playerStateHandler.getCurrentState() instanceof Goal) {
+                Goal currentState = (Goal) playerStateHandler.getCurrentState();
+                if (currentState.frameCountEnded()) {
+                    RandomFact fact = new RandomFact();
+                    game.setScreen(new ResultScreen(game, fact.getRandomFact()));
+                    return;
+                }
+            }
+
+            try {
+                collisionDetector.isInGame();
+            } catch (OutOfBoundException e) {
+                System.out.println(e.getMessage());
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+
+        stage.act(delta);
 
         draw(delta);
     }
@@ -138,7 +194,7 @@ public class GameScreen extends ScreenAdapter {
         playerStateHandler.updateState(delta);
     }
 
-    private void draw(float delta){
+    private void draw(float delta) {
         // reset
         render.reset();
         // draw map
@@ -151,11 +207,22 @@ public class GameScreen extends ScreenAdapter {
         // draw player/animation
         TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
         render.drawPlayer(gameworld.getPlayer(), animationRegion);
-        if (playerStateHandler.getCurrentState() instanceof BeforeJump) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), 0);
-        else if (playerStateHandler.getCurrentState() instanceof BeforeWallKick) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), -gameworld.getPlayer().getDirection());
+        if (playerStateHandler.getCurrentState() instanceof BeforeJump)
+            render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), 0);
+        else if (playerStateHandler.getCurrentState() instanceof BeforeWallKick)
+            render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), -gameworld.getPlayer().getDirection());
         render.endRender();
         // debug mode, comment out when finished
-        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+        // physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+
+        // draw UI
+        render.getUIViewport().apply();
+        render.getSpriteBatch().setProjectionMatrix(render.getUIViewport().getCamera().combined);
+        render.beginRender();
+        settingsPanel.draw(render.getSpriteBatch());
+        render.endRender();
+        stage.getViewport().apply();
+        stage.draw();
 
         if (render.isTransitionBegin(false)) {
             render.beginRender();
@@ -168,6 +235,16 @@ public class GameScreen extends ScreenAdapter {
             render.drawTransition(delta, true);
             render.endRender();
         }
+    }
+
+    private void pauseBtn() {
+        stage.addActor(pauseButton);
+        pauseButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                settingsPanel.setVisible(true);
+            }
+        });
     }
 
     @Override
@@ -185,6 +262,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-
+        GameButton.dispose();
     }
 }
