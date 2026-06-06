@@ -5,6 +5,8 @@ import com.oop.wakuwaku.State.Goal;
 import com.oop.wakuwaku.State.Idle;
 import com.oop.wakuwaku.State.PlayerState;
 import com.oop.wakuwaku.world.GameWorld;
+import com.oop.wakuwaku.Exception.OutOfBoundException;
+
 
 /**
  * Master class for managing player state.

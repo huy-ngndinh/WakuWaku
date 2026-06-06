@@ -1,10 +1,10 @@
-package com.oop.wakuwaku.FactManager;
+package com.oop.wakuwaku.FactManger;
 
 public class FactManager {
     public static String getFact(int level) {
         switch (level) {
             case 1:
-                return "Fact 1: Mew has 9 lives...";
+                return "Cat loves jumping and climbing!!";
             case 2:
                 return "Fact 2: Moew can see at night...";
             case 3:

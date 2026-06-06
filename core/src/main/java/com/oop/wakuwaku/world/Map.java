@@ -25,7 +25,7 @@ public class Map {
     private TiledMap map;
     private Body body;
 
-    public Map(World world) {
+    public Map(World world)  {
 
         map = new TmxMapLoader().load("./asset_work/maps/house.tmx");
         bdef = new BodyDef();
@@ -38,6 +38,7 @@ public class Map {
         createBody(world, map.getLayers().get("wallclimb").getObjects(), "wallclimb");
         createBody(world, map.getLayers().get("hook").getObjects(), "hook");
         createBody(world, map.getLayers().get("goal").getObjects(), "goal");
+        createBody(world, map.getLayers().get("gamezone").getObjects(), "gamezone");
     }
 
     private void createBody(World world, MapObjects mapObjects, String type) {
@@ -54,9 +55,14 @@ public class Map {
             fdef.shape = shape;
             fdef.friction = 0.0f;
 
-            body.createFixture(fdef);
+            fdef.isSensor = type.equals("gamezone");
 
+
+            body.createFixture(fdef);
             body.setUserData(type);
+
+            fdef.isSensor = false;
+
         }
     }
 

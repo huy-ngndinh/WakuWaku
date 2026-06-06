@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.oop.wakuwaku.Exception.OutOfBoundException;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.*;
@@ -32,6 +35,7 @@ public class GameScreen extends ScreenAdapter {
     // Renderer
     private Render render;
 
+
     public GameScreen(Main game) {
         this.game = game;
     }
@@ -59,21 +63,33 @@ public class GameScreen extends ScreenAdapter {
         // Resize your screen here. The parameters represent the new window size.
     }
 
+
     @Override
     public void render(float delta) {
         input.update(delta);
 
         logic(delta);
 
+
         // if the player touches the goal -> start a timer to the next screen
         if (playerStateHandler.getCurrentState() instanceof Goal) {
             Goal currentState = (Goal) playerStateHandler.getCurrentState();
             if (currentState.frameCountEnded()) {
                 game.setScreen(new ResultScreen(game, 1));
+                return;
             }
         }
 
+
+        try {
+            collisionDetector.isInGame();
+        } catch (OutOfBoundException e) {
+            System.out.println(e.getMessage());
+            game.setScreen(new MenuScreen(game));
+        }
+
         draw(delta);
+
     }
 
     private void logic(float delta) {
@@ -136,6 +152,7 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
         playerStateHandler.updateState(delta);
+
     }
 
     private void draw(float delta){
