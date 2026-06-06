@@ -10,6 +10,7 @@ public class GameWorld {
     public GameWorld(World world) {
         player = new Player(world);
         this.map = new Map(world);
+
     }
 
     /**

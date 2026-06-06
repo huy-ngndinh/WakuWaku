@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="151">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="152">
  <tileset firstgid="1" source="house.tsx"/>
  <tileset firstgid="2701" source="decor.tsx"/>
- <layer id="1" name="background" width="30" height="50">
+ <layer id="1" name="background" width="30" height="50" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -110,6 +110,9 @@
 5371,5372,5373,5374,5375,5376,5377,5378,5379,5380,5381,5382,5383,5384,5385,5386,5387,5388,5389,5390,5391,5392,5393,5394,5395,5396,5397,5398,5399,5400
 </data>
  </layer>
+ <objectgroup id="8" name="gamezone">
+  <object id="151" x="-21.6208" y="710.017" width="1018.3" height="908.924"/>
+ </objectgroup>
  <objectgroup id="2" name="ground">
   <object id="7" x="0" y="1568" width="960" height="32"/>
   <object id="10" x="482.978" y="1376" width="157.022" height="32"/>
@@ -131,7 +134,7 @@
   <object id="48" x="608" y="1408" width="32" height="160"/>
   <object id="56" x="768" y="1312" width="32" height="128"/>
   <object id="68" x="480" y="1471.37" width="32" height="96.6256"/>
-  <object id="69" x="928" y="1088" width="32" height="480"/>
+  <object id="69" x="928" y="1088.47" width="32" height="479.533"/>
   <object id="70" x="928" y="673.249" width="32" height="414.751"/>
   <object id="74" x="0" y="736" width="32" height="704"/>
   <object id="76" x="672" y="1056" width="32" height="30.3624"/>

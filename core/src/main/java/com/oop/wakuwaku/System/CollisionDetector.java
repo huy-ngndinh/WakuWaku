@@ -3,6 +3,7 @@ package com.oop.wakuwaku.System;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.oop.wakuwaku.Exception.OutOfBoundException;
 
 public class CollisionDetector implements ContactListener {
 
@@ -15,8 +16,10 @@ public class CollisionDetector implements ContactListener {
     private boolean rightHookContact;
 
     private boolean goalContact;
+    private boolean isInGame = true;
 
     private float hookBoundingBoxTop;
+
 
     public CollisionDetector() {
         leftWallContact = false;
@@ -32,6 +35,24 @@ public class CollisionDetector implements ContactListener {
         groundContact = false;
         leftHookContact = false;
         rightHookContact = false;
+    }
+
+    @Override
+    public void beginContact(Contact contact) {
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+        if (checkInGame(fixtureA, fixtureB) || checkInGame(fixtureB, fixtureA)) {
+            isInGame = true;
+        }
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+        if (checkInGame(fixtureA, fixtureB) || checkInGame(fixtureB, fixtureA)) {
+            isInGame = false;
+        }
     }
 
     @Override
@@ -78,6 +99,9 @@ public class CollisionDetector implements ContactListener {
         if (checkGoalCollision(fixtureA, fixtureB) || checkGoalCollision(fixtureB, fixtureA)) {
             goalContact = true;
         }
+        if (checkInGame(fixtureA, fixtureB) || checkInGame(fixtureB, fixtureA)) {
+            isInGame = true;
+        }
     }
 
     public void postSolve(Contact contact, ContactImpulse impulse) {
@@ -107,6 +131,14 @@ public class CollisionDetector implements ContactListener {
         return goalContact;
     }
 
+    public boolean isInGame() throws OutOfBoundException{
+        if (isInGame){
+            return true;
+        }
+        throw new OutOfBoundException("Player is out of Game World");
+    }
+
+
     private boolean checkHookCollision(Fixture A, Fixture B) {
         return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("hook"));
     }
@@ -121,6 +153,10 @@ public class CollisionDetector implements ContactListener {
 
     private boolean checkGoalCollision(Fixture A, Fixture B) {
         return (A.getBody().getUserData().equals("player") && B.getBody().getUserData().equals("goal"));
+    }
+
+    private boolean checkInGame(Fixture A, Fixture B)  {
+        return A.getBody().getUserData().equals("player") && (B.getBody().getUserData().equals("gamezone"));
     }
 
     /**
@@ -148,11 +184,4 @@ public class CollisionDetector implements ContactListener {
         return hookBoundingBoxTop;
     }
 
-    @Override
-    public void beginContact(Contact contact) {
-    }
-
-    @Override
-    public void endContact(Contact contact) {
-    }
 }
