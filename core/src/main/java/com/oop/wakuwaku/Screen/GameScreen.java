@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.oop.wakuwaku.Exception.OutOfBoundException;
+import com.oop.wakuwaku.FactManager.RandomFact;
 import com.oop.wakuwaku.Input.GameInput;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.*;
@@ -75,7 +76,8 @@ public class GameScreen extends ScreenAdapter {
         if (playerStateHandler.getCurrentState() instanceof Goal) {
             Goal currentState = (Goal) playerStateHandler.getCurrentState();
             if (currentState.frameCountEnded()) {
-                game.setScreen(new ResultScreen(game, 1));
+                RandomFact fact = new RandomFact();
+                game.setScreen(new ResultScreen(game, fact.getRandomFact()));
                 return;
             }
         }

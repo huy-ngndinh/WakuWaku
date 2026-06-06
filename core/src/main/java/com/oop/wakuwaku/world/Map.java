@@ -55,7 +55,8 @@ public class Map {
             fdef.shape = shape;
             fdef.friction = 0.0f;
 
-            fdef.isSensor = type.equals("gamezone");
+
+             fdef.isSensor = type.equals("gamezone");
 
 
             body.createFixture(fdef);
