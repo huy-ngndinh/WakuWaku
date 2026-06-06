@@ -110,6 +110,9 @@
 5371,5372,5373,5374,5375,5376,5377,5378,5379,5380,5381,5382,5383,5384,5385,5386,5387,5388,5389,5390,5391,5392,5393,5394,5395,5396,5397,5398,5399,5400
 </data>
  </layer>
+ <objectgroup id="8" name="gamezone" visible="0">
+  <object id="151" x="-0.0829851" y="710.017" width="996.767" height="908.924"/>
+ </objectgroup>
  <objectgroup id="2" name="ground">
   <object id="7" x="0" y="1568" width="960" height="32"/>
   <object id="10" x="482.978" y="1376" width="157.022" height="32"/>
@@ -153,8 +156,5 @@
  <objectgroup id="5" name="hook">
   <object id="64" x="785.232" y="1024.12" width="15.5644" height="10.9725"/>
   <object id="67" x="479.274" y="1376.32" width="17.9949" height="9.0952"/>
- </objectgroup>
- <objectgroup id="8" name="gamezone">
-  <object id="151" x="-16.3867" y="704" width="996.767" height="908.924"/>
  </objectgroup>
 </map>
