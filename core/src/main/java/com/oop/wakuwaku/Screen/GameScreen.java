@@ -47,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
         input = new GameInput();
         playerStateHandler = new PlayerStateHandler(input, collisionDetector, gameworld, animationHandler);
         render = new Render(gameworld.getMap().getTiledMap());
-
+        render.setTransition(false);
         Gdx.input.setInputProcessor(input);
     }
 
@@ -65,12 +65,12 @@ public class GameScreen extends ScreenAdapter {
 
         logic(delta);
 
-        // if the player touches the goal -> start a timer to the next screen
+        // if the player touches the goal -> start a timer to goal animation before transition
         if (playerStateHandler.getCurrentState() instanceof Goal) {
             Goal currentState = (Goal) playerStateHandler.getCurrentState();
-            if (currentState.frameCountEnded()) {
-                game.setScreen(new ResultScreen(game, 1));
-            }
+            if (currentState.frameCountEnded()) render.setTransition(true);
+            // if the out transition finished, go to result screen
+            if (render.isTransitionFinished(true)) game.setScreen(new ResultScreen(game, 1));
         }
 
         draw(delta);
@@ -155,7 +155,19 @@ public class GameScreen extends ScreenAdapter {
         else if (playerStateHandler.getCurrentState() instanceof BeforeWallKick) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), -gameworld.getPlayer().getDirection());
         render.endRender();
         // debug mode, comment out when finished
-//        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+
+        if (render.isTransitionBegin(false)) {
+            render.beginRender();
+            render.drawTransition(delta, false);
+            render.endRender();
+        }
+
+        if (playerStateHandler.getCurrentState() instanceof Goal) {
+            render.beginRender();
+            render.drawTransition(delta, true);
+            render.endRender();
+        }
     }
 
     @Override

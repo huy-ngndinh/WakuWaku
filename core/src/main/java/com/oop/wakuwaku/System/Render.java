@@ -6,7 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.oop.wakuwaku.Transition.InTransition;
+import com.oop.wakuwaku.Transition.OutTransition;
 import com.oop.wakuwaku.world.Player;
 
 
@@ -15,15 +19,27 @@ import com.oop.wakuwaku.world.Player;
  */
 public class Render {
     private final FitViewport viewport;
+    private final ScreenViewport screenviewport;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
     private final OrthogonalTiledMapRenderer mapRenderer;
+
+    private final Texture transitionTexture;
+    private final InTransition inTransition;
+    private final OutTransition outTransition;
 
     public Render(TiledMap map) {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 30, 20);
 
         viewport = new FitViewport(30, 20, camera);
+
+        screenviewport = new ScreenViewport();
+        screenviewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+        inTransition = new InTransition(screenviewport);
+        outTransition = new OutTransition(screenviewport);
+        transitionTexture = new Texture(Gdx.files.internal("asset_work/transition/transition.png"));
 
         batch = new SpriteBatch();
 
@@ -86,6 +102,54 @@ public class Render {
         mapRenderer.render();
     }
 
+    public void drawTransition(float delta, boolean type) {
+        screenviewport.apply();
+        batch.setProjectionMatrix(screenviewport.getCamera().combined);
+        float width = screenviewport.getWorldWidth();
+        float height = screenviewport.getWorldHeight();
+
+        float yPosition;
+        if (!type) {
+            inTransition.update(delta);
+            yPosition = inTransition.getYPosition();
+        } else {
+            outTransition.update(delta);
+            yPosition = outTransition.getYPosition();
+        }
+
+//        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+//        pixmap.setColor(Color.BLUE);
+//        pixmap.fill();
+//        Texture pixel = new Texture(pixmap);
+//        pixmap.dispose();
+
+        batch.draw(transitionTexture, 0, yPosition, width, height);
+    }
+
+    public boolean isTransitionBegin(boolean type) {
+        if (!type) {
+            return inTransition.isTransitionBegin();
+        } else {
+            return outTransition.isTransitionBegin();
+        }
+    }
+
+    public void setTransition(boolean type) {
+        if (!type) {
+            inTransition.setTransition();
+        } else {
+            outTransition.setTransition();
+        }
+    }
+
+    public boolean isTransitionFinished(boolean type) {
+        if (!type) {
+            return inTransition.isTransitionFinished();
+        } else {
+            return outTransition.isTransitionFinished();
+        }
+    }
+
     /**
      * Update camera viewport
      * @param width The new width
@@ -93,6 +157,7 @@ public class Render {
      */
     public void updateViewport(int width, int height){
         viewport.update(width, height, true);
+        screenviewport.update(width, height, true);
     }
 
     /**
