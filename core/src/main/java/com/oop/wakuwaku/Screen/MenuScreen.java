@@ -81,6 +81,14 @@ public class MenuScreen extends ScreenAdapter {
         if (currentFrame != null) {
             game.batch.draw(currentFrame, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         }
+        if(settingsPanel.isVisible()) {
+            playButton.setVisible(false);
+            settingsButton.setVisible(false);
+        }
+        else {
+            playButton.setVisible(true);
+            settingsButton.setVisible(true);
+        }
         game.batch.end();
         game.batch.begin();
         settingsPanel.draw(game.batch);

@@ -34,7 +34,7 @@ public class SettingsPanel {
                 setVisible(false);
             }
         });
-        exitButton = new GameButton(Exit, Exit1, 500, 250, 144, 48);
+        exitButton = new GameButton(Exit, Exit1, 660, 250, 144, 48);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -60,7 +60,7 @@ public class SettingsPanel {
             CloseButton.setVisible(true);
         }
         else {
-            CloseButton.setPosition(600, 250);
+            CloseButton.setPosition(476, 250);
             CloseButton.setVisible(true);
             exitButton.setVisible(true);
         }
