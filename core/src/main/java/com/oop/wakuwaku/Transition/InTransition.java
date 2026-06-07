@@ -8,12 +8,12 @@ public class InTransition {
 
     private float alpha;
     private float elapsedTime;
-    private final float duration = 0.7f;
+    private final float duration = 1.4f;
 
     private boolean transitionBegin;
     private boolean transitionFinished;
 
-    private final int ANIMATION_FRAME = 1;
+    private final int ANIMATION_FRAME = 14;
     private Animation<TextureRegion> animation;
 
     public InTransition() {
@@ -23,10 +23,11 @@ public class InTransition {
         transitionFinished = false;
 
         Texture spriteSheet = new Texture("transition/transition.png");
-        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, 360, 240);
+        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/14, 240);
         TextureRegion[] frames = new TextureRegion[ANIMATION_FRAME];
         for (int i = 0; i < ANIMATION_FRAME; i++) frames[i] = tmp[0][i];
-        animation = new Animation<>(1f, frames);
+        animation = new Animation<>(0.1f, frames);
+
     }
 
     public void update(float delta) {
@@ -35,9 +36,10 @@ public class InTransition {
         elapsedTime += delta;
 
         float progress = Math.min(1f, elapsedTime / duration);
-        float eased = smoothStep(progress);
+        //float eased = smoothStep(progress);
+        //alpha = 1f - eased;
 
-        alpha = 1f - eased;
+        //alpha = 1f - progress;
 
         if (progress >= 1f) {
             alpha = 0f;

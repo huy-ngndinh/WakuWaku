@@ -163,7 +163,7 @@ public class MenuScreen extends ScreenAdapter {
             alpha = outTransition.getAlpha();
             animationFrame = outTransition.getCurrentFrame();
         }
-        batch.setColor(1, 1, 1, alpha);
+        batch.setColor(1, 1, 1, 1);
         batch.draw(animationFrame, 0, 0, width, height);
         batch.setColor(Color.WHITE);
     }
