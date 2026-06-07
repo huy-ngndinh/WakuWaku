@@ -81,6 +81,7 @@ public class GameScreen extends ScreenAdapter {
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
         render.updateViewport(width, height);
         // Resize your screen here. The parameters represent the new window size.
+        uihandler.resize(width, height);
     }
 
 
@@ -216,13 +217,13 @@ public class GameScreen extends ScreenAdapter {
         render.endRender();
         render.drawStage(uihandler);
 
-        if (render.isTransitionBegin(false)) {
+        if (render.isTransitionBegin(false) && !render.isTransitionFinished(false)) {
             render.beginRender();
             render.drawTransition(delta, false);
             render.endRender();
         }
 
-        if ((playerStateHandler.getCurrentState() instanceof Goal) || render.isTransitionBegin(true)) {
+        if (((playerStateHandler.getCurrentState() instanceof Goal) || render.isTransitionBegin(true)) && !render.isTransitionFinished(true)) {
             render.beginRender();
             render.drawTransition(delta, true);
             render.endRender();
