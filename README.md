@@ -1,33 +1,51 @@
-# WakuWaku
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/huy-ngndinh/WakuWaku">
+    <img src="Images/logo.png" alt="Logo" width="264" height="145">
+  </a>
+  <h2 align="center">WakuWaku</h2>
+  <p align="center">
+    A simple 2D platformer game about cat.
+  </p>
+</div>
 
-This project was generated with a template including simple application launchers and a main class extending `Game` that sets the first screen.
+## Introduction
 
-## Platforms
+This game was created as part of our coursework on Object-Oriented Programming.
+Inspired by Jump King, it features precise jump mechanics, challenging platforming sections, and punishing falls.
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+The latest commit is the version used for course evaluation. 
+The game works well and playable; however it has many limitations. 
+No additional development is currently planned. 
 
-## Gradle
+## Development tools
+`Java, JDK 21`: main programming language
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+`Gradle`: Build automation tool
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+`LibGDX`: Java game development framework
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+`Aseprite`: Animated sprite editor & pixel art tool
+
+## Installation
+
+Clone the repository: 
+
+```bash
+  git clone https://github.com/huy-ngndinh/WakuWaku
+  cd WakuWaku
+```
+
+Run the game with command line using `gradle`:
+
+```bash
+  ./gradlew run
+```
+
+or by running `Lwjgl3Launcher.main()` in your favorite IDE.
+
+## Notice
+
+For the best experience, it is recommended that you run our game at `60 FPS`, with the default `1080 × 720` screen resolution.

@@ -26,6 +26,10 @@ public class GameButton extends ImageButton {
         });
     }
 
+    public void resize(int width, int height) {
+        this.setPosition(width - 100, height - 100);
+    }
+
     private static ImageButtonStyle createButtonStyle(Texture normalTex, Texture pressedTex) {
         ImageButtonStyle style = new ImageButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(normalTex));

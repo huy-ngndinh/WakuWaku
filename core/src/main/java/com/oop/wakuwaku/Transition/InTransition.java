@@ -1,22 +1,33 @@
 package com.oop.wakuwaku.Transition;
 
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class InTransition {
 
-    private float yPosition;
-    private final float endYPosition;
+    private float alpha;
     private float elapsedTime;
-    private final float duration = 1f;
+    private final float duration = 1.4f;
+
     private boolean transitionBegin;
     private boolean transitionFinished;
 
-    public InTransition(ScreenViewport viewport) {
-        yPosition = 0f;
-        endYPosition = -viewport.getWorldHeight();
+    private final int ANIMATION_FRAME = 14;
+    private Animation<TextureRegion> animation;
+
+    public InTransition() {
+        alpha = 1f; // start fully black
         elapsedTime = 0f;
         transitionBegin = false;
         transitionFinished = false;
+
+        Texture spriteSheet = new Texture("transition/transition.png");
+        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/14, 240);
+        TextureRegion[] frames = new TextureRegion[ANIMATION_FRAME];
+        for (int i = 0; i < ANIMATION_FRAME; i++) frames[i] = tmp[0][i];
+        animation = new Animation<>(0.1f, frames);
+
     }
 
     public void update(float delta) {
@@ -24,25 +35,30 @@ public class InTransition {
 
         elapsedTime += delta;
 
-        float eased = smoothStep(Math.min(1f, elapsedTime / duration));
+        float progress = Math.min(1f, elapsedTime / duration);
+        //float eased = smoothStep(progress);
+        //alpha = 1f - eased;
 
-        yPosition = endYPosition * eased;
+        //alpha = 1f - progress;
 
-        if (elapsedTime >= duration) {
-            yPosition = endYPosition;
+        if (progress >= 1f) {
+            alpha = 0f;
             transitionFinished = true;
         }
     }
 
-    private float smoothStep(float time) {
-        return time * time * (3f - 2f * time);
+    private float smoothStep(float t) {
+        t = t * t * t; // t^3
+        return t * t * (3f - 2f * t);
     }
 
-    public float getYPosition() {
-        return yPosition;
+    public float getAlpha() {
+        return alpha;
     }
 
-    public boolean isTransitionBegin() { return transitionBegin; }
+    public TextureRegion getCurrentFrame() {
+        return animation.getKeyFrame(elapsedTime, true);
+    }
 
     public void setTransition() {
         transitionBegin = true;
@@ -50,5 +66,9 @@ public class InTransition {
 
     public boolean isTransitionFinished() {
         return transitionFinished;
+    }
+
+    public boolean isTransitionBegin() {
+        return transitionBegin;
     }
 }
