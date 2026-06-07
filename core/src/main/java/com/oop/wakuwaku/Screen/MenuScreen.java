@@ -179,6 +179,8 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
+
         viewport.update(width, height, true);
+        transitionViewport.update(width, height, true);
     }
 }

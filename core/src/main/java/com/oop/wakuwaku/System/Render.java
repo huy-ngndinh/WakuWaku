@@ -40,7 +40,7 @@ public class Render {
         transitionViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
         uiViewport = new ScreenViewport();
-        uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+        uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
         inTransition = new InTransition(transitionViewport);
         outTransition = new OutTransition(transitionViewport);
@@ -167,7 +167,7 @@ public class Render {
     public void updateViewport(int width, int height){
         viewport.update(width, height, true);
         transitionViewport.update(width, height, true);
-        uiViewport.update(width, height, false);
+        uiViewport.update(width, height, true);
     }
 
     /**

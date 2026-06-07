@@ -21,7 +21,9 @@ public class UserInterfaceHandler {
 
         stage = new Stage(render.getUIViewport());
 
-        pauseButton = new GameButton(new Texture("Buttons/Pause.png"), new Texture("Buttons/Pause1.png"), 980, 630, 70, 64);
+        float width = render.getUIViewport().getScreenWidth();
+        float height = render.getUIViewport().getScreenHeight();
+        pauseButton = new GameButton(new Texture("Buttons/Pause.png"), new Texture("Buttons/Pause1.png"), width - 100, height - 100, 70, 70);
         settingsPanel = new SettingsPanel(game, stage, new Texture("Buttons/settings_panel.png"), new Texture("Buttons/Paw.png"),
             new Texture("Buttons/Bar.png"), new Texture("Buttons/Close.png"), new Texture("Buttons/Close1.png"),
             new Texture("Buttons/Exit.png"), new Texture("Buttons/Exit1.png"));
@@ -60,5 +62,10 @@ public class UserInterfaceHandler {
                 settingsPanel.setVisible(true);
             }
         });
+    }
+
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+        pauseButton.resize(width, height);
     }
 }
