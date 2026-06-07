@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.oop.wakuwaku.Screen.GameScreen;
 import com.oop.wakuwaku.Screen.MenuScreen;
 import com.oop.wakuwaku.Main;
 
@@ -25,20 +26,21 @@ public class SettingsPanel {
         this.popupTex = popupTex;
         this.PawTex = PawTex;
         this.BarTex = BarTex;
-        musicSlider = new Slider(358);
-        effectSlider = new Slider(428);
-        CloseButton = new GameButton(Close, Close1, 568, 250, 144, 48);
+        musicSlider = new Slider(428);
+        effectSlider = new Slider(358);
+        CloseButton = new GameButton(Close, Close1, 480, 250, 144, 48);
         CloseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setVisible(false);
             }
         });
-        exitButton = new GameButton(Exit, Exit1, 660, 250, 144, 48);
+        exitButton = new GameButton(Exit, Exit1, 556, 250, 144, 48);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
+//                game.setScreen(new MenuScreen(game));
+                if (game.getScreen() instanceof GameScreen) ((GameScreen) game.getScreen()).exitToMenu();
             }
         });
         stage.addActor(CloseButton);
@@ -55,12 +57,12 @@ public class SettingsPanel {
     private void UpdateButtons() {
         Screen currentScreen = game.getScreen();
         if(currentScreen instanceof MenuScreen) {
-            CloseButton.setPosition(568, 250);
+            CloseButton.setPosition(480, 250);
             exitButton.setVisible(false);
             CloseButton.setVisible(true);
         }
         else {
-            CloseButton.setPosition(476, 250);
+            CloseButton.setPosition(400, 250);
             CloseButton.setVisible(true);
             exitButton.setVisible(true);
         }
@@ -79,7 +81,7 @@ public class SettingsPanel {
 
     public void draw(SpriteBatch batch) {
         if(Visible) {
-            batch.draw(popupTex, 340, 200, 600, 360);
+            batch.draw(popupTex, 286, 200, 506, 360);
             musicSlider.draw(batch, PawTex, BarTex);
             effectSlider.draw(batch, PawTex, BarTex);
         }
@@ -91,5 +93,9 @@ public class SettingsPanel {
 
     public boolean isVisible() {
         return Visible;
+    }
+
+    public float getMusicVolume() {
+        return musicSlider.getValue();
     }
 }

@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.oop.wakuwaku.Transition.InTransition;
+import com.oop.wakuwaku.Transition.OutTransition;
 import com.oop.wakuwaku.world.Player;
 
 
@@ -15,9 +19,16 @@ import com.oop.wakuwaku.world.Player;
  */
 public class Render {
     private final FitViewport viewport;
+    private final ScreenViewport transitionViewport;
+    private final ScreenViewport uiViewport;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
     private final OrthogonalTiledMapRenderer mapRenderer;
+
+    // Transition
+    private final Texture transitionTexture;
+    private final InTransition inTransition;
+    private final OutTransition outTransition;
 
     public Render(TiledMap map) {
         camera = new OrthographicCamera();
@@ -25,11 +36,20 @@ public class Render {
 
         viewport = new FitViewport(30, 20, camera);
 
+        transitionViewport = new ScreenViewport();
+        transitionViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+        uiViewport = new ScreenViewport();
+        uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
+        inTransition = new InTransition(transitionViewport);
+        outTransition = new OutTransition(transitionViewport);
+        transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
+
         batch = new SpriteBatch();
 
         mapRenderer = new OrthogonalTiledMapRenderer(map, Physics.UNIT);
         mapRenderer.setView(camera);
-
     }
 
     public void reset() {
@@ -86,6 +106,59 @@ public class Render {
         mapRenderer.render();
     }
 
+    public void drawTransition(float delta, boolean type) {
+        transitionViewport.apply();
+        batch.setProjectionMatrix(transitionViewport.getCamera().combined);
+        float width = transitionViewport.getWorldWidth();
+        float height = transitionViewport.getWorldHeight();
+
+        float yPosition;
+        if (!type) {
+            inTransition.update(delta);
+            yPosition = inTransition.getYPosition();
+        } else {
+            outTransition.update(delta);
+            yPosition = outTransition.getYPosition();
+        }
+
+        batch.draw(transitionTexture, 0, yPosition, width, height);
+    }
+
+    public boolean isTransitionBegin(boolean type) {
+        if (!type) {
+            return inTransition.isTransitionBegin();
+        } else {
+            return outTransition.isTransitionBegin();
+        }
+    }
+
+    public void setTransition(boolean type) {
+        if (!type) {
+            inTransition.setTransition();
+        } else {
+            outTransition.setTransition();
+        }
+    }
+
+    public boolean isTransitionFinished(boolean type) {
+        if (!type) {
+            return inTransition.isTransitionFinished();
+        } else {
+            return outTransition.isTransitionFinished();
+        }
+    }
+
+    public void drawUI(UserInterfaceHandler uihandler) {
+        uiViewport.apply();
+        batch.setProjectionMatrix(uiViewport.getCamera().combined);
+        uihandler.drawSettingPanel(batch);
+    }
+
+    public void drawStage(UserInterfaceHandler uihandler) {
+        uiViewport.apply();
+        uihandler.getStage().draw();
+    }
+
     /**
      * Update camera viewport
      * @param width The new width
@@ -93,6 +166,8 @@ public class Render {
      */
     public void updateViewport(int width, int height){
         viewport.update(width, height, true);
+        transitionViewport.update(width, height, true);
+        uiViewport.update(width, height, false);
     }
 
     /**
@@ -101,5 +176,13 @@ public class Render {
      */
     public OrthographicCamera getCamera() {
         return camera;
+    }
+
+    public Viewport getUIViewport() {
+        return uiViewport;
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return batch;
     }
 }

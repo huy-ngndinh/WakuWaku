@@ -1,16 +1,14 @@
 package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.oop.wakuwaku.Exception.OutOfBoundException;
 import com.oop.wakuwaku.FactManager.RandomFact;
 import com.oop.wakuwaku.Input.GameButton;
 import com.oop.wakuwaku.Input.GameInput;
-import com.oop.wakuwaku.Input.SettingsPanel;
 import com.oop.wakuwaku.Main;
 import com.oop.wakuwaku.State.*;
 import com.oop.wakuwaku.System.*;
@@ -19,6 +17,8 @@ import com.oop.wakuwaku.world.Player;
 
 /** First screen of the application.*/
 public class GameScreen extends ScreenAdapter {
+    private enum TransitionDirection { MENU, RESULT };
+    private TransitionDirection currentTransitionDirection = TransitionDirection.RESULT;
     private final Main game;
 
     // Box2d
@@ -38,17 +38,15 @@ public class GameScreen extends ScreenAdapter {
     // Renderer
     private Render render;
 
-    private final FitViewport viewport = new FitViewport(1280, 720);
-    private final Stage stage = new Stage(viewport);
-    private final GameButton pauseButton = new GameButton(new Texture("Buttons/Pause.png"), new Texture("Buttons/Pause1.png"), 1200, 646, 70, 64);
-    private final SettingsPanel settingsPanel;
+    // UI handler
+    private UserInterfaceHandler uihandler;
+
+    // Music
+    Music music;
 
 
     public GameScreen(Main game) {
         this.game = game;
-        settingsPanel = new SettingsPanel(game, stage, new Texture("Buttons/settings_panel.png"), new Texture("Buttons/Paw.png"),
-                new Texture("Buttons/Bar.png"), new Texture("Buttons/Close.png"), new Texture("Buttons/Close1.png"),
-                new Texture("Buttons/Exit.png"), new Texture("Buttons/Exit1.png"));
     }
 
     @Override
@@ -62,12 +60,19 @@ public class GameScreen extends ScreenAdapter {
         input = new GameInput();
         playerStateHandler = new PlayerStateHandler(input, collisionDetector, gameworld, animationHandler);
         render = new Render(gameworld.getMap().getTiledMap());
+        uihandler = new UserInterfaceHandler(render, game);
 
-        com.badlogic.gdx.InputMultiplexer multiplexer = new com.badlogic.gdx.InputMultiplexer();
-        multiplexer.addProcessor(stage);
+        render.setTransition(false);
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(uihandler.getStage());
         multiplexer.addProcessor(input);
         Gdx.input.setInputProcessor(multiplexer);
-        pauseBtn();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/main.mp3"));
+        music.setLooping(true);
+        music.setVolume(uihandler.getVolume());
+        music.play();
     }
 
     @Override
@@ -76,34 +81,20 @@ public class GameScreen extends ScreenAdapter {
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
         render.updateViewport(width, height);
         // Resize your screen here. The parameters represent the new window size.
-        viewport.update(width, height, true);
     }
 
 
     @Override
     public void render(float delta) {
-        settingsPanel.update(viewport);
+        uihandler.updateSettingPanel();
 
-        if(settingsPanel.isVisible()) {
-            pauseButton.setVisible(false);
-        } 
-        else {
-            pauseButton.setVisible(true);
+        if (uihandler.isSettingPanelVisible()) {
+            uihandler.setPauseButton(false);
+        } else {
+            uihandler.setPauseButton(true);
             input.update(delta);
 
             logic(delta);
-
-
-            // if the player touches the goal -> start a timer to the next screen
-            if (playerStateHandler.getCurrentState() instanceof Goal) {
-                Goal currentState = (Goal) playerStateHandler.getCurrentState();
-                if (currentState.frameCountEnded()) {
-                    RandomFact fact = new RandomFact();
-                    game.setScreen(new ResultScreen(game, fact.getRandomFact()));
-                    return;
-                }
-            }
-
 
             try {
                 collisionDetector.isInGame();
@@ -113,8 +104,23 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        stage.act(delta);
+        // if the player touches the goal -> start a timer to goal animation before transition
+        if (playerStateHandler.getCurrentState() instanceof Goal) {
+            Goal currentState = (Goal) playerStateHandler.getCurrentState();
+            if (currentState.frameCountEnded()) render.setTransition(true);
+        }
 
+        // if the out transition finished, go to result screen
+        if (render.isTransitionFinished(true)) {
+            if (currentTransitionDirection == TransitionDirection.RESULT) {
+                RandomFact fact = new RandomFact();
+                game.setScreen(new ResultScreen(game, fact.getRandomFact()));
+            } else {
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+
+        uihandler.getStage().act(delta);
         draw(delta);
     }
 
@@ -178,10 +184,9 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
         playerStateHandler.updateState(delta);
-
     }
 
-    private void draw(float delta){
+    private void draw(float delta) {
         // reset
         render.reset();
         // draw map
@@ -194,25 +199,39 @@ public class GameScreen extends ScreenAdapter {
         // draw player/animation
         TextureRegion animationRegion = animationHandler.getCurrentAnimationFrame(delta, gameworld.getPlayer(), playerStateHandler);
         render.drawPlayer(gameworld.getPlayer(), animationRegion);
-        if (playerStateHandler.getCurrentState() instanceof BeforeJump) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), 0);
-        else if (playerStateHandler.getCurrentState() instanceof BeforeWallKick) render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), -gameworld.getPlayer().getDirection());
+        if (playerStateHandler.getCurrentState() instanceof BeforeJump)
+            render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), 0);
+        else if (playerStateHandler.getCurrentState() instanceof BeforeWallKick)
+            render.drawIndicator(gameworld.getPlayer(), input.getHoldTimeSpace(), -gameworld.getPlayer().getDirection());
         render.endRender();
         // debug mode, comment out when finished
-//        physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
-        game.batch.begin();
-        settingsPanel.draw(game.batch);
-        game.batch.end();
-        stage.draw();
+        // physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
+
+        // Music
+        music.setVolume(uihandler.getVolume());
+
+        // draw UI
+        render.beginRender();
+        render.drawUI(uihandler);
+        render.endRender();
+        render.drawStage(uihandler);
+
+        if (render.isTransitionBegin(false)) {
+            render.beginRender();
+            render.drawTransition(delta, false);
+            render.endRender();
+        }
+
+        if ((playerStateHandler.getCurrentState() instanceof Goal) || render.isTransitionBegin(true)) {
+            render.beginRender();
+            render.drawTransition(delta, true);
+            render.endRender();
+        }
     }
 
-    private void pauseBtn() {
-        stage.addActor(pauseButton);
-        pauseButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                settingsPanel.setVisible(true);
-           }
-        });
+    public void exitToMenu() {
+        currentTransitionDirection = TransitionDirection.MENU;
+        render.setTransition(true);
     }
 
     @Override
@@ -226,7 +245,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void hide() {}
+    public void hide() {
+        music.stop();
+    }
 
     @Override
     public void dispose() {
