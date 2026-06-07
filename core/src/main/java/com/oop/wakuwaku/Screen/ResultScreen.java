@@ -32,7 +32,7 @@ public class ResultScreen extends ScreenAdapter {
     private final Main game;
     private Stage stage;
     private Skin skin;
-    private ScreenViewport viewport;
+    private ScreenViewport transitionViewport;
     private Texture transitionTexture;
     private InTransition inTransition;
     private OutTransition outTransition;
@@ -47,17 +47,17 @@ public class ResultScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        viewport = new ScreenViewport();
-        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        transitionViewport = new ScreenViewport();
+        transitionViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         // transition
-        inTransition = new InTransition(viewport);
-        outTransition = new OutTransition(viewport);
+        inTransition = new InTransition();
+        outTransition = new OutTransition();
         transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
         inTransition.setTransition();
         batch = new SpriteBatch();
 
         // scene2d.ui
-        stage = new Stage(viewport);
+        stage = new Stage(transitionViewport);
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -154,21 +154,25 @@ public class ResultScreen extends ScreenAdapter {
     }
 
     public void drawTransition(float delta, boolean type) {
-        viewport.apply();
-        batch.setProjectionMatrix(viewport.getCamera().combined);
-        float width = viewport.getWorldWidth();
-        float height = viewport.getWorldHeight();
+        transitionViewport.apply();
+        batch.setProjectionMatrix(transitionViewport.getCamera().combined);
+        float width = transitionViewport.getWorldWidth();
+        float height = transitionViewport.getWorldHeight();
 
-        float yPosition;
+        float alpha;
+        TextureRegion animationFrame;
         if (!type) {
             inTransition.update(delta);
-            yPosition = inTransition.getYPosition();
+            alpha = inTransition.getAlpha();
+            animationFrame = inTransition.getCurrentFrame();
         } else {
             outTransition.update(delta);
-            yPosition = outTransition.getYPosition();
+            alpha = outTransition.getAlpha();
+            animationFrame = outTransition.getCurrentFrame();
         }
-
-        batch.draw(transitionTexture, 0, yPosition, width, height);
+        batch.setColor(1, 1, 1, alpha);
+        batch.draw(animationFrame, 0, 0, width, height);
+        batch.setColor(Color.WHITE);
     }
 
     @Override
@@ -199,7 +203,7 @@ public class ResultScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        transitionViewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
         stage.clear();
         show();

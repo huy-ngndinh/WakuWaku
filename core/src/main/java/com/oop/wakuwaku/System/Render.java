@@ -26,7 +26,6 @@ public class Render {
     private final OrthogonalTiledMapRenderer mapRenderer;
 
     // Transition
-    private final Texture transitionTexture;
     private final InTransition inTransition;
     private final OutTransition outTransition;
 
@@ -42,9 +41,8 @@ public class Render {
         uiViewport = new ScreenViewport();
         uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
-        inTransition = new InTransition(transitionViewport);
-        outTransition = new OutTransition(transitionViewport);
-        transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
+        inTransition = new InTransition();
+        outTransition = new OutTransition();
 
         batch = new SpriteBatch();
 
@@ -112,16 +110,20 @@ public class Render {
         float width = transitionViewport.getWorldWidth();
         float height = transitionViewport.getWorldHeight();
 
-        float yPosition;
+        float alpha;
+        TextureRegion animationFrame;
         if (!type) {
             inTransition.update(delta);
-            yPosition = inTransition.getYPosition();
+            alpha = inTransition.getAlpha();
+            animationFrame = inTransition.getCurrentFrame();
         } else {
             outTransition.update(delta);
-            yPosition = outTransition.getYPosition();
+            alpha = outTransition.getAlpha();
+            animationFrame = outTransition.getCurrentFrame();
         }
-
-        batch.draw(transitionTexture, 0, yPosition, width, height);
+        batch.setColor(1, 1, 1, alpha);
+        batch.draw(animationFrame, 0, 0, width, height);
+        batch.setColor(Color.WHITE);
     }
 
     public boolean isTransitionBegin(boolean type) {

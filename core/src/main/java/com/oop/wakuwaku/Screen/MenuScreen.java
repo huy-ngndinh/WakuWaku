@@ -3,6 +3,7 @@ package com.oop.wakuwaku.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -58,8 +59,8 @@ public class MenuScreen extends ScreenAdapter {
         // transition
         transitionViewport = new ScreenViewport();
         transitionViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        inTransition = new InTransition(transitionViewport);
-        outTransition = new OutTransition(transitionViewport);
+        inTransition = new InTransition();
+        outTransition = new OutTransition();
         transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
         if (!FIRST_TIME) inTransition.setTransition();
         else FIRST_TIME = false;
@@ -151,16 +152,20 @@ public class MenuScreen extends ScreenAdapter {
         float width = transitionViewport.getWorldWidth();
         float height = transitionViewport.getWorldHeight();
 
-        float yPosition;
+        float alpha;
+        TextureRegion animationFrame;
         if (!type) {
             inTransition.update(delta);
-            yPosition = inTransition.getYPosition();
+            alpha = inTransition.getAlpha();
+            animationFrame = inTransition.getCurrentFrame();
         } else {
             outTransition.update(delta);
-            yPosition = outTransition.getYPosition();
+            alpha = outTransition.getAlpha();
+            animationFrame = outTransition.getCurrentFrame();
         }
-
-        batch.draw(transitionTexture, 0, yPosition, width, height);
+        batch.setColor(1, 1, 1, alpha);
+        batch.draw(animationFrame, 0, 0, width, height);
+        batch.setColor(Color.WHITE);
     }
 
     @Override
