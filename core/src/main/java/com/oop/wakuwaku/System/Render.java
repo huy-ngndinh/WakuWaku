@@ -44,7 +44,7 @@ public class Render {
 
         inTransition = new InTransition(transitionViewport);
         outTransition = new OutTransition(transitionViewport);
-        transitionTexture = new Texture(Gdx.files.internal("asset_work/transition/transition.png"));
+        transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
 
         batch = new SpriteBatch();
 

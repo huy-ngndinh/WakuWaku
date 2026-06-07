@@ -44,6 +44,10 @@ public class UserInterfaceHandler {
         return settingsPanel.isVisible();
     }
 
+    public float getVolume() {
+        return settingsPanel.getMusicVolume();
+    }
+
     public void setPauseButton(boolean visible) {
         pauseButton.setVisible(visible);
     }

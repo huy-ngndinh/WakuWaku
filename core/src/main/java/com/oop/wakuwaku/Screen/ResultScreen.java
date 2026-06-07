@@ -2,6 +2,7 @@ package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -37,6 +38,7 @@ public class ResultScreen extends ScreenAdapter {
     private OutTransition outTransition;
     private int factIndex;
     private SpriteBatch batch;
+    private Music music;
 
     public ResultScreen(Main game, int factIndex) { // thêm tham số
         this.game = game;
@@ -50,7 +52,7 @@ public class ResultScreen extends ScreenAdapter {
         // transition
         inTransition = new InTransition(viewport);
         outTransition = new OutTransition(viewport);
-        transitionTexture = new Texture(Gdx.files.internal("asset_work/transition/transition.png"));
+        transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
         inTransition.setTransition();
         batch = new SpriteBatch();
 
@@ -143,6 +145,12 @@ public class ResultScreen extends ScreenAdapter {
         rootStack.add(root);
 
         stage.addActor(rootStack);
+
+        // Music
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/result.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
     }
 
     public void drawTransition(float delta, boolean type) {
@@ -182,6 +190,11 @@ public class ResultScreen extends ScreenAdapter {
         }
 
         if (outTransition.isTransitionFinished()) game.setScreen(new MenuScreen(game));
+    }
+
+    @Override
+    public void hide() {
+        music.stop();
     }
 
     @Override

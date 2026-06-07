@@ -20,6 +20,7 @@ public class Slider {
             if (isTouching) {
                 X = Math.max(sliderMinX, Math.min(sliderMaxX, X));
                 value = (X - sliderMinX) / 190f;
+                System.out.println(value);
             }
             else if (X >= sliderMinX && X <= sliderMaxX && Y >= y - 25 && Y <= y + 25) {
                 isTouching = true;

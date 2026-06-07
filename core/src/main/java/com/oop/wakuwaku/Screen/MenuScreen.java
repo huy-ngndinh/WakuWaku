@@ -2,6 +2,7 @@ package com.oop.wakuwaku.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,6 +29,8 @@ public class MenuScreen extends ScreenAdapter {
     private Animation<TextureRegion> bgAnimation;
     private final float VIRTUAL_WIDTH = 1080;
     private final float VIRTUAL_HEIGHT = 720;
+    // Music
+    Music music;
     // Transition
     private ScreenViewport transitionViewport;
     private final Texture transitionTexture;
@@ -47,12 +50,17 @@ public class MenuScreen extends ScreenAdapter {
         settingsPanel = new SettingsPanel(game, stage, new Texture("Buttons/settings_panel.png"), new Texture("Buttons/Paw.png"),
                 new Texture("Buttons/Bar.png"), new Texture("Buttons/Close.png"), new Texture("Buttons/Close1.png"),
                 new Texture("Buttons/Exit.png"), new Texture("Buttons/Exit1.png"));
+        // Music
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/menu.mp3"));
+        music.setLooping(true);
+        music.setVolume(settingsPanel.getMusicVolume());
+        music.play();
         // transition
         transitionViewport = new ScreenViewport();
         transitionViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         inTransition = new InTransition(transitionViewport);
         outTransition = new OutTransition(transitionViewport);
-        transitionTexture = new Texture(Gdx.files.internal("asset_work/transition/transition.png"));
+        transitionTexture = new Texture(Gdx.files.internal("transition/transition.png"));
         if (!FIRST_TIME) inTransition.setTransition();
         else FIRST_TIME = false;
         batch = new SpriteBatch();
@@ -118,6 +126,9 @@ public class MenuScreen extends ScreenAdapter {
         stage.draw();
         batch.end();
 
+        // Music
+        music.setVolume(settingsPanel.getMusicVolume());
+
         // Transition
         if (inTransition.isTransitionBegin() && !inTransition.isTransitionFinished()) {
             batch.begin();
@@ -159,6 +170,11 @@ public class MenuScreen extends ScreenAdapter {
         settingsTex.dispose();
         playTex.dispose();
         GameButton.dispose();
+    }
+
+    @Override
+    public void hide() {
+        music.stop();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.oop.wakuwaku.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.oop.wakuwaku.Exception.OutOfBoundException;
 import com.oop.wakuwaku.FactManager.RandomFact;
@@ -40,6 +41,9 @@ public class GameScreen extends ScreenAdapter {
     // UI handler
     private UserInterfaceHandler uihandler;
 
+    // Music
+    Music music;
+
 
     public GameScreen(Main game) {
         this.game = game;
@@ -64,6 +68,11 @@ public class GameScreen extends ScreenAdapter {
         multiplexer.addProcessor(uihandler.getStage());
         multiplexer.addProcessor(input);
         Gdx.input.setInputProcessor(multiplexer);
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/main.mp3"));
+        music.setLooping(true);
+        music.setVolume(uihandler.getVolume());
+        music.play();
     }
 
     @Override
@@ -198,6 +207,9 @@ public class GameScreen extends ScreenAdapter {
         // debug mode, comment out when finished
         // physics.getDebugRenderer().render(physics.getWorld(), render.getCamera().combined);
 
+        // Music
+        music.setVolume(uihandler.getVolume());
+
         // draw UI
         render.beginRender();
         render.drawUI(uihandler);
@@ -233,7 +245,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void hide() {}
+    public void hide() {
+        music.stop();
+    }
 
     @Override
     public void dispose() {

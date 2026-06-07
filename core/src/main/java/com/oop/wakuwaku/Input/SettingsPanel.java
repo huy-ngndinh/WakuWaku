@@ -26,8 +26,8 @@ public class SettingsPanel {
         this.popupTex = popupTex;
         this.PawTex = PawTex;
         this.BarTex = BarTex;
-        musicSlider = new Slider(358);
-        effectSlider = new Slider(428);
+        musicSlider = new Slider(428);
+        effectSlider = new Slider(358);
         CloseButton = new GameButton(Close, Close1, 480, 250, 144, 48);
         CloseButton.addListener(new ClickListener() {
             @Override
@@ -93,5 +93,9 @@ public class SettingsPanel {
 
     public boolean isVisible() {
         return Visible;
+    }
+
+    public float getMusicVolume() {
+        return musicSlider.getValue();
     }
 }
